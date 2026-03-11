@@ -1,6 +1,7 @@
 package dao;
 
 import model.Banner;
+import org.jdbi.v3.core.Jdbi;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

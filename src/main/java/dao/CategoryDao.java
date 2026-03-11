@@ -1,7 +1,9 @@
 package dao;
 
 import model.Category;
+import model.Contact;
 import model.Product;
+import org.jdbi.v3.core.Jdbi;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,32 +17,14 @@ public class CategoryDao {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
-    public List<Category> getAllCategories() throws SQLException, ClassNotFoundException {
-        List<Category> list = new ArrayList<>();
-        String sql = "SELECT * FROM Categories";
-        try {
-            conn = DBConnect.getConnection();
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
+    private static Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
-            while (rs.next()) {
-                Category c = new Category(rs.getInt(1), rs.getString(2));
-                int idParent = rs.getInt(3) != 0 ? rs.getInt(3) : 0;
-                c.setParentID(idParent);
-                list.add(c);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
+    public List<Category> getAllCategories() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM Categories")
+                        .mapToBean(Category.class)
+                        .list()
+        );
     }
-
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        CategoryDao dao = new CategoryDao();
-        List<Category> l = dao.getAllCategories();
-        System.out.println(l);
-    }
-
 
 }
