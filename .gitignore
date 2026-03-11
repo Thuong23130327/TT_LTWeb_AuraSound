@@ -12,6 +12,7 @@ target/
 *.iws
 *.iml
 *.ipr
+.smarttomcat/
 
 ### Eclipse ###
 .apt_generated
@@ -21,7 +22,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
-**/config.properties
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
