@@ -1,4 +1,5 @@
-package model;
+package model.entity;
+
 
 public class Brand {
 
@@ -6,13 +7,23 @@ public class Brand {
     private String name;
     private String logoUrl;
 
-    public Brand(){
+//    Construc rỗng
+    public Brand() {
     }
+
+
     public Brand(int id, String name, String logoUrl) {
-        super();
         this.id = id;
         this.name = name;
         this.logoUrl = logoUrl;
+    }
+
+    public String toString() {
+        return "Brand {" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", logo='" + logoUrl + '\'' +
+                '}';
     }
 
     public int getId() {
@@ -39,5 +50,5 @@ public class Brand {
         this.logoUrl = logoUrl;
     }
 
-
 }
+

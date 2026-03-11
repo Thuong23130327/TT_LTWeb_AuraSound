@@ -7,14 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="AuraSound" />
-        <module name="DemoWeb" />
-        <module name="Aurasound" />
       </profile>
     </annotationProcessing>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="AuraSound" options="" />
-    </option>
   </component>
 </project>
