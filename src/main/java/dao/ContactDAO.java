@@ -18,7 +18,7 @@ public class ContactDAO {
     private static PreparedStatement ps = null;
     private static ResultSet rs = null;
 
-    private static Jdbi jdbi = dao.DB.DBConnect.getJdbi();
+    static Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
     public List<Contact> getAllContacts() throws SQLException, ClassNotFoundException {
         return jdbi.withHandle(handle -> handle.createQuery("SELECT * FROM contactmails WHERE message is not null and trim(message) <>''").mapToBean(Contact.class).list());

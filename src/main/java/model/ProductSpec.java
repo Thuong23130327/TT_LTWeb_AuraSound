@@ -1,5 +1,7 @@
 package model;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 public class ProductSpec {
 	private int id;
 	private int productId;
@@ -29,6 +31,7 @@ public class ProductSpec {
 		return productId;
 	}
 
+	@ColumnName("Products_id")
 	public void setProductId(int productId) {
 		this.productId = productId;
 	}
@@ -37,6 +40,7 @@ public class ProductSpec {
 		return specName;
 	}
 
+	@ColumnName("spec_name")
 	public void setSpecName(String specName) {
 		this.specName = specName;
 	}
@@ -45,6 +49,7 @@ public class ProductSpec {
 		return specValue;
 	}
 
+	@ColumnName("spec_value")
 	public void setSpecValue(String specValue) {
 		this.specValue = specValue;
 	}
