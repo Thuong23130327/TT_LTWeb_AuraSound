@@ -18,11 +18,15 @@ target/
 .apt_generated
 .classpath
 .factorypath
-.project
 .settings
 .springBeans
 .sts4-cache
-
+*.class
+target/
+bin/
+.metadata/
+.project
+.settings/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

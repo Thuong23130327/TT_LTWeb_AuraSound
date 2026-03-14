@@ -3,160 +3,147 @@ package model.entity;
 import model.enums.OrderStatus;
 import model.enums.PaymentStatus;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Order {
-	private int id;
-	private int usersId;
-	private int vouchersId;
-	private String orderCode;
-	private Timestamp orderDate;
-	private OrderStatus status;
-	private PaymentStatus paymentStatus;
-	private double totalProductsPrice;
-	private double shippingFee;
-	private double discountAmount;
-	private double finalAmount;
-	private String adminNote;
-	private Timestamp finishedAt; // ngay hoan thanh
-	private String recipientName;
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//Get - set
-	public int getId() {
-		return id;
-	}
+    private int id;
+    private User user;
+    private int vouchersId;
+    private String orderCode;
+    private Timestamp orderDate;
+    private OrderStatus status;
+    private PaymentStatus paymentStatus;
+    private BigDecimal totalProductsPrice;
+    private BigDecimal shippingFee;
+    private BigDecimal discountAmount;
+    private BigDecimal finalAmount;
+    private String adminNote;
+    private Timestamp finishedAt;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    private String recipientName;
+    private List<OrderItem> items;
+    //Get - set
 
-	public Integer getUsersId() {
-		return usersId;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setUsersId(Integer usersId) {
-		if (usersId == null) {
-			this.usersId = 0;
-		} else
-			this.usersId = usersId;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getVouchersId() {
-		return vouchersId;
-	}
+    public String getOrderCode() {
+        return orderCode;
+    }
 
-	public void setVouchersId(int vouchersId) {
-		this.vouchersId = vouchersId;
-	}
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
 
-	public String getOrderCode() {
-		return orderCode;
-	}
+    public Timestamp getOrderDate() {
+        return orderDate;
+    }
 
-	public void setOrderCode(String orderCode) {
-		this.orderCode = orderCode;
-	}
+    public void setOrderDate(Timestamp orderDate) {
+        this.orderDate = orderDate;
+    }
 
-	public Timestamp getOrderDate() {
-		return orderDate;
-	}
+    public Timestamp getFinishedAt() {
+        return finishedAt;
+    }
 
-	public void setOrderDate(Timestamp orderDate) {
-		this.orderDate = orderDate;
-	}
+    public void setFinishedAt(Timestamp finishedAt) {
+        this.finishedAt = finishedAt;
+    }
 
-	public OrderStatus getStatus() {
-		return status;
-	}
-	
-	public void setStatus(int value) {
+    public String getAdminNote() {
+        return adminNote;
+    }
+
+    public void setAdminNote(String adminNote) {
+        this.adminNote = adminNote;
+    }
+
+    public String getRecipientName() {
+        return recipientName;
+    }
+
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
+
+    public int getVouchersId() {
+        return vouchersId;
+    }
+
+    public void setVouchersId(int vouchersId) {
+        this.vouchersId = vouchersId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(int value) {
         this.status = OrderStatus.fromInt(value);
     }
 
-	public PaymentStatus getPaymentStatus() {
-		return paymentStatus;
-	}
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
 
-	public void setPaymentStatus(int value) {
+    public void setPaymentStatus(int value) {
         this.paymentStatus = PaymentStatus.fromInt(value);
     }
 
-	public double getTotalProductsPrice() {
-		return totalProductsPrice;
-	}
+    public BigDecimal getTotalProductsPrice() {
+        return totalProductsPrice;
+    }
 
-	public void setTotalProductsPrice(double totalProductsPrice) {
-		this.totalProductsPrice = totalProductsPrice;
-	}
+    public void setTotalProductsPrice(BigDecimal totalProductsPrice) {
+        this.totalProductsPrice = totalProductsPrice;
+    }
 
-	public double getShippingFee() {
-		return shippingFee;
-	}
+    public BigDecimal getShippingFee() {
+        return shippingFee;
+    }
 
-	public void setShippingFee(double shippingFee) {
-		this.shippingFee = shippingFee;
-	}
+    public void setShippingFee(BigDecimal shippingFee) {
+        this.shippingFee = shippingFee;
+    }
 
-	public double getDiscountAmount() {
-		return discountAmount;
-	}
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
 
-	public void setDiscountAmount(double discountAmount) {
-		this.discountAmount = discountAmount;
-	}
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
+    }
 
-	public double getFinalAmount() {
-		return finalAmount;
-	}
+    public BigDecimal getFinalAmount() {
+        return finalAmount;
+    }
 
-	public void setFinalAmount(double finalAmount) {
-		this.finalAmount = finalAmount;
-	}
+    public void setFinalAmount(BigDecimal finalAmount) {
+        this.finalAmount = finalAmount;
+    }
 
-	public String getAdminNote() {
-		return adminNote;
-	}
+    public List<OrderItem> getItems() {
+        return items;
+    }
 
-	public void setAdminNote(String adminNote) {
-		this.adminNote = adminNote;
-	}
-
-	public Timestamp getFinishedAt() {
-		return finishedAt;
-	}
-
-	public void setFinishedAt(Timestamp finishedAt) {
-		this.finishedAt = finishedAt;
-	}
-
-	public String getRecipientName() {
-		return recipientName;
-	}
-
-	public void setRecipientName(String recipientName) {
-		this.recipientName = recipientName;
-	}
-
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
 }
