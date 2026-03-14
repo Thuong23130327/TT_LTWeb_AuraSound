@@ -4,6 +4,9 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jdbi.v3.core.Jdbi;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 public class DBConnect {
 
     private static HikariDataSource dataSource;
@@ -35,5 +38,4 @@ public class DBConnect {
         }
 
     }
-
 }
