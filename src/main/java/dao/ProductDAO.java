@@ -212,71 +212,53 @@ public class ProductDAO {
         return new ArrayList<>(allCategoryIds);
     }
 
-//    public List<Product> filterProduct(String[] brandIds, String[] cateIds, int numPerPage, int page, String selectedSort) {
-//        List<Product> list = new ArrayList<>();
-//        StringBuilder sql = new StringBuilder("SELECT p.* FROM Products p ");
-//        sql.append("LEFT JOIN Brands b ON p.Brands_id = b.id ");
-//        sql.append("LEFT JOIN Categories c ON p.Categories_id = c.id ");
-//        sql.append("WHERE p.display_sell_price <> 0  ");
-//        sql.append("AND p.display_image_url IS NOT NULL  ");
-//        sql.append("AND TRIM(p.display_image_url) <> ''  ");
-//        if (brandIds != null && brandIds.length > 0) {
-//            sql.append(" AND p.Brands_id IN (");
-//            for (int i = 0; i < brandIds.length; i++) {
-//                sql.append(brandIds[i]);
-//                if (i < brandIds.length - 1) sql.append(",");
-//            }
-//            sql.append(") ");
-//        }
-//        if (cateIds != null && cateIds.length > 0) {
-//            List<String> allCateIds = getListCategoryIdsIncludingChildren(cateIds);
-//            if (!allCateIds.isEmpty()) {
-//                sql.append(" AND p.Categories_id IN (");
-//                for (int i = 0; i < allCateIds.size(); i++) {
-//                    sql.append(allCateIds.get(i));
-//                    if (i < allCateIds.size() - 1) sql.append(",");
-//                }
-//                sql.append(") ");
-//            }
-//        }
-//        if (selectedSort == null) {
-//            sql.append(" ORDER BY p.id DESC ");
-//        } else if (selectedSort.equals("price-asc")) {
-//            sql.append(" ORDER BY p.display_sell_price ASC ");
-//        } else if (selectedSort.equals("price-desc")) {
-//            sql.append(" ORDER BY p.display_sell_price DESC ");
-//        }
-//        if (page * numPerPage != 0)
-//            sql.append(" LIMIT ? OFFSET ?");
-//
-//        try {
-//            conn = DBConnect.getConnection();
-//            ps = conn.prepareStatement(sql.toString());
-//
-//            if (page * numPerPage != 0) {
-//                ps.setInt(1, numPerPage);
-//                ps.setInt(2, (page - 1) * numPerPage);
-//            }
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                list.add(mapRStoProduct(rs));
-//            }
-//        } catch (SQLException |
-//                 ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return list;
-//    }
-//
-//    public String getProductName(String pid) {
-//        return jdbi.withHandle(handle ->
-//                handle.createQuery("SELECT name FROM products WHERE id = :id")
-//                        .bind("id", pid)
-//                        .mapTo(String.class)
-//                        .findFirst()
-//                        .orElse("Không tìm thấy tên Sản phẩm")
-//        );
-//    }
+    public List<Product> filterProduct(String[] brandIds, String[] cateIds, int numPerPage, int page, String selectedSort) {
+        StringBuilder sql = new StringBuilder("SELECT p.* FROM Products p ");
+        sql.append("LEFT JOIN Brands b ON p.Brands_id = b.id ");
+        sql.append("LEFT JOIN Categories c ON p.Categories_id = c.id ");
+        sql.append("WHERE p.display_sell_price <> 0 ");
+        sql.append("AND p.display_image_url IS NOT NULL ");
+        sql.append("AND TRIM(p.display_image_url) <> '' ");
+        //brands
+        if (brandIds != null && brandIds.length > 0) {
+            sql.append(" AND p.Brands_id IN (<brandIds>) ");
+        }
+        // cate
+        if (cateIds != null && cateIds.length > 0) {
+            List<String> allCateIds = getListCategoryIdsIncludingChildren(cateIds);
+            if (!allCateIds.isEmpty()) {
+                sql.append(" AND p.Categories_id IN (<cateIds>) ");
+            }
+        }
+        if (selectedSort == null) {
+            sql.append(" ORDER BY p.id DESC ");
+        } else if (selectedSort.equals("price-asc")) {
+            sql.append(" ORDER BY p.display_sell_price ASC ");
+        } else if (selectedSort.equals("price-desc")) {
+            sql.append(" ORDER BY p.display_sell_price DESC ");
+        }
+        boolean hasPagination = (page * numPerPage != 0);
+        if (hasPagination) {
+            sql.append(" LIMIT :limit OFFSET :offset");
+        }
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+            if (brandIds != null && brandIds.length > 0) {
+                query.bindList("brandIds", Arrays.asList(brandIds));
+            }
+            if (cateIds != null && cateIds.length > 0) {
+                List<String> allCateIds = getListCategoryIdsIncludingChildren(cateIds);
+                if (!allCateIds.isEmpty()) {
+                    query.bindList("cateIds", allCateIds);
+                }
+            }
+            if (hasPagination) {
+                query.bind("limit", numPerPage)
+                        .bind("offset", (page - 1) * numPerPage);
+            }
+            return query.mapToBean(Product.class).list();
+        });
+    }
 
     public boolean updateProduct(String pid, String brandid, String cateid, String name, String sku, String discript, String varSelected, String isActive) {
         try {
