@@ -7,7 +7,6 @@ public class Brand {
     private String name;
     private String logoUrl;
 
-//    Construc rỗng
     public Brand() {
     }
 

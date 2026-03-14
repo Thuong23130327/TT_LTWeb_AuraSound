@@ -1,0 +1,54 @@
+package model.entity;
+
+import java.math.BigDecimal;
+
+public class OrderItem {
+	private int id;
+	private int ordersId;
+	private ProductVariant productVariant;
+	private int quantity;
+	private BigDecimal price_at_purchase;
+
+	
+//	Get-set
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getOrdersId() {
+		return ordersId;
+	}
+
+	public void setOrdersId(int ordersId) {
+		this.ordersId = ordersId;
+	}
+
+	public ProductVariant getProductVariant() {
+		return productVariant;
+	}
+
+	public void setProductVariant(ProductVariant productVariant) {
+		this.productVariant = productVariant;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public BigDecimal getPrice_at_purchase() {
+		return price_at_purchase;
+	}
+
+	public void setPrice_at_purchase(BigDecimal price_at_purchase) {
+		this.price_at_purchase = price_at_purchase;
+	}
+
+}

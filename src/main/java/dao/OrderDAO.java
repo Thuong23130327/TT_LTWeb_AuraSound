@@ -53,7 +53,41 @@ public class OrderDAO {
                 .bind("uid", userId)
                 .bind("status", status)
                 .mapToBean(Order.class).list());
+    }
 
+//    public OrderShipping getOrShip(String ordId) {
+////     lamsau
+//        return null;
+//    }
+
+    public boolean updateStatus(String orderId, String newStatus) {
+        String sql = "UPDATE orders SET status = :status WHERE id = :id";
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("status", newStatus)
+                        .bind("id", orderId)
+                        .execute() > 0
+        );
+    }
+
+    public boolean updatePayment(String orderId, String newStatus) {
+        String sql = "UPDATE orders SET payment_status = :status WHERE id = :id";
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("status", newStatus)
+                        .bind("id", orderId)
+                        .execute() > 0
+        );
+    }
+
+    public boolean updateAdNote(String orderId, String newNote) {
+        String sql = "UPDATE orders SET admin_note = :adNote WHERE id = :id";
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("adNote", newNote)
+                        .bind("id", orderId)
+                        .execute() > 0
+        );
     }
 
     public static void main(String[] args) {
