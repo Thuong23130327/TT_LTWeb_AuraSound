@@ -1,18 +1,29 @@
 package model.entity;
 
-import java.security.Timestamp;
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
+import java.time.LocalDateTime;
 
 public class User {
 
     private int id;
     private String email;
+
+    @ColumnName("password_hash")
     private String passwordHash;
+
+    @ColumnName("full_name")
     private String fullName;
     private String phone;
+
+    @ColumnName("avatar_url")
     private String avatarUrl;
     private Role role;
+
+    @ColumnName("is_locked")
     private boolean isLocked;
-    private Timestamp createdAt;
+    @ColumnName("created_at")
+    private LocalDateTime createdAt;
 
     public int getId() {
         return id;
@@ -78,11 +89,11 @@ public class User {
         this.isLocked = isLocked;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -112,7 +123,7 @@ public class User {
     }
 
     public User(int id, String email, String passwordHash, String fullName, String phone, String avatarUrl, Role role,
-                boolean isLocked, Timestamp createdAt) {
+                boolean isLocked, LocalDateTime createdAt) {
         super();
         this.id = id;
         this.email = email;
@@ -136,7 +147,25 @@ public class User {
     }
 
     public enum Role {
-        Customer, Admin
+        Customer(0, "khách hàng"), Admin(1, "admin");
+        private final int value;
+        private final String description;
+
+        Role(int value, String description) {
+            this.value = value;
+            this.description = description;
+        }
+        public int getValue() { return value; }
+        public String getDescription() { return description; }
+
+        public static Role fromValue(int value) {
+            for (Role role : Role.values()) {
+                if (role.value == value) {
+                    return role;
+                }
+            }
+            return Customer;
+        }
     }
 
     @Override
