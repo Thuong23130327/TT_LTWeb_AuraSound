@@ -3,14 +3,11 @@ package service;
 import java.sql.SQLException;
 import java.util.List;
 
-import dao.CategoryDao;
+import dao.CategoryDAO;
 import model.entity.Category;
 
-import java.sql.SQLException;
-import java.util.List;
-
-    public class CategoryService {
-        CategoryDao categoryDao = new CategoryDao();
+public class CategoryService {
+        CategoryDAO categoryDao = new CategoryDAO();
 
         public List<Category> getAllCategories() throws SQLException, ClassNotFoundException {
             return categoryDao.getAllCategories();

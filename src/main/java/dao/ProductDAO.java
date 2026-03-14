@@ -14,7 +14,9 @@ public class ProductDAO {
     private Connection conn= null;
     private PreparedStatement ps = null;
     private ResultSet rs = null;
+
     private Jdbi jdbi = dao.DB.DBConnect.getJdbi();
+
     static Map<Integer, Product> data = new HashMap<>();
 
     public List<Product> getAllProduct(){
