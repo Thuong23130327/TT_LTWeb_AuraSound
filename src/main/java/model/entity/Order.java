@@ -96,7 +96,7 @@ public class Order {
     }
 
     public void setStatus(int value) {
-        this.status = OrderStatus.fromInt(value);
+        this.status = OrderStatus.fromValue(value);
     }
 
     public PaymentStatus getPaymentStatus() {
@@ -104,7 +104,7 @@ public class Order {
     }
 
     public void setPaymentStatus(int value) {
-        this.paymentStatus = PaymentStatus.fromInt(value);
+        this.paymentStatus = PaymentStatus.fromValue(value);
     }
 
     public BigDecimal getTotalProductsPrice() {

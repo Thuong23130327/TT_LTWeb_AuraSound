@@ -1,30 +1,22 @@
 package model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Category {
 
     private int id;
     private String name;
     private int parentID;
 
-    public Category() {
+    private List<Category> children = new ArrayList<>();
 
+    public List<Category> getChildren() {
+        return children;
     }
 
-    public Category(String name) {
-        super();
-        this.name = name;
-    }
-
-    public Category(String name, int parentID) {
-        super();
-        this.name = name;
-        this.parentID = parentID;
-    }
-
-    public Category(int id, String name) {
-        super();
-        this.id = id;
-        this.name = name;
+    public void setChildren(List<Category> children) {
+        this.children = children;
     }
 
     public int getId() {
@@ -43,11 +35,12 @@ public class Category {
         this.name = name;
     }
 
-    public int getParentID() {
+    public int getParentId() {
+        if (parentID <= 0) return 0;
         return parentID;
     }
 
-    public void setParentID(int parentID) {
+    public void setParentId(int parentID) {
         this.parentID = parentID;
     }
 
@@ -55,7 +48,6 @@ public class Category {
     public String toString() {
         return "Category [ id=" + id + ", name=" + name + ", parentID=" + parentID + " ]\n";
     }
-
 
 
 }

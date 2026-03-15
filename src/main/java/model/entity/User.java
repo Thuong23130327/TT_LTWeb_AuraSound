@@ -1,5 +1,6 @@
 package model.entity;
 
+import model.enums.Role;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 import java.time.LocalDateTime;
@@ -97,76 +98,6 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public User() {
-    }
-
-    public User(String email, String passwordHash, String fullName) {
-        super();
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.fullName = fullName;
-        this.isLocked = false;
-        this.avatarUrl = "";
-        this.role = Role.Customer;
-    }
-
-
-    public User(int id, String email, String passwordHash, String fullName) {
-        super();
-        this.id = id;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.fullName = fullName;
-        this.isLocked = false;
-        this.avatarUrl = "";
-        this.role = Role.Customer;
-    }
-
-    public User(int id, String email, String passwordHash, String fullName, String phone, String avatarUrl, Role role,
-                boolean isLocked, LocalDateTime createdAt) {
-        super();
-        this.id = id;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.fullName = fullName;
-        this.phone = phone;
-        this.avatarUrl = avatarUrl;
-        this.role = role;
-        this.isLocked = isLocked;
-        this.createdAt = createdAt;
-    }
-
-    public User(String email, String passwordHash) {
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.fullName = "New User";
-        this.phone = null;
-        this.avatarUrl = null;
-        this.role = Role.Customer;
-        this.isLocked = false;
-    }
-
-    public enum Role {
-        Customer(0, "khách hàng"), Admin(1, "admin");
-        private final int value;
-        private final String description;
-
-        Role(int value, String description) {
-            this.value = value;
-            this.description = description;
-        }
-        public int getValue() { return value; }
-        public String getDescription() { return description; }
-
-        public static Role fromValue(int value) {
-            for (Role role : Role.values()) {
-                if (role.value == value) {
-                    return role;
-                }
-            }
-            return Customer;
-        }
-    }
 
     @Override
     public String toString() {

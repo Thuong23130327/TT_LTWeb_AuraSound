@@ -3,6 +3,7 @@ package dao;
 import dao.DB.DBConnect;
 import model.entity.Product;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.reflect.FieldMapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,17 +12,136 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class ProductDAO {
-    private Connection conn= null;
-    private PreparedStatement ps = null;
-    private ResultSet rs = null;
 
     private Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
     static Map<Integer, Product> data = new HashMap<>();
 
-    public List<Product> getAllProduct(){
+    public List<Product> getAllProduct() {
         return jdbi.withHandle(handle -> handle.createQuery("select * from products").mapToBean(Product.class).list());
     }
+
+
+    public int countProducts(List<Integer> categoryIds, List<Integer> brandIds, Double minPrice, Double maxPrice) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1 ");
+
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            sql.append(" AND categories_id IN (<categoryIds>) ");
+        }
+
+        if (brandIds != null && !brandIds.isEmpty()) {
+            sql.append(" AND brands_id IN (<brandIds>) ");
+        }
+        if (minPrice != null) {
+            sql.append(" AND display_sell_price >= :minPrice ");
+        }
+        if (maxPrice != null) {
+            sql.append(" AND display_sell_price <= :maxPrice ");
+        }
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                query.bindList("categoryIds", categoryIds);
+            }
+            if (brandIds != null && !brandIds.isEmpty()) {
+                query.bindList("brandIds", brandIds);
+            }
+            if (minPrice != null) query.bind("minPrice", minPrice);
+            if (maxPrice != null) query.bind("maxPrice", maxPrice);
+
+            return query.mapTo(Integer.class).findFirst().orElse(1);
+        });
+    }
+
+    public List<Product> getProductsByPage(List<Integer> categoryIds, List<Integer> brandIds, Double minPrice, Double maxPrice, String selectedSort, int offset, int limit) {
+
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1 ");
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            sql.append(" AND categories_id IN (<categoryIds>) ");
+        }
+
+        if (brandIds != null && !brandIds.isEmpty()) {
+            sql.append(" AND brands_id IN (<brandIds>) ");
+        }
+        if (minPrice != null) {
+            sql.append(" AND display_sell_price >= :minPrice ");
+        }
+        if (maxPrice != null) {
+            sql.append(" AND display_sell_price <= :maxPrice ");
+        }
+
+        if ("price-asc".equals(selectedSort)) {
+            sql.append(" ORDER BY display_sell_price ASC ");
+        } else if ("price-desc".equals(selectedSort)) {
+            sql.append(" ORDER BY display_sell_price DESC ");
+        } else {
+            sql.append(" ORDER BY id ");
+        }
+
+        sql.append(" LIMIT :limit OFFSET :offset");
+
+        return jdbi.withHandle(handle -> {
+            handle.registerRowMapper(FieldMapper.factory(Product.class));
+            var query = handle.createQuery(sql.toString());
+
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                query.bindList("categoryIds", categoryIds);
+            }
+            if (brandIds != null && !brandIds.isEmpty()) {
+                query.bindList("brandIds", brandIds);
+            }
+            if (minPrice != null) query.bind("minPrice", minPrice);
+            if (maxPrice != null) query.bind("maxPrice", maxPrice);
+
+            return query.bind("limit", limit)
+                    .bind("offset", offset).mapTo(Product.class).list();
+        });
+    }
+
+    public static void main(String[] args) {
+        ProductDAO dao = new ProductDAO();
+
+        int totalAll = dao.countProducts(null, null, null, null);
+        System.out.println("all: " + totalAll);
+
+        List<Integer> cates = List.of(1, 2, 3);
+        int totalCates = dao.countProducts(cates, null, null, null);
+        System.out.println("Cate 1, 2,3: " + totalCates);
+
+        int totalByPrice = dao.countProducts(null, null, 500000.0, 2000000.0);
+        System.out.println("500k-2tr: " + totalByPrice);
+
+
+    }
+
+
+    public List<Product> getPerPageProductByCategoryId(int numPerPage, int page, String cateId, String selectedSort) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT * FROM products WHERE Categories_id = :cateId OR " +
+                        "Categories_id IN (SELECT id FROM categories WHERE Categories_id = :cateId) ");
+
+        if ("price-asc".equals(selectedSort)) {
+            sql.append(" ORDER BY display_sell_price ASC ");
+        } else if ("price-desc".equals(selectedSort)) {
+            sql.append(" ORDER BY display_sell_price DESC ");
+        } else {
+            sql.append(" ORDER BY id ");
+        }
+
+        sql.append(" LIMIT :limit OFFSET :offset");
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql.toString())
+                        .bind("cateId", cateId)
+                        .bind("limit", numPerPage)
+                        .bind("offset", (page - 1) * numPerPage)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+
 
     public List<Product> getFeaturedProducts(int limit) {
         return jdbi.withHandle(handle ->
@@ -119,84 +239,6 @@ public class ProductDAO {
         );
     }
 
-    public List<Product> getPerPageProductByCategoryId(int numPerPage, int page, String cateId, String selectedSort) {
-        StringBuilder sql = new StringBuilder(
-                "SELECT * FROM products WHERE Categories_id = :cateId OR " +
-                        "Categories_id IN (SELECT id FROM categories WHERE Categories_id = :cateId) ");
-
-        if ("price-asc".equals(selectedSort)) {
-            sql.append(" ORDER BY display_sell_price ASC ");
-        } else if ("price-desc".equals(selectedSort)) {
-            sql.append(" ORDER BY display_sell_price DESC ");
-        } else {
-            sql.append(" ORDER BY id ");
-        }
-
-        sql.append(" LIMIT :limit OFFSET :offset");
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql.toString())
-                        .bind("cateId", cateId)
-                        .bind("limit", numPerPage)
-                        .bind("offset", (page - 1) * numPerPage)
-                        .mapToBean(Product.class)
-                        .list()
-        );
-    }
-
-    private Product mapRStoProduct(ResultSet rs) throws SQLException {
-        return new Product(rs.getInt("id"), rs.getInt("Brands_id"), rs.getInt("Categories_id"),
-                rs.getString("sku"), rs.getString("name"), rs.getString("description"),
-                rs.getFloat("avg_rating"), rs.getInt("sold_count"), rs.getBoolean("is_active"),
-                rs.getTimestamp("created_at"),
-                rs.getDouble("display_market_price"), rs.getDouble("display_sell_price"), rs.getString("display_image_url"));
-    }
-
-    public List<Product> getPerPageAllProduct(int numPerPage, int page, String selectedSort) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM products");
-
-        if ("price-asc".equals(selectedSort)) {
-            sql.append(" ORDER BY display_sell_price ASC");
-        } else if ("price-desc".equals(selectedSort)) {
-            sql.append(" ORDER BY display_sell_price DESC");
-        } else {
-            sql.append(" ORDER BY id");
-        }
-
-        sql.append(" LIMIT :limit OFFSET :offset");
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql.toString())
-                        .bind("limit", numPerPage)
-                        .bind("offset", (page - 1) * numPerPage)
-                        .mapToBean(Product.class)
-                        .list()
-        );
-    }
-
-    public int pageNeed(String cateId, int sizePerPage) {
-        long totalRecords;
-
-        if (cateId == null || "0".equals(cateId)) {
-            totalRecords = jdbi.withHandle(handle ->
-                    handle.createQuery("SELECT COUNT(*) FROM products")
-                            .mapTo(Long.class)
-                            .findFirst() // Lấy kết quả đầu tiên
-                            .orElse(0L)); // Nếu không có mặc định là 0
-        } else {
-            totalRecords = jdbi.withHandle(handle ->
-                    handle.createQuery("SELECT COUNT(*) FROM products WHERE Categories_id = :cateId OR " +
-                                    "Categories_id IN (SELECT id FROM categories WHERE Categories_id = :cateId)")
-                            .bind("cateId", cateId)
-                            .mapTo(Long.class)
-                            .findFirst()
-                            .orElse(0L));
-        }
-
-        if (totalRecords == 0) return 1;
-        // Tính số trang
-        return (int) Math.ceil((double) totalRecords / sizePerPage);
-    }
 
     private List<String> getListCategoryIdsIncludingChildren(String[] cateIds) {
         if (cateIds == null || cateIds.length == 0) return new ArrayList<>();
