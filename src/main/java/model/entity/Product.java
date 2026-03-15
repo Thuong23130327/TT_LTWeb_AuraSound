@@ -6,17 +6,27 @@ import java.sql.Timestamp;
 
 public class Product {
     private int id;
+    @ColumnName("brands_id")
+
     private int brandId;
+    @ColumnName("categories_id")
     private int categoriesId;
     private String sku;
     private String name;
     private String description;
+    @ColumnName("avg_rating")
     private float avgRating;
+    @ColumnName("sold_count")
     private int soldCount;
+    @ColumnName("is_active")
     private boolean isActive;
+    @ColumnName("created_at")
     private Timestamp createdAt;
+    @ColumnName("display_market_price")
     private double oldPrice;
+    @ColumnName("display_sell_price")
     private double sellPrice;
+    @ColumnName("display_image_url")
     private String img;
 
     public Product() {
@@ -50,7 +60,6 @@ public class Product {
         return brandId;
     }
 
-    @ColumnName("Brands_id")
     public void setBrandId(int brandId) {
         this.brandId = brandId;
     }
@@ -59,7 +68,6 @@ public class Product {
         return categoriesId;
     }
 
-    @ColumnName("Categories_id")
     public void setCategoriesId(int categoriesId) {
         this.categoriesId = categoriesId;
     }
@@ -92,7 +100,6 @@ public class Product {
         return avgRating;
     }
 
-    @ColumnName("avg_rating")
     public void setAvgRating(float avgRating) {
         this.avgRating = avgRating;
     }
@@ -109,7 +116,6 @@ public class Product {
         return isActive;
     }
 
-    @ColumnName("is_active")
     public void setActive(boolean active) {
         isActive = active;
     }
@@ -126,7 +132,6 @@ public class Product {
         return oldPrice;
     }
 
-    @ColumnName("display_market_price")
     public void setOldPrice(double oldPrice) {
         this.oldPrice = oldPrice;
     }
@@ -135,7 +140,6 @@ public class Product {
         return sellPrice;
     }
 
-    @ColumnName("display_sell_price")
     public void setSellPrice(double sellPrice) {
         this.sellPrice = sellPrice;
     }
@@ -144,7 +148,6 @@ public class Product {
         return img;
     }
 
-    @ColumnName("display_image_url")
     public void setImg(String img) {
         this.img = img;
     }

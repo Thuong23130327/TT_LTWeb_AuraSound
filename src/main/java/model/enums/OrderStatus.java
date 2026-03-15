@@ -16,9 +16,10 @@ public enum OrderStatus {
     public int getValue() { return value; }
     public String getDescription() { return description; }
 
-    public static OrderStatus fromInt(int value) {
+    public static OrderStatus fromValue(int value) {
         for (OrderStatus s : values()) {
             if (s.value == value) return s;
+
         }
         return PENDING;
     }

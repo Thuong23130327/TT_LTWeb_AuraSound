@@ -9,16 +9,9 @@ import java.util.List;
 public class CategoryDAO {
     private static final Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
-    public List<Category> getAllCategories() throws SQLException, ClassNotFoundException {
+    public List<Category> getAll() {
         String sql = "SELECT * FROM Categories";
         return jdbi.withHandle(handle -> handle.createQuery(sql).mapToBean(Category.class).list());
-    }
-
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        CategoryDAO dao = new CategoryDAO();
-        List<Category> l = dao.getAllCategories();
-        System.out.println(l);
     }
 
 

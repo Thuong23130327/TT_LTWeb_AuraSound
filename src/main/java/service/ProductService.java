@@ -1,72 +1,48 @@
 package service;
 
+import dao.BrandDAO;
+import dao.CategoryDAO;
 import dao.ProductDAO;
+import dao.VariantDAO;
+import model.entity.Brand;
+import model.entity.Category;
 import model.entity.Product;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class ProductService {
-    private ProductDAO productDao;
+    private ProductDAO productDAO = new ProductDAO();
+    private VariantDAO variantDAO = new VariantDAO();
+    private CategoryDAO categoryDAO = new CategoryDAO();
+    private BrandDAO brandDAO = new BrandDAO();
 
-    public ProductService() throws SQLException, ClassNotFoundException {
-        productDao = new ProductDAO();
+    private int pageSize = 12;
+
+    public List<Brand> getAllBrands() {
+        return brandDAO.getAll();
     }
 
-    public List<Product> searchProductByText(String textSearch) {
-        return productDao.searchProductByText(textSearch);
+    public List<Category> getAllCategories() {
+        return categoryDAO.getAll();
     }
 
-    public int pageNeed(String cateId, int sizePerPage) {
-        return productDao.pageNeed(cateId, sizePerPage);
+    public List<Product> getList(List<Integer> cates, List<Integer> brands, Double min, Double max, String selectedSort, int page) {
+        int offset = (page - 1) * pageSize;
+        return productDAO.getProductsByPage(cates, brands, min, max, selectedSort, offset, pageSize);
     }
 
-    public List<Product> filterProduct(String[] brandIds, String[] cateIds, int numPerPage, int page, String selectedSort) {
-        if (selectedSort == null) selectedSort = "default";
-        return productDao.filterProduct(brandIds, cateIds, numPerPage, page, selectedSort);
+    public int getTotalPages(List<Integer> cates, List<Integer> brands, Double min, Double max) {
+        int totalItems = productDAO.countProducts(cates, brands, min, max);
+        return (int) Math.ceil((double) totalItems / pageSize);
     }
 
-    public List<Product> getPerPageProduct(int numPerPage, int page, String cId, String selectedSort) {
-        if (cId != null) {
-            return productDao.getPerPageProductByCategoryId(numPerPage, page, cId, selectedSort);
-        }
-        return productDao.getPerPageAllProduct(numPerPage, page, selectedSort);
-    }
-
-    public List<Product> getAllProduct() {
-        return productDao.getAllProduct();
+    public static void main(String[] args) {
+        ProductService productService = new ProductService();
+        List<model.entity.Product> productList = null;
+        productList = productService.getList(null, null, null, null, "default",1);
+        System.out.println(productList);
     }
 
 
-    public List<Product> getProductByCategoryId(String cateId) {
-        return productDao.getProductByCategoryId(cateId);
-    }
-
-    public Product getById(String pid) {
-        Product p = productDao.getById(pid);
-        return p != null ? p : null;
-    }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        ProductService ps = new ProductService();
-        System.out.println(ps.getAllProduct().toString());
-    }
-
-    public boolean deleteProduct(String pid) {
-        return productDao.deleteProduct(pid);
-    }
-
-    public int totalProduct(String[] selectedBrands, String[] selectedCates) {
-        return productDao.filterProduct(selectedBrands, selectedCates, 0, 0, null).size();
-    }
-
-    public int addNewProduct(Product p) {return productDao.addProduct(p);}
-
-    public void updateSearchCount(String pid) {
-        productDao.updateSearchCount(pid);
-    }
-
-    public void updateViewCount(String pid) {
-        productDao.updateViewCount(pid);
-    }
 }
