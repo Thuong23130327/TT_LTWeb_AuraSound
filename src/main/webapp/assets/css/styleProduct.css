@@ -1,16 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-:root {
-    --theme-color-primary: #4a6fff;
-    --theme-color-secondary: #b76bff;
-    --price: #d9534f;
-    --black: #000000;
-    --white: #ffffff;
-    --theme-gradient-button: linear-gradient(135deg, var(--theme-color-secondary), var(--theme-color-primary));
-    --theme-gradient-icon: linear-gradient(135deg, var(--theme-color-primary), var(--theme-color-secondary));
-    --theme-gradient-text: linear-gradient(90deg, var(--theme-color-secondary), var(--theme-color-primary));
-}
-
 
 body {
     margin: 0;
@@ -368,11 +357,9 @@ main {
     font-weight: 600;
     width: 30%;
     border-right: 1px solid #e6e6e6;
-    /* Viền dọc */
     color: #444;
 }
 
-/* === Mobile Responsive === */
 @media (max-width: 768px) {
 
     .equal-columns {
@@ -411,9 +398,6 @@ main {
 }
 
 
-/* -------------------------------
-   KHUNG CHÍNH
---------------------------------*/
 .boxReview {
     background: #fff;
     padding: 25px;
@@ -431,18 +415,12 @@ main {
     color: #333;
 }
 
-/* -------------------------------
-   BỐ CỤC 3 CỘT
---------------------------------*/
 .boxReview-review {
     display: grid;
     grid-template-columns: 0.6fr 1fr 1fr;
     gap: 28px;
 }
 
-/* -------------------------------
-   CỘT TRÁI – OVERVIEW SCORE
---------------------------------*/
 .boxReview-overView {
     display: flex;
     flex-direction: column;
@@ -491,10 +469,6 @@ main {
     transition: all 0.3s ease;
     transform: scale(1.1);
 }
-
-/* -------------------------------
-   CỘT GIỮA – RATING BAR
---------------------------------*/
 .boxReview-rating {
     display: flex;
     flex-direction: column;
@@ -518,7 +492,7 @@ main {
     color: #333;
 }
 
-/* Progress giống TGDD */
+/* Progress */
 .progress {
     width: 50%;
     height: 8px;
@@ -539,11 +513,6 @@ progress::-webkit-progress-value {
 progress::-moz-progress-bar {
     background: var(--theme-color-primary);
 }
-
-/* -------------------------------
-   CỘT PHẢI – TRẢI NGHIỆM
---------------------------------*/
-
 
 .boxReview-experience {
     padding-left: 20px;
@@ -588,9 +557,6 @@ progress::-moz-progress-bar {
     font-size: 14px;
 }
 
-/* -------------------------------------
-    RESPONSIVE – TABLET
---------------------------------------*/
 @media (max-width: 900px) {
     .boxReview-review {
         grid-template-columns: 1fr 1fr;
@@ -605,9 +571,6 @@ progress::-moz-progress-bar {
     }
 }
 
-/* -------------------------------------
-    RESPONSIVE – MOBILE
---------------------------------------*/
 @media (max-width: 600px) {
     .boxReview-review {
         grid-template-columns: 1fr;
@@ -627,7 +590,6 @@ progress::-moz-progress-bar {
     }
 }
 
-/* -- */
 
 .main-modal {
     display: flex;
@@ -727,7 +689,6 @@ progress::-moz-progress-bar {
     background: #2ac70e;
 }
 
-/* ---review-- */
 
 .wrapper {
     background: var(--white);

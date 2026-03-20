@@ -5,14 +5,13 @@ import model.entity.CartItem;
 import model.entity.CartItemDTO;
 import org.jdbi.v3.core.Jdbi;
 
+
+import java.util.Arrays;
 import java.util.List;
 
 public class CartService {
-    private final CartDAO cartDAO;
+    private final CartDAO cartDAO = new CartDAO();
 
-    public CartService(CartDAO cartDAO) {
-        this.cartDAO = new CartDAO();
-    }
 
     private static final Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
@@ -85,4 +84,7 @@ public class CartService {
         }
         return sum;
     }
+
+
+
 }

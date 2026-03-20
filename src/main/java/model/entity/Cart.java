@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Cart {
     private int id;
     private int userId;
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     public Cart() {
     }
