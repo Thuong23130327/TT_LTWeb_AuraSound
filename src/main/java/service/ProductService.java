@@ -27,20 +27,20 @@ public class ProductService {
         return categoryDAO.getAll();
     }
 
-    public List<Product> getList(List<Integer> cates, List<Integer> brands, Double min, Double max, String selectedSort, int page) {
+    public List<Product> getList(List<String> cates, List<String> brands, Double min, Double max, String selectedSort, int page) {
         int offset = (page - 1) * pageSize;
         return productDAO.getProductsByPage(cates, brands, min, max, selectedSort, offset, pageSize);
     }
 
-    public int getTotalPages(List<Integer> cates, List<Integer> brands, Double min, Double max) {
+    public int getTotalPages(List<String> cates, List<String> brands, Double min, Double max) {
         int totalItems = productDAO.countProducts(cates, brands, min, max);
         return (int) Math.ceil((double) totalItems / pageSize);
     }
 
     public static void main(String[] args) {
         ProductService productService = new ProductService();
-        List<model.entity.Product> productList = null;
-        productList = productService.getList(null, null, null, null, "default",1);
+        List<Product> productList = null;
+        productList = productService.getList(null, null, null, null, "default", 1);
         System.out.println(productList);
     }
 

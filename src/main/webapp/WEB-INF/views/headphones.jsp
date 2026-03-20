@@ -21,10 +21,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">
+<%--    <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">--%>
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleProfile.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleHeadphones.css">
+<%--    <link rel="stylesheet" href="${AuraSound}/assets/css/styleProfile.css">--%>
+<%--    <link rel="stylesheet" href="${AuraSound}/assets/css/styleHeadphones.css">--%>
+
+    <link rel="stylesheet" href="${AuraSound}/assets/css/product-page.css">
 
 </head>
 
@@ -52,21 +54,31 @@
                 <div class="filter-group">
                     <h4>Hãng sản xuất</h4>
                     <div class="filter-options" data-filter-group="brand">
-                        <c:forEach items="${brandList}" var="brand">
+                        <c:forEach items="${applicationScope.brandList}" var="brand">
                             <button onclick="sort(this)" type="button" class="filter-option" data-filter="${brand.id}">
                                     ${brand.name}
                             </button>
                         </c:forEach>
+
                     </div>
                 </div>
 
                 <div class="filter-group">
                     <h4>Loại tai nghe</h4>
                     <div class="filter-options" data-filter-group="category">
-                        <c:forEach items="${categoryList}" var="cate">
+                        <c:forEach items="${applicationScope.MENU_TREE}" var="cate">
                             <button onclick="sort(this)" type="button" class="filter-option" data-filter="${cate.id}">
                                     ${cate.name}
                             </button>
+
+                            <c:if test="${not empty cate.children}">
+                                <c:forEach items="${cate.children}" var="child">
+                                    <button onclick="sort(this)" type="button" class="filter-option"
+                                            data-filter="${child.id}">
+                                            ${child.name}
+                                    </button>
+                                </c:forEach>
+                            </c:if>
                         </c:forEach>
                     </div>
                 </div>
@@ -76,7 +88,7 @@
             </div>
         </aside>
     </form>
-    <div  class="product-grid-container">
+    <div class="product-grid-container">
         <h1 id="namePage">${cateName != null ? cateName : 'Sản phẩm'}</h1>
 
         <div class="sort-options" id="sort-options">
@@ -126,14 +138,11 @@
         </div>
 
         <div class="pagination" id="pagination-buttons">
-            <c:forEach begin="1" end="${numPage}" var="i">
-                <button class="page-btn ${pageCurrent == i ? 'active' :''}" onclick="loadPage(this)"
-                        data-page="${i}">${i}</button>
-            </c:forEach>
+
         </div>
     </div>
 
-    <input type="hidden" id="numPage" name="totalPageNeed" value="${numPage}">
+    <input type="hidden" id="numPage" name="totalPageNeed" value="${totalPage}">
     <input type="hidden" id="cur-keyword" value="${search}">
 
 
@@ -144,6 +153,7 @@
 <script>
     let cateId = "${cateId != null ? cateId : 0}";
 </script>
+
 <script src="${AuraSound}/assets/js/script.js"></script>
 <%--<script src="${AuraSound}/assets/js/scriptProfile.js"></script>--%>
 <script src="${AuraSound}/assets/js/scriptStore.js"></script>

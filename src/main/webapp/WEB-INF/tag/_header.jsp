@@ -69,33 +69,38 @@
         </a>
 
         <%--Menu dropdown--%>
-        <div class="nav-item-dropdown aura-dropdown-container">
-          <a class="a-nodecor"
-             href="${AuraSound}/product">
-            <div class="store ${activePage =='product'?'active':''} ">
-              Sản phẩm <i class="bi bi-chevron-compact-down"></i>
-            </div>
-          </a>
+          <div class="nav-item-dropdown aura-dropdown-container">
+              <a class="a-nodecor" href="${applicationScope.AuraSound}/product">
+                  <div class="store ${activePage == 'product' ? 'active' : ''} ">
+                      Sản phẩm <i class="bi bi-chevron-compact-down"></i>
+                  </div>
+              </a>
 
-          <ul class="aura-menu-parent">
-            <c:forEach items="${parentList}" var="par">
-              <li class="aura-menu-item has-child"><a href="${AuraSound}/product?cateId=${par.id}"
-                                                      class="parent-link">
-                  ${par.name}
-                <i class="bi bi-chevron-right ms-auto"></i> </a>
+              <ul class="aura-menu-parent">
+                  <c:forEach items="${applicationScope.MENU_TREE}" var="par">
+                      <li class="aura-menu-item has-child">
+                          <a href="${applicationScope.AuraSound}/product?cateId=${par.id}" class="parent-link">
+                                  ${par.name}
 
-                <ul class="aura-menu-child"><c:forEach items="${childList}" var="child">
-                  <c:if test="${child.parentID == par.id}">
-                    <li>
-                      <a href="${AuraSound}/product?cateId=${child.id}">${child.name}</a>
-                    </li>
-                  </c:if>
-                </c:forEach>
-                </ul>
-              </li>
-            </c:forEach>
-          </ul>
-        </div>
+                              <c:if test="${not empty par.children}">
+                                  <i class="bi bi-chevron-right ms-auto"></i>
+                              </c:if>
+                          </a>
+
+                          <c:if test="${not empty par.children}">
+                              <ul class="aura-menu-child">
+                                  <c:forEach items="${par.children}" var="child">
+                                      <li>
+                                          <a href="${applicationScope.AuraSound}/product?cateId=${child.id}">${child.name}</a>
+                                      </li>
+                                  </c:forEach>
+                              </ul>
+                          </c:if>
+
+                      </li>
+                  </c:forEach>
+              </ul>
+          </div>
 
 
         <a class="a-nodecor " href="${AuraSound}/cart.jsp">

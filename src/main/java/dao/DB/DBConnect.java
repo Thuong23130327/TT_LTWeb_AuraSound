@@ -13,12 +13,18 @@ public class DBConnect {
     private static Jdbi jdbi;
 
     public static Jdbi getJdbi() {
+        if (jdbi == null) {
+            init();
+        }
         return jdbi;
+
     }
 
-    static {
-        try {
+    public static void init() {
+
+        if (dataSource == null || dataSource.isClosed()) {
             HikariConfig config = new HikariConfig();
+
             config.setJdbcUrl(DBProperties.URL);
             config.setUsername(DBProperties.USERNAME);
             config.setPassword(DBProperties.PASSWORD);
@@ -29,20 +35,26 @@ public class DBConnect {
             config.setIdleTimeout(30000);
             config.setConnectionTimeout(20000);
 
+
             dataSource = new HikariDataSource(config);
             jdbi = Jdbi.create(dataSource);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Loi khoi tao HKR va JDBI");
         }
     }
+
 
     public static Connection getConnection() throws SQLException {
         if (dataSource == null) {
             throw new SQLException("DataSource chưa được khởi tạo. Kiểm tra lại cấu hình HikariCP.");
         }
         return dataSource.getConnection();
+    }
+
+    public static void close() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+            dataSource = null;
+            jdbi = null;
+        }
     }
 
 }

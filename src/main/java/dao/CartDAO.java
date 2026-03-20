@@ -8,11 +8,7 @@ import org.jdbi.v3.core.Jdbi;
 import java.util.List;
 
 public class CartDAO {
-    private Jdbi jdbi;
-
-    public CartDAO(Jdbi jdbi) {
-        this.jdbi = jdbi;
-    }
+    private static final Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
     //Lấy cart theo mã người dùng
     public Cart getCartByUserId(int userId){
