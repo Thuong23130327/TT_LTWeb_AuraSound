@@ -91,6 +91,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-sqlobject</artifactId>
+            <version>3.45.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
