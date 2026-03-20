@@ -1,5 +1,7 @@
 package model.entity;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 public class UserAddress {
 
         private int id;
@@ -18,7 +20,9 @@ public class UserAddress {
         public void setId(int id) { this.id = id; }
 
         public int getUserId() { return userId; }
-        public void setUserId(int userId) { this.userId = userId; }
+    @ColumnName("users_id")
+
+    public void setUserId(int userId) { this.userId = userId; }
 
         public String getRecipientName() { return recipientName; }
         public void setRecipientName(String recipientName) { this.recipientName = recipientName; }
@@ -34,15 +38,18 @@ public class UserAddress {
 
         // Jdbi sẽ tự động hiểu isDefault từ cột is_default trong DB
         public boolean isDefault() { return isDefault; }
-        public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
+    @ColumnName("is_default")
+    public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
 
         public User getUser() { return user; }
         public void setUser(User user) { this.user = user; }
+		@Override
+		public String toString() {
+			return "UserAddress [id=" + id + ", userId=" + userId + ", recipientName=" + recipientName + ", phone="
+					+ phone + ", address=" + address + ", city=" + city + ", isDefault=" + isDefault + ", user=" + user
+					+ "]\n";
+		}
 
-        @Override
-        public String toString() {
-            return recipientName + " | " + phone + " | " + address + ", " + city;
-        }
-
+       
 
 }

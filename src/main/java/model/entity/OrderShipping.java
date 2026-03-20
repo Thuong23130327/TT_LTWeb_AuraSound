@@ -1,5 +1,6 @@
 package model.entity;
 
+import org.jdbi.v3.core.mapper.Nested;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 public class OrderShipping {
@@ -35,8 +36,14 @@ public class OrderShipping {
 	public UserAddress getUserAddress() {
 		return userAddress;
 	}
+    @Nested("ua")
 	public void setUserAddress(UserAddress userAddress) {
 		this.userAddress = userAddress;
+	}
+	@Override
+	public String toString() {
+		return "OrderShipping [id=" + id + ", orderId=" + orderId + ", note=" + note + ", userAddress=" + userAddress
+				+ "]\n";
 	}
 
 

@@ -14,5 +14,10 @@ public class CategoryDAO {
         return jdbi.withHandle(handle -> handle.createQuery(sql).mapToBean(Category.class).list());
     }
 
+    public static void main(String[] args) {
+        CategoryDAO dao = new CategoryDAO();
+        System.out.println(dao.getAll());
+    }
+
 
 }

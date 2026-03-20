@@ -22,7 +22,7 @@ public class Brand {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", logo='" + logoUrl + '\'' +
-                '}';
+                '}'+"\n";
     }
 
     public int getId() {

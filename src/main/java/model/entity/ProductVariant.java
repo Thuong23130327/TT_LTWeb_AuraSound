@@ -107,5 +107,13 @@ public class ProductVariant {
         this.product = product;
     }
 
+	@Override
+	public String toString() {
+		return "ProductVariant [id=" + id + ", productId=" + productId + ", variantSku=" + variantSku + ", colorName="
+				+ colorName + ", mainImageUrl=" + mainImageUrl + ", marketPrice=" + marketPrice + ", sellPrice="
+				+ sellPrice + ", stockQuantity=" + stockQuantity + ", soldQuantity=" + soldQuantity + ", isDefault="
+				+ isDefault + ", product=" + product + "]\n";
+	}
+
 
 }
