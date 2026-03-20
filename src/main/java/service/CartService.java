@@ -3,6 +3,8 @@ import dao.CartDAO;
 import model.entity.Cart;
 import model.entity.CartItem;
 import model.entity.CartItemDTO;
+import org.jdbi.v3.core.Jdbi;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
 public class CartService {
     private final CartDAO cartDAO = new CartDAO();
 
+
+    private static final Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
     public Cart getOrCreateCartByUserId(int userId) {
         Cart cart = cartDAO.getCartByUserId(userId);
