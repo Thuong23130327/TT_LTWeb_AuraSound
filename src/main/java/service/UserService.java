@@ -32,17 +32,20 @@ public class UserService {
     }
 
     // check mail tồn tại
-    public boolean isEmailExists(String email) {
+    public boolean checkExistMail(String email) {
         return UserDAO.checkExistMail(email);
     }
 
     // đăng ký
-    public boolean register(String email, String password, String fullname) {
-        if (isEmailExists(email)) {
-            return false;
+    public int register(String email, String password, String fullname) {
+        if (checkExistMail(email)) {
+            return 0; // 0: Lỗi do email tồn tại
         }
+
         String passHash = hashMD5(password);
-        return userDAO.register(email, passHash, fullname);
+        boolean success = userDAO.register(email, passHash, fullname);
+
+        return success ? 1 : -1; // 1: Thành công, -1: Lỗi hệ thống/Database
     }
 
     //đăng nhập
