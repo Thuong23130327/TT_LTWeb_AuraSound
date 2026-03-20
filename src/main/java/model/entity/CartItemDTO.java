@@ -67,4 +67,8 @@ public class CartItemDTO {
     public void setChecked(boolean checked) {
         isChecked = checked;
     }
+
+    public double getTotalItemPrice() {
+        return this.price * this.quantity;
+    }
 }
