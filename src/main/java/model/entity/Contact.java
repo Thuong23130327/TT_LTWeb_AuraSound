@@ -77,8 +77,11 @@ public class Contact {
         this.mess = mess;
     }
 
-    public ContactStatus getStatus() {
+    public ContactStatus getEContactStatus() {
         return status;
+    }
+    public int getStatus() {
+        return status.getValue();
     }
 
     public String getStringStatus() {
@@ -112,6 +115,15 @@ public class Contact {
     public void setReplyMess(String replyMess) {
         this.replyMess = replyMess;
     }
+
+	@Override
+	public String toString() {
+		return "Contact [id=" + id + ", usersID=" + usersID + ", senderMail=" + senderMail + ", senderName="
+				+ senderName + ", phone=" + phone + ", mess=" + mess + ", replyMess=" + replyMess + ", status=" + status
+				+ ", createdAt=" + createdAt + "]\n";
+	}
+    
+    
 
 
 }

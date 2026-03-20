@@ -21,4 +21,9 @@ public class SpecDAO {
                         .mapToBean(ProductSpec.class).list());
     }
 
+    public static void main(String[] args) {
+        SpecDAO specDAO = new SpecDAO();
+        System.out.println(specDAO.getSpecsByProductId("2"));
+    }
+
 }

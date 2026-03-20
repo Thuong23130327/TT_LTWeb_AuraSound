@@ -13,16 +13,9 @@ public class BrandDAO {
         return jdbi.withHandle(handle -> handle.createQuery(sql).mapToBean(Brand.class).list());
     }
 
-    //    Lay brand theo id brand
-    public Brand getById(int id){
-        String sql = "SELECT * FROM Brands WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("id", id)
-                        .mapToBean(Brand.class)
-                        .findFirst()
-                        .orElse(null)
-        );
+    public static void main(String[] args) {
+        BrandDAO dao = new BrandDAO();
+        System.out.println(dao.getAll());
     }
 
 }

@@ -117,32 +117,6 @@ public class ProductDAO {
     }
 
 
-    public List<Product> getPerPageProductByCategoryId(int numPerPage, int page, String cateId, String selectedSort) {
-        StringBuilder sql = new StringBuilder(
-                "SELECT * FROM products WHERE Categories_id = :cateId OR " +
-                        "Categories_id IN (SELECT id FROM categories WHERE Categories_id = :cateId) ");
-
-        if ("price-asc".equals(selectedSort)) {
-            sql.append(" ORDER BY display_sell_price ASC ");
-        } else if ("price-desc".equals(selectedSort)) {
-            sql.append(" ORDER BY display_sell_price DESC ");
-        } else {
-            sql.append(" ORDER BY id ");
-        }
-
-        sql.append(" LIMIT :limit OFFSET :offset");
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql.toString())
-                        .bind("cateId", cateId)
-                        .bind("limit", numPerPage)
-                        .bind("offset", (page - 1) * numPerPage)
-                        .mapToBean(Product.class)
-                        .list()
-        );
-    }
-
-
     public List<Product> getFeaturedProducts(int limit) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT *, (avg_rating + (view_count / (SELECT SUM(view_count) + 1 FROM products) * 100) " +
@@ -256,53 +230,6 @@ public class ProductDAO {
         return new ArrayList<>(allCategoryIds);
     }
 
-    public List<Product> filterProduct(String[] brandIds, String[] cateIds, int numPerPage, int page, String selectedSort) {
-        StringBuilder sql = new StringBuilder("SELECT p.* FROM Products p ");
-        sql.append("LEFT JOIN Brands b ON p.Brands_id = b.id ");
-        sql.append("LEFT JOIN Categories c ON p.Categories_id = c.id ");
-        sql.append("WHERE p.display_sell_price <> 0 ");
-        sql.append("AND p.display_image_url IS NOT NULL ");
-        sql.append("AND TRIM(p.display_image_url) <> '' ");
-        //brands
-        if (brandIds != null && brandIds.length > 0) {
-            sql.append(" AND p.Brands_id IN (<brandIds>) ");
-        }
-        // cate
-        if (cateIds != null && cateIds.length > 0) {
-            List<String> allCateIds = getListCategoryIdsIncludingChildren(cateIds);
-            if (!allCateIds.isEmpty()) {
-                sql.append(" AND p.Categories_id IN (<cateIds>) ");
-            }
-        }
-        if (selectedSort == null) {
-            sql.append(" ORDER BY p.id DESC ");
-        } else if (selectedSort.equals("price-asc")) {
-            sql.append(" ORDER BY p.display_sell_price ASC ");
-        } else if (selectedSort.equals("price-desc")) {
-            sql.append(" ORDER BY p.display_sell_price DESC ");
-        }
-        boolean hasPagination = (page * numPerPage != 0);
-        if (hasPagination) {
-            sql.append(" LIMIT :limit OFFSET :offset");
-        }
-        return jdbi.withHandle(handle -> {
-            var query = handle.createQuery(sql.toString());
-            if (brandIds != null && brandIds.length > 0) {
-                query.bindList("brandIds", Arrays.asList(brandIds));
-            }
-            if (cateIds != null && cateIds.length > 0) {
-                List<String> allCateIds = getListCategoryIdsIncludingChildren(cateIds);
-                if (!allCateIds.isEmpty()) {
-                    query.bindList("cateIds", allCateIds);
-                }
-            }
-            if (hasPagination) {
-                query.bind("limit", numPerPage)
-                        .bind("offset", (page - 1) * numPerPage);
-            }
-            return query.mapToBean(Product.class).list();
-        });
-    }
 
     public boolean updateProduct(String pid, String brandid, String cateid, String name, String sku, String discript, String varSelected, String isActive) {
         try {

@@ -33,6 +33,9 @@ public class VariantDAO {
         );
     }
 
-
+    public static void main(String[] args) {
+        VariantDAO dao = new VariantDAO();
+        System.out.println(dao.getVariantsByProductId("1"));
+    }
 
 }

@@ -1,6 +1,7 @@
 package dao;
 
 import model.entity.Order;
+import model.entity.OrderItem;
 import org.jdbi.v3.core.Jdbi;
 
 import java.util.List;
@@ -8,92 +9,53 @@ import java.util.List;
 public class OrderDAO {
     private Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
-    //Lay all order
-    public List<Order> getAllOrder() {
-        String sql = "SELECT o.*, os.recipient_name  " +
-                "from orders o  " +
-                "LEFT JOIN ordershippings os ON o.id = os.Orders_id " +
-                "ORDER BY o.order_date DESC;";
-
-        return jdbi.withHandle(handle -> handle.createQuery(sql).mapToBean(Order.class).list());
-    }
-
-    //Chi tiet 1 ord by ordId
-    public Order getOrderById(String id) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM orders WHERE id = :id")
-                        .bind("id", id)
-                        .mapToBean(Order.class)
-                        .findFirst()
-                        .orElse(null)
-        );
-    }
-
-    //Lay all ord cua UserID
-
-    public List<Order> getAllOrderById(int userId) {
-        String sql = "SELECT o.*, os.recipient_name  " +
-                "from orders o  " +
-                "LEFT JOIN ordershippings os ON o.id = os.Orders_id " +
-                "WHERE o.Users_id = :uid " +
-                "ORDER BY o.order_date DESC;";
-
-        return jdbi.withHandle(handle -> handle.createQuery(sql).bind("uid", userId).mapToBean(Order.class).list());
-    }
-
-
-    public List<Order> getOrdersByStatus(int userId, String status) {
-        String sql = "SELECT o.*, os.recipient_name " +
+    //Lay all order - OK
+    public List<Order> getAll() {
+        String sql = "SELECT o.*, ua.recipient_name AS recipient_name " +
                 "FROM orders o " +
-                "LEFT JOIN ordershippings os ON o.id = os.Orders_id " +
-                "WHERE o.Users_id = :uid AND o.status = :status " +
+                "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
                 "ORDER BY o.order_date DESC;";
 
         return jdbi.withHandle(handle -> handle.createQuery(sql)
-                .bind("uid", userId)
-                .bind("status", status)
-                .mapToBean(Order.class).list());
+                .mapToBean(Order.class)
+                .list());
     }
 
-//    public OrderShipping getOrShip(String ordId) {
-////     lamsau
-//        return null;
+    //Chi tiet 1 ord by ordId -OK
+    public Order getOrderById(String id) {
+        String sql = "SELECT o.*, ua.recipient_name AS recipient_name " +
+                "FROM orders o " +
+                "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
+                "WHERE o.id = :id";
+
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("id", id)
+                .mapToBean(Order.class)
+                .findOne()
+                .orElse(null));
+    }
+
+
+    //Lay all ord cua UserID
+//    public List<Order> getAllOrderById(int userId) {
+//        String sql = "SELECT o.*, os.recipient_name AS recipient_name  " +
+//                "from orders o  " +
+//                "LEFT JOIN ordershippings os ON o.id = os.Orders_id " +
+//                "WHERE o.Users_id = :uid " +
+//                "ORDER BY o.order_date DESC;";
+//
+//        return jdbi.withHandle(handle -> handle.createQuery(sql).bind("uid", userId).mapToBean(Order.class).list());
 //    }
 
-    public boolean updateStatus(String orderId, String newStatus) {
-        String sql = "UPDATE orders SET status = :status WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(sql)
-                        .bind("status", newStatus)
-                        .bind("id", orderId)
-                        .execute() > 0
-        );
-    }
 
-    public boolean updatePayment(String orderId, String newStatus) {
-        String sql = "UPDATE orders SET payment_status = :status WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(sql)
-                        .bind("status", newStatus)
-                        .bind("id", orderId)
-                        .execute() > 0
-        );
-    }
 
-    public boolean updateAdNote(String orderId, String newNote) {
-        String sql = "UPDATE orders SET admin_note = :adNote WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(sql)
-                        .bind("adNote", newNote)
-                        .bind("id", orderId)
-                        .execute() > 0
-        );
-    }
 
     public static void main(String[] args) {
         OrderDAO dao = new OrderDAO();
-        System.out.println(dao.getAllOrder().toString());
+     //   System.out.println(dao.getAll().toString());
         System.out.println("--");
-        System.out.println(dao.getAllOrderById(1).toString());
+        System.out.println(dao.getOrderById("1"));
     }
 }

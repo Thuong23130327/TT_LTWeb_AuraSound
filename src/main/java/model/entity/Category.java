@@ -1,5 +1,7 @@
 package model.entity;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class Category {
         if (parentID <= 0) return 0;
         return parentID;
     }
-
+    @ColumnName("parents_id")
     public void setParentId(int parentID) {
         this.parentID = parentID;
     }

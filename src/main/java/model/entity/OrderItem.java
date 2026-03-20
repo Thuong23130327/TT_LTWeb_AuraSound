@@ -1,6 +1,7 @@
 package model.entity;
 
 import java.math.BigDecimal;
+import org.jdbi.v3.core.mapper.Nested;
 
 public class OrderItem {
 	private int id;
@@ -27,6 +28,7 @@ public class OrderItem {
 		this.ordersId = ordersId;
 	}
 
+    @Nested("pv")
 	public ProductVariant getProductVariant() {
 		return productVariant;
 	}
@@ -50,5 +52,12 @@ public class OrderItem {
 	public void setPrice_at_purchase(BigDecimal price_at_purchase) {
 		this.price_at_purchase = price_at_purchase;
 	}
+
+	@Override
+	public String toString() {
+		return "OrderItem [id=" + id + ", ordersId=" + ordersId + ", productVariant=" + productVariant + ", quantity="
+				+ quantity + ", price_at_purchase=" + price_at_purchase + "]\n";
+	}
+	
 
 }

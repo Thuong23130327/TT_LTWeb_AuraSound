@@ -2,7 +2,7 @@ package model.entity;
 
 import model.enums.OrderStatus;
 import model.enums.PaymentStatus;
-
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
@@ -27,7 +27,16 @@ public class Order {
     private List<OrderItem> items;
     //Get - set
 
-    public int getId() {
+    @Override
+	public String toString() {
+		return "Order [id=" + id + ", user=" + user + ", vouchersId=" + vouchersId + ", orderCode=" + orderCode
+				+ ", orderDate=" + orderDate + ", status=" + status + ", paymentStatus=" + paymentStatus
+				+ ", totalProductsPrice=" + totalProductsPrice + ", shippingFee=" + shippingFee + ", discountAmount="
+				+ discountAmount + ", finalAmount=" + finalAmount + ", adminNote=" + adminNote + ", finishedAt="
+				+ finishedAt + ", recipientName=" + recipientName + ", items=" + items + "]\n";
+	}
+
+	public int getId() {
         return id;
     }
 
@@ -70,7 +79,7 @@ public class Order {
     public String getRecipientName() {
         return recipientName;
     }
-
+@ColumnName("recipient_name")
     public void setRecipientName(String recipientName) {
         this.recipientName = recipientName;
     }
@@ -91,18 +100,23 @@ public class Order {
         this.user = user;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public int getStatus() {
+        return status != null ? status.getValue() : 0;
     }
 
     public void setStatus(int value) {
         this.status = OrderStatus.fromValue(value);
     }
-
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
+    public OrderStatus getEOrderStatus() {
+        return status;
     }
 
+    public int getPaymentStatus() {
+        return paymentStatus != null ? paymentStatus.getValue() : 0;
+    }
+    public PaymentStatus getEPaymentStatus() {
+        return paymentStatus;
+    }
     public void setPaymentStatus(int value) {
         this.paymentStatus = PaymentStatus.fromValue(value);
     }
