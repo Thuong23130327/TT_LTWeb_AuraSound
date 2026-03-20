@@ -58,4 +58,11 @@ public class UserService {
     public List<User> getAllUsers() {
         return userDAO.getAllUser();
     }
+
+    public static void main(String[] args) {
+        UserDAO dao = new UserDAO();
+        System.out.println(dao.checkExistMail("admin@gmail.com"));
+        System.out.println(dao.checkExistMail("22@gmail.com"));
+//        System.out.println(dao.register("22@gmail.com", "333","Nguyen"));
+    }
 }
