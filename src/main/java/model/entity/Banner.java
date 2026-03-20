@@ -85,4 +85,11 @@ public class Banner {
 		this.createdAt = createdAt;
 	}
 
+	@Override
+	public String toString() {
+		return "Banner [ id=" + id + ", imageUrl=" + imageUrl + ", targetUrl=" + targetUrl + ", title=" + title
+				+ ", description=" + description + ", sortOrder=" + sortOrder + ", isActive=" + isActive
+				+ ", createdAt=" + createdAt + " ]\n";
+	}
+
 }

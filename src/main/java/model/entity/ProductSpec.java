@@ -1,5 +1,7 @@
 package model.entity;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 public class ProductSpec {
         private int id;
         private int productId;
@@ -19,6 +21,7 @@ public class ProductSpec {
             return productId;
         }
 
+        @ColumnName("Products_id")
         public void setProductId(int productId) {
             this.productId = productId;
         }
@@ -42,7 +45,7 @@ public class ProductSpec {
         @Override
         public String toString() {
             return "ProductSpec [id=" + id + ", productId=" + productId + ", specName=" + specName + ", specValue="
-                    + specValue + "]";
+                    + specValue + "]\n";
         }
 
 

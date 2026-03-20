@@ -74,12 +74,17 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
-    public Role getRole() {
+    public Role getERole() {
         return role;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public int getRole() {
+        return role.getValue();
+    }
+
+
+    public void setRole(int value) {
+        this.role = Role.fromValue(value);
     }
 
     public boolean isLocked() {
@@ -98,10 +103,9 @@ public class User {
         this.createdAt = createdAt;
     }
 
-
     @Override
     public String toString() {
-        return "User{" +
+        return "\nUser{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
