@@ -4,7 +4,7 @@ import model.enums.OrderStatus;
 import model.enums.PaymentStatus;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order {
@@ -13,7 +13,7 @@ public class Order {
     private User user;
     private int vouchersId;
     private String orderCode;
-    private Timestamp orderDate;
+    private LocalDateTime orderDate;
     private OrderStatus status;
     private PaymentStatus paymentStatus;
     private BigDecimal totalProductsPrice;
@@ -21,10 +21,11 @@ public class Order {
     private BigDecimal discountAmount;
     private BigDecimal finalAmount;
     private String adminNote;
-    private Timestamp finishedAt;
+    private LocalDateTime finishedAt;
 
     private String recipientName;
     private List<OrderItem> items;
+
     //Get - set
 
     @Override
@@ -52,19 +53,19 @@ public class Order {
         this.orderCode = orderCode;
     }
 
-    public Timestamp getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Timestamp orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 
-    public Timestamp getFinishedAt() {
+    public LocalDateTime getFinishedAt() {
         return finishedAt;
     }
 
-    public void setFinishedAt(Timestamp finishedAt) {
+    public void setFinishedAt(LocalDateTime finishedAt) {
         this.finishedAt = finishedAt;
     }
 

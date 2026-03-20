@@ -13,7 +13,7 @@ import java.util.*;
 
 public class ProductDAO {
 
-    private Jdbi jdbi = dao.DB.DBConnect.getJdbi();
+    private final Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
     static Map<Integer, Product> data = new HashMap<>();
 
@@ -22,7 +22,7 @@ public class ProductDAO {
     }
 
 
-    public int countProducts(List<Integer> categoryIds, List<Integer> brandIds, Double minPrice, Double maxPrice) {
+    public int countProducts(List<String> categoryIds, List<String> brandIds, Double minPrice, Double maxPrice) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1 ");
 
         if (categoryIds != null && !categoryIds.isEmpty()) {
@@ -54,10 +54,15 @@ public class ProductDAO {
         });
     }
 
-    public List<Product> getProductsByPage(List<Integer> categoryIds, List<Integer> brandIds, Double minPrice, Double maxPrice, String selectedSort, int offset, int limit) {
+    public List<Product> getProductsByPage(List<String> categoryIds, List<String> brandIds, Double minPrice, Double maxPrice, String selectedSort, int offset, int limit) {
 
+        StringBuilder sql = new StringBuilder("SELECT * ");
+        if (selectedSort == null || !selectedSort.equals("price-asc") || !selectedSort.equals("price-desc"))
+            sql.append(" , (avg_rating + (view_count / (SELECT SUM(view_count) + 1 FROM products) * 100) " +
+                    "+ (search_count / (SELECT SUM(search_count) + 1 FROM products) * 100)) as hot_score ");
 
-        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1 ");
+        sql.append(" FROM products WHERE 1=1 ");
+
         if (categoryIds != null && !categoryIds.isEmpty()) {
             sql.append(" AND categories_id IN (<categoryIds>) ");
         }
@@ -77,7 +82,7 @@ public class ProductDAO {
         } else if ("price-desc".equals(selectedSort)) {
             sql.append(" ORDER BY display_sell_price DESC ");
         } else {
-            sql.append(" ORDER BY id ");
+            sql.append(" ORDER BY hot_score DESC ");
         }
 
         sql.append(" LIMIT :limit OFFSET :offset");
@@ -106,12 +111,6 @@ public class ProductDAO {
         int totalAll = dao.countProducts(null, null, null, null);
         System.out.println("all: " + totalAll);
 
-        List<Integer> cates = List.of(1, 2, 3);
-        int totalCates = dao.countProducts(cates, null, null, null);
-        System.out.println("Cate 1, 2,3: " + totalCates);
-
-        int totalByPrice = dao.countProducts(null, null, 500000.0, 2000000.0);
-        System.out.println("500k-2tr: " + totalByPrice);
 
 
     }
