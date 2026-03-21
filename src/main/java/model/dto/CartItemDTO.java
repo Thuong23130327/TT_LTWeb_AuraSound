@@ -1,4 +1,4 @@
-package model.entity;
+package model.dto;
 
 public class CartItemDTO {
     private int productVariantId;
