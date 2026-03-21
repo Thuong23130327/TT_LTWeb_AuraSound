@@ -1,9 +1,7 @@
 package service;
 
-import dao.BrandDAO;
-import dao.CategoryDAO;
-import dao.ProductDAO;
-import dao.VariantDAO;
+import dao.*;
+import model.entity.Banner;
 import model.entity.Brand;
 import model.entity.Category;
 import model.entity.Product;
@@ -16,7 +14,7 @@ public class ProductService {
     private VariantDAO variantDAO = new VariantDAO();
     private CategoryDAO categoryDAO = new CategoryDAO();
     private BrandDAO brandDAO = new BrandDAO();
-
+    BannerDAO bannerDAO = new BannerDAO();
     private int pageSize = 12;
 
     public List<Brand> getAllBrands() {
@@ -45,4 +43,13 @@ public class ProductService {
     }
 
 
+    public List<Banner> getListBanner() {
+        return bannerDAO.getAll();
+
+    }
+
+    public List<Brand> getListBrands() {
+        return brandDAO.getAll();
+
+    }
 }

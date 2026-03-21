@@ -31,7 +31,8 @@
 </head>
 
 <body>
-<jsp:include page="../tag/_header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/tag/_header.jsp"></jsp:include>
+
 <main class="store-container content headphones-page-container">
     <form action="product" method="get" id="filterForm">
         <aside class="filter-sidebar" id="filter-sidebar">
