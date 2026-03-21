@@ -115,14 +115,14 @@ public class CartServlet extends HttpServlet {
             request.setAttribute("totalPrice", totalPrice);
             request.setAttribute("totalQuantity", totalQuantity);
 
-            request.getRequestDispatcher("cart.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/cart.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             if (isAjax) {
                 response.setStatus(500);
                 response.getWriter().write("{\"status\": \"error\", \"message\": \"Lỗi xử lý giỏ hàng\"}");
             } else {
-                response.sendRedirect("cart.jsp?error=true");
+                response.sendRedirect("/cart.jsp?error=true");
             }
 
         }
