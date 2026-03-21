@@ -10,10 +10,10 @@ import org.jdbi.v3.core.Jdbi;
 import java.util.List;
 
 public class CartService {
-    private final CartDAO cartDAO = new CartDAO();
+    private static final CartDAO cartDAO = new CartDAO();
     private static final Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
-    public Cart getOrCreateCartByUserId(int userId) {
+    public static Cart getOrCreateCartByUserId(int userId) {
         Cart cart = cartDAO.getCartByUserId(userId);
         if (cart == null) {
             cart = new Cart();
@@ -24,7 +24,7 @@ public class CartService {
         return cart;
     }
 
-    public void addOrUpdateItem(int cartId, int variantId, int quantityChange) {
+    public static void addOrUpdateItem(int cartId, int variantId, int quantityChange) {
         CartItem existingItem = cartDAO.getCartItem(cartId, variantId);
 
         if (existingItem != null) {
@@ -41,24 +41,24 @@ public class CartService {
         }
     }
 
-    public void deleteItem(int cartId, int variantId) {
+    public static void deleteItem(int cartId, int variantId) {
         cartDAO.deleteCartItem(cartId, variantId);
     }
 
-    public void deleteAllItems(int cartId) {
+    public static void deleteAllItems(int cartId) {
         cartDAO.clearCart(cartId);
     }
 
-    public List<CartItemDTO> getListItems(int cartId) {
+    public static List<CartItemDTO> getListItems(int cartId) {
         return cartDAO.getListItems(cartId);
     }
 
-    public int getTotalQuantity(int cartId) {
+    public static int getTotalQuantity(int cartId) {
         return cartDAO.getTotalQuantity(cartId);
     }
 
     //Tổng tiền giỏ hàng
-    public double getTotalPrice(int cartId) {
+    public static double getTotalPrice(int cartId) {
         List<CartItemDTO> items = cartDAO.getListItems(cartId);
         double sum = 0;
         for (CartItemDTO item : items) {
@@ -68,7 +68,7 @@ public class CartService {
     }
 
     //Tính tiền cho sp đc chọn (được tick)
-    public double getSelectedItemsTotalPrice(int cartId, List<Integer> selectedVariantIds) {
+    public static double getSelectedItemsTotalPrice(int cartId, List<Integer> selectedVariantIds) {
         if (selectedVariantIds == null || selectedVariantIds.isEmpty()) {
             return 0;
         }
