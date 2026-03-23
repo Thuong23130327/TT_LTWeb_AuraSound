@@ -65,8 +65,8 @@ function loadPage(e) {
     let page = parseInt(e.getAttribute("data-page"));
     console.log("page: " + page);
     $.ajax({
-        type: "GET",
-        url: path + "/loadAjax",
+        type: "POST",
+        url: path + "/product",
         data: {
             selectedBrands: selectedBrands,
             selectedCates: selectedCates,
@@ -123,8 +123,8 @@ var allPage = 0;
 
 function loadData() {
     $.ajax({
-        type: "GET",
-        url: path + "/loadAjax",
+        type: "POST",
+        url: path + "/product",
         traditional: true,
         data: {
             pageCurrent: 1,
