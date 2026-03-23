@@ -103,7 +103,7 @@
           </div>
 
 
-        <a class="a-nodecor " href="${AuraSound}/cart.jsp">
+        <a class="a-nodecor " href="${AuraSound}/cart">
           <div class="cart ${activePage =='cart'?'active':''}">
             <i class="bi bi-cart"></i> Giỏ hàng
             <span id="cart-badge" class="badge bg-danger rounded-pill"
@@ -178,7 +178,7 @@
     <div class="mobile-menu-item"><a href="${AuraSound}/login" class="nav-login-btn">Đăng nhập</a></div>
   </c:if>
 
-  <div class="mobile-menu-item ${activePage =='cart'?'active':''}"><a href="${AuraSound}/cart.jsp">Giỏ hàng</a></div>
+  <div class="mobile-menu-item ${activePage =='cart'?'active':''}"><a href="${AuraSound}/cart">Giỏ hàng</a></div>
   <div class="mobile-menu-item ${activePage =='contact'?'active':''}"><a href="${AuraSound}/contact">Liên hệ</a></div>
   <div class="mobile-menu-item ${activePage =='product'?'active':''}"><a href="${AuraSound}/product">Sản phẩm</a>
   </div>
