@@ -3,6 +3,7 @@ package service;
 import dao.ContactDAO;
 import model.entity.Contact;
 import model.entity.User;
+import model.enums.ContactStatus;
 import org.jdbi.v3.core.Jdbi;
 
 import java.util.List;
@@ -19,7 +20,8 @@ public class ContactService {
         contact.setSenderName(name);
         contact.setPhone(phone);
         contact.setMess(message);
-        contact.setStatus(0); // Mặc định là New (0)
+        contact.setStatus(ContactStatus.NEW.getValue());
+        contact.setStatus(0);
 
         return contactDAO.insertContact(contact);
     }

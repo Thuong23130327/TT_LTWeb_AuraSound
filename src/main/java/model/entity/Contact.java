@@ -53,12 +53,10 @@ public class Contact {
     public String getMess() { return mess; }
     public void setMess(String mess) { this.mess = mess; }
 
-    // JDBI sẽ gọi hàm này khi dùng .bindBean
     public int getStatus() {
         return status != null ? status.getValue() : 0;
     }
 
-    // JDBI sẽ gọi hàm này khi map từ DB (Integer) vào Object
     public void setStatus(int value) {
         this.status = ContactStatus.fromValue(value);
     }

@@ -24,7 +24,7 @@ public class ContactDAO {
                 handle.createUpdate("INSERT INTO contactmails "
                                 + "(Users_id, sender_name, sender_email, sender_phone, message, status, created_at) "
                                 + "VALUES (:usersID, :senderName, :senderMail, :phone, :mess, :status, NOW())")
-                        .bindBean(contact) // Sẽ tự gọi getStatus() khớp với :status
+                        .bindBean(contact)
                         .execute() > 0
         );
     }
@@ -38,8 +38,8 @@ public class ContactDAO {
     public List<Contact> sort(String type) {
         StringBuilder sql = new StringBuilder("SELECT * FROM contactmails WHERE message IS NOT NULL AND TRIM(message) <> ''");
 
-        if ("rep".equals(type)) sql.append(" AND status = 1"); // 1: Đã phản hồi
-        else if ("non".equals(type)) sql.append(" AND status = 0"); // 0: Mới
+        if ("rep".equals(type)) sql.append(" AND status = 1");
+        else if ("non".equals(type)) sql.append(" AND status = 0");
 
         if ("old".equals(type)) sql.append(" ORDER BY created_at ASC");
         else sql.append(" ORDER BY created_at DESC");
