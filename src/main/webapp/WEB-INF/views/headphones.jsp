@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../tag/_taglibs.jsp" %>
+<%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
 <%
     request.setAttribute("activePage", "product");

@@ -42,10 +42,10 @@ public class ProductDAO {
             var query = handle.createQuery(sql.toString());
 
             if (categoryIds != null && !categoryIds.isEmpty()) {
-                query.bindList("categoryIds", categoryIds);
+                query.bindList("categoryIds", categoryIds.toArray());
             }
             if (brandIds != null && !brandIds.isEmpty()) {
-                query.bindList("brandIds", brandIds);
+                query.bindList("brandIds", brandIds.toArray());
             }
             if (minPrice != null) query.bind("minPrice", minPrice);
             if (maxPrice != null) query.bind("maxPrice", maxPrice);
@@ -57,14 +57,16 @@ public class ProductDAO {
     public List<Product> getProductsByPage(List<String> categoryIds, List<String> brandIds, Double minPrice, Double maxPrice, String selectedSort, int offset, int limit) {
 
         StringBuilder sql = new StringBuilder("SELECT * ");
-        if (selectedSort == null || !selectedSort.equals("price-asc") || !selectedSort.equals("price-desc"))
+        if (selectedSort == null || (!selectedSort.equals("price-asc") && !selectedSort.equals("price-desc"))) {
             sql.append(" , (avg_rating + (view_count / (SELECT SUM(view_count) + 1 FROM products) * 100) " +
                     "+ (search_count / (SELECT SUM(search_count) + 1 FROM products) * 100)) as hot_score ");
-
+        }
         sql.append(" FROM products WHERE 1=1 ");
 
         if (categoryIds != null && !categoryIds.isEmpty()) {
-            sql.append(" AND categories_id IN (<categoryIds>) ");
+            sql.append(" AND categories_id IN ( ");
+            sql.append("     SELECT id FROM categories WHERE id IN (<categoryIds>) OR parents_id IN (<categoryIds>) ");
+            sql.append(" ) ");
         }
 
         if (brandIds != null && !brandIds.isEmpty()) {
@@ -92,10 +94,10 @@ public class ProductDAO {
             var query = handle.createQuery(sql.toString());
 
             if (categoryIds != null && !categoryIds.isEmpty()) {
-                query.bindList("categoryIds", categoryIds);
+                query.bindList("categoryIds", categoryIds.toArray());
             }
             if (brandIds != null && !brandIds.isEmpty()) {
-                query.bindList("brandIds", brandIds);
+                query.bindList("brandIds", brandIds.toArray());
             }
             if (minPrice != null) query.bind("minPrice", minPrice);
             if (maxPrice != null) query.bind("maxPrice", maxPrice);
