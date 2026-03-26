@@ -168,7 +168,7 @@ public class Product {
                 ", oldPrice=" + oldPrice +
                 ", sellPrice=" + sellPrice +
                 ", img='" + img + '\'' +
-                '}';
+                '}'+"\n";
     }
 
     public int getDiscountPercent() {
