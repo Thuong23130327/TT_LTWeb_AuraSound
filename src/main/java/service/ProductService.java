@@ -52,4 +52,16 @@ public class ProductService {
         return brandDAO.getAll();
 
     }
+
+    //lấy sp bằng id
+    public Product getById(String pid) {
+        Product p = productDAO.getById(pid);
+        return p != null ? p : null;
+    }
+
+    //cập nhật lượt xem sản phẩm
+    public void updateViewCount(String pid) {
+        productDAO.updateViewCount(pid);
+    }
+
 }
