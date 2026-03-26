@@ -52,7 +52,7 @@ public class ProductDetailServlet extends HttpServlet {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        request.getRequestDispatcher("/sproduct.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/productdetail.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -36,7 +36,7 @@
     <div class="product-grid" id="product-grid">
 
         <c:forEach items="${products}" var="p">
-            <a href="sproduct.jsp" class="product-card">
+            <a href="detail?pid=${p.id}" class="product-card">
                 <div class="product-badge discount">
                     Giảm 50%
                 </div>

@@ -6,6 +6,10 @@ public class Image {
     private String imageUrl;
     private int sortOrder;
 
+    public Image(){
+
+    }
+
     public Image(int id, int productId, String imageUrl, int sortOrder) {
         super();
         this.id = id;
