@@ -59,8 +59,6 @@
                             ${cate.name}
                     </a>
                     </c:forEach>
-
-                    / <span >${product.name}</span>
                 </h6>
                 <h3>${product.name}</h3>
                 <div class="star">
@@ -110,9 +108,9 @@
                     <div class="btn">
                         <button type="submit" class="buy-btn popup" id="cart-btn">Thêm vào giỏ hàng</button>
 
-                        <a href="cart.html"><a href="checkout.html">
+                        <a href="checkout">
                             <button class="buy-btn">Mua Ngay</button>
-                        </a></a>
+                        </a>
                     </div>
                 </form>
             </div>
