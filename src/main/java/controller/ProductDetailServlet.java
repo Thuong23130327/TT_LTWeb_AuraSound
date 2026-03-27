@@ -5,10 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.entity.Image;
-import model.entity.Product;
-import model.entity.ProductSpec;
-import model.entity.ProductVariant;
+import model.entity.*;
 import service.ProductDetailService;
 import service.ProductService;
 
@@ -39,12 +36,14 @@ public class ProductDetailServlet extends HttpServlet {
             List<ProductVariant> variants = productDetailService.getAllVariantByProductId(pid);
             List<Image> imgs = productDetailService.getImageByProductId(pid);
             ProductVariant curVariant = productDetailService.getVariantByImg(variants, product.getImg());
+            List<Category> categories = productDetailService.getCategory(product.getCategoriesId());
 
             request.setAttribute("product", product);
             request.setAttribute("variants", variants);
             request.setAttribute("specs", specs);
             request.setAttribute("images", imgs);
             request.setAttribute("curVariant", curVariant);
+            request.setAttribute("categories", categories);
 
 
         } catch (SQLException e) {

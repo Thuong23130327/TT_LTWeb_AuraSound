@@ -52,7 +52,16 @@
             </div>
 
             <div class="info col-lg-6 col-md-12 col-12">
-                <h6>Home / ${product.name}</h6>
+                <h6>
+                    <a href="/AuraSound">Home</a>
+                    <c:forEach var="cate" items="${categories}">
+                        / <a href="${applicationScope.AuraSound}/product?cateId=${cate.id}">
+                            ${cate.name}
+                    </a>
+                    </c:forEach>
+
+                    / <span >${product.name}</span>
+                </h6>
                 <h3>${product.name}</h3>
                 <div class="star">
                     <span>${product.avgRating}</span>
@@ -96,7 +105,6 @@
                         <input type="hidden" name="variants" id="ipListVar" value="${variants}">
                         <input type="hidden" name="nameProduct" id="ipNameP" type="text" value="${product.name}">
                         <input type="hidden" name="variantId" id="selectedVariantId" value="${curVariant.id}">
-
                     </div>
 
                     <div class="btn">
