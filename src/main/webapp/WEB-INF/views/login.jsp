@@ -40,7 +40,7 @@
                 <a href="#" class="icon">
                     <i class="fa-brands fa-facebook-f"></i>
                 </a>
-                <a href="#" class="icon">
+                <a href="admin/admin.jsp" class="icon">
                     <i class="fa-brands fa-github"></i>
                 </a>
                 <a href="#" class="icon">
@@ -54,6 +54,7 @@
             <a href="#">Quên mật khẩu?</a>
             <span class="text-success">${registerMessage}</span>
             <button type="submit" id="signIn">Đăng Nhập</button>
+            </a>
         </form>
     </div>
 
