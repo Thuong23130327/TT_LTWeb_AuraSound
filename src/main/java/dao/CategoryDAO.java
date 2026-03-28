@@ -13,20 +13,16 @@ public class CategoryDAO {
         return jdbi.withHandle(handle -> handle.createQuery(sql).mapToBean(Category.class).list());
     }
 
+
     public Category getCategoryById(int id) {
         String sql = "SELECT id, name, parents_id FROM Categories WHERE id = :id";
-        try {
             return jdbi.withHandle(handle ->
                     handle.createQuery(sql)
                             .bind("id", id)
                             .mapToBean(Category.class)
-                            .findOne()
+                            .findFirst()
                             .orElse(null)
             );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public static void main(String[] args) {

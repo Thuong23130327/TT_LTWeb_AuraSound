@@ -25,7 +25,7 @@ public class ContextLoaderListener implements ServletContextListener {
 
         ProductService productService = new ProductService();
         List<Category> allCategories = productService.getAllCategories();
-        List<Brand> allBrands = productService.getAllBrands();
+        List<Brand> allBrands = productService.getListBrands();
 
         Map<Integer, Category> map = new HashMap<>();
         for (Category cat : allCategories) {

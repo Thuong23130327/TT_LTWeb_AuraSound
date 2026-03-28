@@ -21,22 +21,20 @@ public class ProductDetailServlet extends HttpServlet {
             response.sendRedirect("home"); // Hoặc trang lỗi
             return;
         }
+        ProductService productService = new ProductService();
+        productService.updateViewCount(pid);
 
-        try {
-            ProductDetailService productDetailService = new ProductDetailService();
-            ProductService productService = new ProductService();
             Product product = productService.getById(pid);
-            productService.updateViewCount(pid);
             if (product == null) {
                 response.sendError(404, "Sản phẩm không tồn tại!");
                 return;
             }
 
-            List<ProductSpec> specs = productDetailService.getAllSpecByProductId(pid);
-            List<ProductVariant> variants = productDetailService.getAllVariantByProductId(pid);
-            List<Image> imgs = productDetailService.getImageByProductId(pid);
-            ProductVariant curVariant = productDetailService.getVariantByImg(variants, product.getImg());
-            List<Category> categories = productDetailService.getCategory(product.getCategoriesId());
+            List<ProductSpec> specs = productService.getAllSpecByProductId(pid);
+            List<ProductVariant> variants = productService.getAllVariantByProductId(pid);
+            List<Image> imgs = productService.getImageByProductId(pid);
+            ProductVariant curVariant = productService.getVariantByImg(variants, product.getImg());
+            List<Category> categories = productService.getCategory(product.getCategoriesId());
 
             request.setAttribute("product", product);
             request.setAttribute("variants", variants);
@@ -46,16 +44,10 @@ public class ProductDetailServlet extends HttpServlet {
             request.setAttribute("categories", categories);
 
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
         request.getRequestDispatcher("/WEB-INF/views/productdetail.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         doGet(request, response);
     }
 }

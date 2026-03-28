@@ -16,7 +16,7 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,7 +35,8 @@ public class LoginServlet extends HttpServlet {
             if (user.isLocked()) {
                 request.setAttribute("error", "Tài khoản của bạn đã bị khóa");
                 request.setAttribute("loginEmail", email);
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+
                 return;
             }
 
@@ -60,6 +61,6 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("error", "Đăng nhập không thành công. Vui lòng kiểm tra tên đăng nhập và mật khẩu");
             }
         }
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
 }
