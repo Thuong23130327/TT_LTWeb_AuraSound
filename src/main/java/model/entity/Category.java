@@ -9,6 +9,7 @@ public class Category {
 
     private int id;
     private String name;
+    @ColumnName("parents_id")
     private int parentID;
 
     private List<Category> children = new ArrayList<>();
