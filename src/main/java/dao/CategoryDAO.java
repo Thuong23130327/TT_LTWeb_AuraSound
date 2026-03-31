@@ -1,9 +1,8 @@
 package dao;
 
-import dao.DB.DBConnect;
 import model.entity.Category;
 import org.jdbi.v3.core.Jdbi;
-import java.sql.SQLException;
+
 import java.util.List;
 
 public class CategoryDAO {
@@ -14,9 +13,22 @@ public class CategoryDAO {
         return jdbi.withHandle(handle -> handle.createQuery(sql).mapToBean(Category.class).list());
     }
 
+
+    public Category getCategoryById(int id) {
+        String sql = "SELECT id, name, parents_id FROM Categories WHERE id = :id";
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("id", id)
+                            .mapToBean(Category.class)
+                            .findFirst()
+                            .orElse(null)
+            );
+    }
+
     public static void main(String[] args) {
         CategoryDAO dao = new CategoryDAO();
-        System.out.println(dao.getAll());
+//        System.out.println(dao.getAll());
+        System.out.println(dao.getCategoryById(3));
     }
 
 

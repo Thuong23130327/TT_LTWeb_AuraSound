@@ -16,16 +16,16 @@ public class UserService {
     }
 
     // băm mk sang md5
-    private String hashMD5(String password) {
+    private String hashPass(String password) {
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(password.getBytes());
-            BigInteger no = new BigInteger(1, messageDigest);
-            String hashtext = no.toString(16);
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md5.digest(password.getBytes());
+            BigInteger n = new BigInteger(1, messageDigest);
+            String hashpassword = n.toString(16);
+            while (hashpassword.length() < 32) {
+                hashpassword = "0" + hashpassword;
             }
-            return hashtext;
+            return hashpassword;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -39,19 +39,23 @@ public class UserService {
     // đăng ký
     public int register(String email, String password, String fullname) {
         if (checkExistMail(email)) {
-            return 0; // 0: Lỗi do email tồn tại
+            return 0; // 0: lỗi do email đã tồn tại
         }
 
-        String passHash = hashMD5(password);
+        String passHash = hashPass(password);
         boolean success = userDAO.register(email, passHash, fullname);
 
-        return success ? 1 : -1; // 1: Thành công, -1: Lỗi hệ thống/Database
+        return success ? 1 : -1; // 1: tạo tài khoản thành công, -1: tạo tài khoản k thành công (do lỗi hệ thống/db)
     }
 
     //đăng nhập
     public User login(String email, String password) {
-        String passHash = hashMD5(password);
+        String passHash = hashPass(password);
         return userDAO.checkLogin(email, passHash);
+    }
+
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
     }
 
     // all user
@@ -60,9 +64,10 @@ public class UserService {
     }
 
     public static void main(String[] args) {
-        UserDAO dao = new UserDAO();
+        UserService dao = new UserService();
         System.out.println(dao.checkExistMail("admin@gmail.com"));
-        System.out.println(dao.checkExistMail("22@gmail.com"));
-//        System.out.println(dao.register("22@gmail.com", "333","Nguyen"));
+        System.out.println(dao.checkExistMail("24@gmail.com"));
+        System.out.println(dao.register("24@gmail.com", "abcdef","Nguyen"));
+
     }
 }
