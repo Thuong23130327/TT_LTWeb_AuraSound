@@ -54,6 +54,10 @@ public class UserService {
         return userDAO.checkLogin(email, passHash);
     }
 
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
+    }
+
     // all user
     public List<User> getAllUsers() {
         return userDAO.getAllUser();

@@ -34,7 +34,7 @@
         <form action="login" method="post">
             <h1>Đăng Nhập</h1>
             <div class="social-icons">
-                <a href="#" class="icon">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email+profile+openid&redirect_uri=http://localhost:8080/AuraSound_war/login&response_type=code&client_id=462941574651-08lfhtvomnhq4qhotkei01r5eu6uougj.apps.googleusercontent.com&approval_prompt=force" class="icon">
                     <i class="fa-brands fa-google-plus-g"></i>
                 </a>
                 <a href="#" class="icon">

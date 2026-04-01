@@ -9,16 +9,56 @@ import jakarta.servlet.http.HttpSession;
 import model.entity.User;
 import model.enums.Role;
 import service.UserService;
-
+import model.IconLogin.GoogleLogin;
+import model.entity.GoogleAccount;
 import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
-    }
+        response.setContentType("text/html;charset=UTF-8");
+        String code = request.getParameter("code");
+        if (code != null && !code.isEmpty()) {
+            try {
+                GoogleLogin gg = new GoogleLogin();
+                String access = gg.getToken(code);
+                GoogleAccount acc = gg.getUserInfo(access);
+                UserService userService = new UserService();
+                User user = userService.getUserByEmail(acc.getEmail());
 
+                if (user == null) {
+                    request.setAttribute("error", "Email Google này chưa được đăng ký trong hệ thống!");
+                    request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+                    return;
+                }
+
+                if (user.isLocked()) {
+                    request.setAttribute("error", "Tài khoản của bạn đã bị khóa");
+                    request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+                    return;
+                }
+
+                HttpSession session = request.getSession();
+                session.setAttribute("auth", user);
+
+                if (user.getERole() == Role.ADMIN) {
+                    session.setAttribute("author", user);
+                    response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+                } else {
+                    response.sendRedirect("home");
+                }
+
+                System.out.println(acc);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", "Đăng nhập Google thất bại!");
+                request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+            }
+        } else {
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        }
+    }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserService userService = new UserService();
 
