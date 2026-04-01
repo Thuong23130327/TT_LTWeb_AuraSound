@@ -77,6 +77,7 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("loginEmail", email);
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
 
+                return;
             }
 
             // đăng nhập thành công
