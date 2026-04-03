@@ -52,13 +52,7 @@ public class ContextLoaderListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         DBConnect.close();
-        System.out.println("HikariCP đã được đóng an toàn!");
+        System.out.println("HikariCP da close!");
 
-        try {
-            java.sql.Driver mySqlDriver = java.sql.DriverManager.getDriver("jdbc:mysql://localhost:3306/");
-            java.sql.DriverManager.deregisterDriver(mySqlDriver);
-        } catch (java.sql.SQLException ex) {
-            System.out.println("Không thể hủy đăng ký driver MySQL.");
-        }
     }
 }

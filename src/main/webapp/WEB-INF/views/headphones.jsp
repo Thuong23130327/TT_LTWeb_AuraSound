@@ -135,7 +135,6 @@
                 </a>
             </c:forEach>
 
-
         </div>
 
         <div class="pagination" id="pagination-buttons">
@@ -149,14 +148,13 @@
 
 </main>
 
-<jsp:include page="../tag/_footer.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
 
 <script>
     let cateId = "${cateId != null ? cateId : 0}";
 </script>
 
 <script src="${AuraSound}/assets/js/script.js"></script>
-<%--<script src="${AuraSound}/assets/js/scriptProfile.js"></script>--%>
 <script src="${AuraSound}/assets/js/scriptStore.js"></script>
 </body>
 </html>
