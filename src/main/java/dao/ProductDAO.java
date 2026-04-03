@@ -26,7 +26,9 @@ public class ProductDAO {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1 ");
 
         if (categoryIds != null && !categoryIds.isEmpty()) {
-            sql.append(" AND categories_id IN (<categoryIds>) ");
+            sql.append(" AND categories_id IN ( ");
+            sql.append("     SELECT id FROM categories WHERE id IN (<categoryIds>) OR parents_id IN (<categoryIds>) ");
+            sql.append(" ) ");
         }
 
         if (brandIds != null && !brandIds.isEmpty()) {

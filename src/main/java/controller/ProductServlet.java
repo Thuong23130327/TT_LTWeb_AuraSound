@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,12 +10,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.entity.Category;
 import model.entity.Product;
 import service.ProductService;
+import util.CharResponseWrapper;
 
 import java.io.IOException;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // sản phẩm all, theo phan loai cate, brand ban dau
 @WebServlet(name = "ProductServlet", value = "/product")
@@ -52,16 +56,18 @@ public class ProductServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String[] selectedBrands = request.getParameterValues("selectedBrands");
         String[] selectedCates = request.getParameterValues("selectedCates");
+        List<String> brandIds = (selectedBrands != null) ? Arrays.asList(selectedBrands) : null;
+        List<String> cateIds = (selectedCates != null) ? Arrays.asList(selectedCates) : null;
+
         String selectedSort = request.getParameter("selectedSort");
-        String pageStr = request.getParameter("page");
+        String pageStr = request.getParameter("pageCurrent");
 
         String minPriceStr = request.getParameter("minPrice");
         String maxPriceStr = request.getParameter("maxPrice");
 
-        List<String> brandIds = (selectedBrands != null) ? Arrays.asList(selectedBrands) : null;
-        List<String> cateIds = (selectedCates != null) ? Arrays.asList(selectedCates) : null;
 
         int page = (pageStr != null && !pageStr.isEmpty()) ? Integer.parseInt(pageStr) : 1;
 
@@ -71,13 +77,24 @@ public class ProductServlet extends HttpServlet {
         if (selectedSort == null || selectedSort.isEmpty()) {
             selectedSort = "default";
         }
-
-        List<Product> productList = productService.getList(cateIds, brandIds, minPrice, maxPrice, selectedSort, page+1);
+        System.out.println( " cate: "+cateIds+" brandIds: "+brandIds+" minPrice: "+minPrice+" maxPrice: "+maxPrice+" selectedSort: "+selectedSort+" page: "+page );
+        List<Product> productList = productService.getList(cateIds, brandIds, minPrice, maxPrice, selectedSort, page);
         int totalPage = productService.getTotalPages(cateIds, brandIds, minPrice, maxPrice);
 
         request.setAttribute("productList", productList);
-        request.setAttribute("totalPage", totalPage);
         request.setAttribute("pageCurrent", page);
-        request.getRequestDispatcher("/WEB-INF/views/_product_grid_ajax.jsp").forward(request, response);
+
+        CharResponseWrapper wrapper = new CharResponseWrapper(response);
+        request.getRequestDispatcher("/WEB-INF/views/ajax/_product_grid.jsp").include(request, wrapper);
+        String htmlResult = wrapper.toString();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("totalPage", totalPage);
+        jsonMap.put("html", htmlResult);
+
+        String jsonResponse = new Gson().toJson(jsonMap);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonResponse);
+
     }
 }
