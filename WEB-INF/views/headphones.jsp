@@ -82,6 +82,31 @@
                         </c:forEach>
                     </div>
                 </div>
+
+                <div class="filter-group">
+                    <h4>Khoảng giá</h4>
+                    <div class="price-filter-popup">
+                        <p class="price-title">Mức giá phù hợp với bạn</p>
+
+                        <div class="price-inputs">
+                            <input type="text" id="min-price-input" value="0đ" readonly>
+                            <span> - </span>
+                            <input type="text" id="max-price-input" value="20.000.000đ" readonly>
+                        </div>
+
+                        <div class="price-slider-container">
+                            <div class="slider-track"></div>
+                            <input type="range" min="0" max="20000000" step="100000" value="0" id="min-range-slider">
+                            <input type="range" min="0" max="20000000" step="100000" value="0" id="max-range-slider">
+                        </div>
+
+                        <div class="price-actions">
+                            <button type="button" class="btn-close-price" id="btn-reset-price">Đặt lại</button>
+                            <button type="button" class="btn-apply-price" id="btn-apply-price">Xem kết quả</button>
+                        </div>
+                    </div>
+                </div>
+
                 <button type="button" onclick="clearFilter()" class="filter-reset-btn" id="filter-reset">Xóa tất cả
                     bộ lọc
                 </button>
