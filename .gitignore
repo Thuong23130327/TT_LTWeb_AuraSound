@@ -10,6 +10,9 @@ target/
 **/.smarttomcat/
 *.iml
 *.ipr
+*.jar
+*.war
+*.ear
 
 ### Eclipse ###
 .apt_generated
@@ -37,7 +40,8 @@ temp/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+/WEB-INF/classes/
+/WEB-INF/lib/
 ### VS Code ###
 .vscode/
 
