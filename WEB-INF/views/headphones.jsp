@@ -21,11 +21,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-<%--    <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">--%>
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
-<%--    <link rel="stylesheet" href="${AuraSound}/assets/css/styleProfile.css">--%>
-<%--    <link rel="stylesheet" href="${AuraSound}/assets/css/styleHeadphones.css">--%>
-
     <link rel="stylesheet" href="${AuraSound}/assets/css/product-page.css">
 
 </head>
@@ -54,9 +50,11 @@
 
                 <div class="filter-group">
                     <h4>Hãng sản xuất</h4>
+                    <%--                    Sửa thành filter--%>
+
                     <div class="filter-options" data-filter-group="brand">
                         <c:forEach items="${applicationScope.brandList}" var="brand">
-                            <button onclick="sort(this)" type="button" class="filter-option" data-filter="${brand.id}">
+                            <button onclick="filter(this)" type="button" class="filter-option" data-filter="${brand.id}">
                                     ${brand.name}
                             </button>
                         </c:forEach>
@@ -66,15 +64,16 @@
 
                 <div class="filter-group">
                     <h4>Loại tai nghe</h4>
+                    <%--                    Sửa thành filter--%>
                     <div class="filter-options" data-filter-group="category">
                         <c:forEach items="${applicationScope.MENU_TREE}" var="cate">
-                            <button onclick="sort(this)" type="button" class="filter-option" data-filter="${cate.id}">
+                            <button onclick="filter(this)" type="button" class="filter-option" data-filter="${cate.id}">
                                     ${cate.name}
                             </button>
 
                             <c:if test="${not empty cate.children}">
                                 <c:forEach items="${cate.children}" var="child">
-                                    <button onclick="sort(this)" type="button" class="filter-option"
+                                    <button onclick="filter(this)" type="button" class="filter-option"
                                             data-filter="${child.id}">
                                             ${child.name}
                                     </button>
@@ -83,7 +82,32 @@
                         </c:forEach>
                     </div>
                 </div>
-                <button type="button" onclick="clearFilter(this)" class="filter-reset-btn" id="filter-reset">Xóa tất cả
+
+                <div class="filter-group">
+                    <h4>Khoảng giá</h4>
+                    <div class="price-filter-popup">
+                        <p class="price-title">Mức giá phù hợp với bạn</p>
+
+                        <div class="price-inputs">
+                            <input type="text" id="min-price-input" value="0đ" readonly>
+                            <span> - </span>
+                            <input type="text" id="max-price-input" value="20.000.000đ" readonly>
+                        </div>
+
+                        <div class="price-slider-container">
+                            <div class="slider-track"></div>
+                            <input type="range" min="0" max="20000000" step="100000" value="0" id="min-range-slider">
+                            <input type="range" min="0" max="20000000" step="100000" value="0" id="max-range-slider">
+                        </div>
+
+                        <div class="price-actions">
+                            <button type="button" class="btn-close-price" id="btn-reset-price">Đặt lại</button>
+                            <button type="button" class="btn-apply-price" id="btn-apply-price">Xem kết quả</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" onclick="clearFilter()" class="filter-reset-btn" id="filter-reset">Xóa tất cả
                     bộ lọc
                 </button>
             </div>

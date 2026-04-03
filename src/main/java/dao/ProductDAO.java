@@ -23,10 +23,12 @@ public class ProductDAO {
 
 
     public int countProducts(List<String> categoryIds, List<String> brandIds, Double minPrice, Double maxPrice) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE is_active =1 ");
 
         if (categoryIds != null && !categoryIds.isEmpty()) {
-            sql.append(" AND categories_id IN (<categoryIds>) ");
+            sql.append(" AND categories_id IN ( ");
+            sql.append("     SELECT id FROM categories WHERE id IN (<categoryIds>) OR parents_id IN (<categoryIds>) ");
+            sql.append(" ) ");
         }
 
         if (brandIds != null && !brandIds.isEmpty()) {
@@ -61,7 +63,7 @@ public class ProductDAO {
             sql.append(" , (avg_rating + (view_count / (SELECT SUM(view_count) + 1 FROM products) * 100) " +
                     "+ (search_count / (SELECT SUM(search_count) + 1 FROM products) * 100)) as hot_score ");
         }
-        sql.append(" FROM products WHERE 1=1 ");
+        sql.append(" FROM products WHERE is_active =1 ");
 
         if (categoryIds != null && !categoryIds.isEmpty()) {
             sql.append(" AND categories_id IN ( ");
@@ -117,27 +119,6 @@ public class ProductDAO {
 
     }
 
-
-    public List<Product> getFeaturedProducts(int limit) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT *, (avg_rating + (view_count / (SELECT SUM(view_count) + 1 FROM products) * 100) " +
-                                "+ (search_count / (SELECT SUM(search_count) + 1 FROM products) * 100)) as hot_score " +
-                                "FROM products WHERE is_active = 1 ORDER BY hot_score DESC LIMIT :limit")
-                        .bind("limit", limit)
-                        .mapToBean(Product.class)
-                        .list()
-        );
-    }
-
-    public List<Product> getProductByCategoryId(String cateId) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM products WHERE Categories_id = :cateId OR " +
-                                "Categories_id IN (SELECT id FROM categories WHERE Categories_id = :cateId)")
-                        .bind("cateId", cateId)
-                        .mapToBean(Product.class)
-                        .list()
-        );
-    }
 
     public Product getById(String id) {
         return jdbi.withHandle(handle ->
