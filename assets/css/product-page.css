@@ -1,11 +1,7 @@
-/* ==========================================================================
-   AURA SOUND - GIAO DIỆN TRANG SẢN PHẨM (GỘP CHUNG)
-   ========================================================================== */
 
-/* --- 1. SETTINGS CHUNG --- */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fa; /* Màu nền xám nhạt giúp card nổi bật */
+    background-color: #f8f9fa;
     color: #333;
 }
 
@@ -14,7 +10,6 @@ a.a-nodecor {
     color: inherit;
 }
 
-/* --- 2. BỐ CỤC CHÍNH (LAYOUT) --- */
 .store-container {
     display: flex;
     max-width: 1250px;
@@ -36,10 +31,9 @@ a.a-nodecor {
     padding: 20px;
     border-radius: 8px;
     position: sticky;
-    top: 20px; /* Ghim sidebar khi cuộn trang */
+    top: 20px;
 }
 
-/* Nút Quay Lại */
 .filter-sidebar .btn-primary {
     background-color: #3b82f6;
     border-color: #3b82f6;
@@ -50,7 +44,7 @@ a.a-nodecor {
 }
 
 .filter-header {
-    display: none; /* Ẩn trên PC, chỉ dùng cho mobile */
+    display: none;
 }
 
 .filter-group {
@@ -115,10 +109,9 @@ a.a-nodecor {
 }
 
 
-/* --- 4. KHU VỰC SẢN PHẨM CHÍNH --- */
 .product-grid-container {
     flex-grow: 1;
-    min-width: 0; /* Tránh tràn layout flex */
+    min-width: 0;
 }
 
 #namePage {
@@ -163,7 +156,6 @@ a.a-nodecor {
     transition: all 0.3s;
 }
 
-/* --- Grid Sản Phẩm --- */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -171,7 +163,6 @@ a.a-nodecor {
 }
 
 
-/* --- 5. CARD SẢN PHẨM (ITEM) --- */
 .product-card {
     background: #fff;
     border: 1px solid #e5e7eb;
@@ -189,7 +180,6 @@ a.a-nodecor {
     transform: translateY(-3px);
 }
 
-/* Badge Giảm Giá */
 .product-badge.discount {
     position: absolute;
     top: 10px;
@@ -203,7 +193,6 @@ a.a-nodecor {
     z-index: 2;
 }
 
-/* Hình ảnh sản phẩm */
 .product-card img {
     width: 100%;
     height: 180px;
@@ -217,11 +206,10 @@ a.a-nodecor {
     transform: scale(1.05);
 }
 
-/* Thông tin sản phẩm */
 .product-card-info {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Đẩy phần bottom xuống đáy card */
+    flex-grow: 1;
 }
 
 .product-card-info h4 {
@@ -230,7 +218,6 @@ a.a-nodecor {
     line-height: 1.5;
     color: #111;
     margin-bottom: 10px;
-    /* Giới hạn 2 dòng */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -238,13 +225,12 @@ a.a-nodecor {
     height: 39px;
 }
 
-/* Khu vực Giá */
 .price-block {
     margin-bottom: 15px;
 }
 
 .new-price {
-    color: #d70018; /* Đỏ đậm đặc trưng bán hàng */
+    color: #d70018;
     font-weight: 700;
     font-size: 16px;
     margin-bottom: 2px;
@@ -261,13 +247,13 @@ a.a-nodecor {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto; /* Luôn ép sát đáy card */
+    margin-top: auto;
     font-size: 13px;
     color: #6b7280;
 }
 
 .rating i {
-    color: #f59e0b; /* Vàng sao */
+    color: #f59e0b;
     margin-right: 4px;
 }
 
@@ -281,11 +267,10 @@ a.a-nodecor {
 }
 
 .product-card:hover .favorite i {
-    color: #ef4444; /* Đỏ khi hover card */
+    color: #ef4444;
 }
 
 
-/* --- 6. PHÂN TRANG (PAGINATION) --- */
 .pagination {
     display: flex;
     justify-content: center;
@@ -312,25 +297,22 @@ a.a-nodecor {
 }
 
 
-/* --- 7. RESPONSIVE (Dành cho điện thoại & Tablet) --- */
 
-/* Màn hình Tablet (Nhỏ hơn 1024px) */
 @media (max-width: 1024px) {
     .product-grid {
-        grid-template-columns: repeat(3, 1fr); /* Giảm xuống 3 cột */
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* Màn hình Mobile (Nhỏ hơn 768px) */
 @media (max-width: 768px) {
     .store-container {
-        flex-direction: column; /* Đẩy sidebar lên trên */
+        flex-direction: column;
     }
 
     .filter-sidebar {
         width: 100%;
         position: static;
-        display: none; /* Mặc định ẩn trên mobile, dùng JS để mở */
+        display: none;
     }
 
     .filter-sidebar.active {
@@ -349,7 +331,7 @@ a.a-nodecor {
     }
 
     .product-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 cột trên Mobile */
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
 
@@ -365,3 +347,4 @@ a.a-nodecor {
         font-size: 14px;
     }
 }
+
