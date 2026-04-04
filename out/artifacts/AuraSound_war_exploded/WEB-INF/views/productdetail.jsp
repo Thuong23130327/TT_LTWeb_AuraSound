@@ -93,12 +93,13 @@
 
                     <div class="product-quantity">
                         <h4>Số lượng còn:
-                            <span id="stock"
-                                  data-stock="${curVariant.stockQuantity}">${curVariant.stockQuantity} </span>
+                            <span id="stock" data-stock="${curVariant.stockQuantity}">${curVariant.stockQuantity}</span>
                         </h4>
-                        <button type="button" class="quantity-btn" onclick="updateQuan(-1)">-</button>
-                        <input name="quantity" id="quanProduct" type="number" onchange="checkInput()" value="1">
-                        <button type="button" class="quantity-btn" onclick="updateQuan(+1)">+</button>
+                        <div class="quantity-controls">
+                            <button type="button" class="quantity-btn" onclick="updateQuan(-1)">-</button>
+                            <input name="quantity" id="quanProduct" type="number" onchange="checkInput()" value="1">
+                            <button type="button" class="quantity-btn" onclick="updateQuan(+1)">+</button>
+                        </div>
 
                         <input type="hidden" name="variants" id="ipListVar" value="${variants}">
                         <input type="hidden" name="nameProduct" id="ipNameP" type="text" value="${product.name}">
