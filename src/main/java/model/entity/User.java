@@ -79,7 +79,7 @@ public class User {
     }
 
     public int getRole() {
-        return role.getValue();
+        return role != null ? role.getValue() : 0;
     }
 
 
