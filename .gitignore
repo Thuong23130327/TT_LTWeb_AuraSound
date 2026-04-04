@@ -30,7 +30,7 @@ bin/
 *.log
 logs/
 temp/
-
+out/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

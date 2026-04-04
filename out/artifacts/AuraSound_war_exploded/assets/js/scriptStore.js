@@ -2,12 +2,16 @@ let filterState = {
     pageCurrent: 1,
     selectedBrands: [],
     selectedCates: [],
-    selectedSort: 'default'
+    selectedSort: 'default',
+    minPrice: null,
+    maxPrice: null
 };
 
 
 document.addEventListener("DOMContentLoaded", function () {
     renderPagination(parseInt(document.getElementById("numPage").value) || 1, 1);
+    updateSlider();
+
 });
 
 function loadAjaxProducts() {
@@ -69,8 +73,15 @@ function filter(element) {
     } else {
         updateFilterArray(filterState.selectedCates, value);
     }
+    const parentBtn = $(element).closest('.filter-item').find('> .btn-filter');
+    const currentArray = (group === 'brand') ? filterState.selectedBrands : filterState.selectedCates;
 
-    filterState.pageCurrent = 1; // Reset về trang 1 khi lọc mới
+    if (currentArray.length > 0) {
+        parentBtn.addClass('active');
+    } else {
+        parentBtn.removeClass('active');
+    }
+    filterState.pageCurrent = 1;
     loadAjaxProducts();
 }
 
@@ -106,3 +117,84 @@ function changePage(page) {
     filterState.pageCurrent = page;
     loadAjaxProducts();
 }
+const minSlider = document.getElementById('min-range-slider');
+const maxSlider = document.getElementById('max-range-slider');
+const minInput = document.getElementById('min-price-input');
+const maxInput = document.getElementById('max-price-input');
+const track = document.querySelector('.slider-track');
+
+const priceGap = 1000000;
+
+function formatCurrency(value) {
+    return new Intl.NumberFormat('vi-VN').format(value);
+}
+
+function updateSlider() {
+    let minVal = parseInt(minSlider.value);
+    let maxVal = parseInt(maxSlider.value);
+
+    if (maxVal - minVal < priceGap) {
+        if (this === minSlider) {
+            minSlider.value = maxVal - priceGap;
+        } else {
+            maxSlider.value = minVal + priceGap;
+        }
+    }
+
+    minInput.value = formatCurrency(minSlider.value);
+    maxInput.value = formatCurrency(maxSlider.value);
+
+    const percentLeft = (minSlider.value / minSlider.max) * 100;
+    const percentRight = 100 - (maxSlider.value / maxSlider.max) * 100;
+
+    track.style.left = percentLeft + "%";
+    track.style.right = percentRight + "%";
+    filterState.minPrice = minSlider.value;
+    filterState.maxPrice = maxSlider.value;
+}
+
+minSlider.addEventListener('input', updateSlider);
+maxSlider.addEventListener('input', updateSlider);
+
+document.getElementById('btn-apply-price').addEventListener('click', function() {
+    loadAjaxProducts();
+    $('.filter-dropdown').removeClass('active');
+});
+
+
+function formatNumber(n) {
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function handleInput(e, type) {
+    let input = e.target;
+    let value = input.value.replace(/\D/g, "");
+    if (parseInt(value) > 20000) value = "20000";
+    input.value = formatNumber(value);
+    let realValue = parseInt(value) * 1000 || 0;
+    if (type === 'min') {
+        minSlider.value = realValue;
+        filterState.minPrice = realValue;
+    } else {
+        maxSlider.value = realValue;
+        filterState.maxPrice = realValue;
+    }
+
+    updateTrack();
+}
+
+document.getElementById('min-price-input').addEventListener('input', (e) => handleInput(e, 'min'));
+document.getElementById('max-price-input').addEventListener('input', (e) => handleInput(e, 'max'));
+
+function updateFromSlider() {
+    let minVal = Math.floor(minSlider.value / 1000);
+    let maxVal = Math.floor(maxSlider.value / 1000);
+
+    document.getElementById('min-price-input').value = formatNumber(minVal.toString());
+    document.getElementById('max-price-input').value = formatNumber(maxVal.toString());
+
+    updateTrack();
+}
+
+minSlider.addEventListener('input', updateFromSlider);
+maxSlider.addEventListener('input', updateFromSlider);

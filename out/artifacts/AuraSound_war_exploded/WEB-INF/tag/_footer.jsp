@@ -42,31 +42,27 @@
         <p>Aurasound.work@gmail.com</p>
       </div>
     </div>
-    <div class="footer-one col-lg-3 col-md-6 col-12">
-      <h5 class="pb-2">Instagram</h5>
-      <div class="row">
-        <img class="img-fluid w-25 h-100 m-2"
-             src="${AuraSound}/assets/img/Instagram/img1.jpg" alt="">
+    <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
+      <div>
+        <p>© 2025 Công Ty Cổ Phần AuraSound</p>
+      </div>
 
+      <div class="mb-3">
+        <h6 class="text-uppercase">Mạng xã hội</h6>
+        <div class="copyright mt-2">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <h6 class="text-uppercase">Phương thức thanh toán</h6>
+        <div class="mt-2">
+          <img src="${AuraSound}/assets/img/Payment/payment.png" alt="">
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="copyright mt-5">
-    <div class="row container mx-auto">
-      <div class="col-lg-3 col-md-6 col-12 mb-4">
-        <img src="${AuraSound}/assets/img/Payment/payment.png" alt="">
-      </div>
-      <div class="col-lg-4 col-md-6 col-12 text-nowrap mb-2">
-        <p>© 2025 Công Ty Cổ Phần AuraSound </p>
-      </div>
-      <div class="col-lg-4 col-md-6 col-12">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-      </div>
-    </div>
-
   </div>
 </footer>
 
