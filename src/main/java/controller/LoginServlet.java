@@ -49,11 +49,13 @@ public class LoginServlet extends HttpServlet {
                 }
                 HttpSession session = request.getSession();
                 session.setAttribute("auth", user);
-                if (user.getRole() == Role.ADMIN.getValue()) {
+                if (user.getERole() == Role.ADMIN) {
                     session.setAttribute("author", user);
                     response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+                    return;
                 } else {
                     response.sendRedirect("home");
+                    return;
                 }
 
             } catch (Exception e) {
@@ -95,8 +97,10 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("author", user);
                 //qua AMDashboardServlet
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+                return;
             } else {
                 response.sendRedirect("home");
+                return;
             }
         } else {
             if (!userService.checkExistMail(email)) {
