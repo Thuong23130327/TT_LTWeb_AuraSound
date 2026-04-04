@@ -720,28 +720,65 @@ hr {
 #Speaker .row,
 #Headphone .row {
     display: flex;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 20px;
-    gap: 20px;
-    margin-left: 0;
-    margin-right: 0;
     width: 100%;
     align-items: flex-start;
+    justify-content: flex-start;
+    margin-left: -15px;
+    margin-right: -15px;
+    gap: 0;
 }
 
 .product {
-    flex: 0 0 280px;
-    max-width: 280px;
-    margin-bottom: 0 !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
-    scroll-snap-align: start;
+    margin-bottom: 30px !important;
     padding: 15px;
-    background-color: var(--white);
-    border-radius: 8px;
+    background-color: transparent;
+    transition: transform 0.3s ease;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 15px;
+    background: #fff;
+    border-radius: 15px;
+}
+
+.price-block {
+    margin-top: auto;
+    padding-top: 10px;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.product-card-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--black);
+    height: 48px;
+    line-height: 24px;
+    margin-bottom: 15px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.new-price {
+    font-size: 19px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 15px;
 }
 
 .product:hover {
@@ -755,7 +792,15 @@ hr {
     object-fit: contain;
     margin-bottom: 10px;
 }
-
+.product-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    background-color: var(--white);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+}
 .product:hover img {
     opacity: 0.5;
 }
@@ -1345,3 +1390,8 @@ formSearch {
     color: red;
     font-weight: 500;
 }
+
+/*.social-icons {*/
+/*    display: flex;*/
+/*    gap: 10px;*/
+/*}*/
