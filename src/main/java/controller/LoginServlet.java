@@ -19,6 +19,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String code = request.getParameter("code");
+
         if (code != null && !code.isEmpty()) {
             try {
                 GoogleLogin gg = new GoogleLogin();
@@ -26,33 +27,40 @@ public class LoginServlet extends HttpServlet {
                 GoogleAccount acc = gg.getUserInfo(access);
                 UserService userService = new UserService();
                 User user = userService.getUserByEmail(acc.getEmail());
-
+                //Kiểm tra tài khoản tồn tại chưa
                 if (user == null) {
-                    request.setAttribute("error", "Email Google này chưa được đăng ký trong hệ thống!");
-                    request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
-                    return;
+                    String randomPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
+                    String fullName = acc.getName() != null ? acc.getName() : acc.getEmail().split("@")[0];
+                    int registerStatus = userService.register(acc.getEmail(), randomPassword, fullName);
+                    if (registerStatus == 1) {
+                        user = userService.getUserByEmail(acc.getEmail());
+                    } else {
+                        request.setAttribute("error", "Có lỗi xảy ra khi tạo tài khoản từ Google.");
+                        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+                        return;
+                    }
                 }
-
+                //Mail đã được dùng
+                // Kiểm tra trạng thái tài khoản
                 if (user.isLocked()) {
                     request.setAttribute("error", "Tài khoản của bạn đã bị khóa");
                     request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
                     return;
                 }
-
                 HttpSession session = request.getSession();
                 session.setAttribute("auth", user);
-
                 if (user.getERole() == Role.ADMIN) {
                     session.setAttribute("author", user);
                     response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+                    return;
                 } else {
                     response.sendRedirect("home");
+                    return;
                 }
 
-                System.out.println(acc);
             } catch (Exception e) {
                 e.printStackTrace();
-                request.setAttribute("error", "Đăng nhập Google thất bại!");
+                request.setAttribute("error", "Đăng nhập Google thất bại! Vui lòng thử lại.");
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
             }
         } else {
@@ -89,8 +97,10 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("author", user);
                 //qua AMDashboardServlet
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+                return;
             } else {
                 response.sendRedirect("home");
+                return;
             }
         } else {
             if (!userService.checkExistMail(email)) {
