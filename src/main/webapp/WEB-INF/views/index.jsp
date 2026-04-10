@@ -21,8 +21,6 @@
 
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
-    <%--    <link rel="stylesheet" href="${AuraSound}/assets/css/styleProfile.css">--%>
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleHeadphones.css">
 
 </head>
 
@@ -71,39 +69,44 @@
             <hr class="mx-auto">
             <p>Bạn có thể tìm thấy những sản phẩm HOTT của Aurasound tại đây.</p>
         </div>
-        <c:forEach items="${featuredProducts}" var="p">
-            <div class="product col-lg-3 col-md-4 col-12">
+        <div class="product-grid" id="product-grid">
+            <c:forEach items="${featuredProducts}" var="p">
                 <a href="detail?pid=${p.id}" class="product-card">
                     <c:if test="${p.discountPercent > 0}">
                         <div class="product-badge discount">Giảm ${p.discountPercent} %</div>
                     </c:if>
+
                     <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x300?text=No+Image'">
+
                     <div class="product-card-info">
                         <h4>${p.name}</h4>
+
                         <div class="price-block">
                             <div class="new-price"><fmt:formatNumber value="${p.sellPrice}" pattern="#,###"/> đ</div>
 
                             <c:if test="${p.discountPercent > 0}">
                                 <div class="old-price"><fmt:formatNumber value="${p.oldPrice}" pattern="#,###"/> đ</div>
                             </c:if>
+
                         </div>
+
                         <div class="product-bottom-row">
                             <div class="rating">
                                 <i class="bi bi-star-fill"></i>
                                 <span>${p.avgRating}</span>
                             </div>
                             <div class="favorite">
-                                <i class="bi bi-heart"></i> <i class="bi bi-heart-fill"></i>
+                                <i class="bi bi-heart"></i>
                                 <span>Yêu thích</span>
                             </div>
                         </div>
                     </div>
-                </a> <a href="checkout.html">
-                <button class="buy-btn">Sản phẩm tương tự</button>
-            </a></div>
-        </c:forEach>
-
+                </a>
+            </c:forEach>
+        </div>
     </div>
+
+
 
     <section id="service-commitment" class="py-5">
         <div class="container row mx-auto">
