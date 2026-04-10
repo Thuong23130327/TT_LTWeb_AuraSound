@@ -19,7 +19,7 @@ public class User {
 
     @ColumnName("avatar_url")
     private String avatarUrl;
-    private int role;
+    private String role;
 
     @ColumnName("is_locked")
     private boolean isLocked;
@@ -75,14 +75,21 @@ public class User {
     }
 
     public Role getERole() {
-        return Role.fromValue(this.role);
+        if (this.role == null) {
+            return null;
+        }
+        try {
+            return Role.valueOf(this.role.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return Role.CUSTOMER;
+        }
     }
 
-    public int getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
