@@ -10,6 +10,12 @@ Thương */
     --theme-gradient-icon: linear-gradient(135deg, var(--theme-color-primary), var(--theme-color-secondary));
     --theme-gradient-text: linear-gradient(90deg, var(--theme-color-secondary), var(--theme-color-primary));
     --theme-gradient-button-light: linear-gradient(135deg, rgba(183, 107, 255, 0.8), rgba(74, 111, 255, 0.7));
+
+    --profile-text-dark: #333333;
+    --profile-border-light: #eeeeee;
+    --profile-background-light: #f9f9f9;
+    --profile-shipping-border: #f39c12;
+    --profile-history-border: #2ecc71;
 }
 
 * {
