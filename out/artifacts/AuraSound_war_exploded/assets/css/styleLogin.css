@@ -234,3 +234,48 @@ form a:hover,
 .container.active .toggle-right {
     transform: translateX(200%);
 }
+
+.requirement-list {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+    text-align: left;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 0.6rem;
+}
+
+.requirement-list li {
+    margin-bottom: 2px;
+    transition: all 0.3s ease;
+}
+
+/*Chuaw dat*/
+.invalid {
+    content: "";
+    color: #e74c3c;
+}
+
+.invalid::before,
+.valid::before {
+    font-weight: bold;
+}
+
+/*Da dat*/
+.valid {
+    color: #27ae60;
+}
+
+.invalid::before {
+    content: "🔴";
+    margin-right: 8px;
+    font-size: 12px;
+}
+
+.valid::before {
+    content: "🟢";
+    margin-right: 8px;
+    font-size: 12px;
+}
+
