@@ -3,6 +3,7 @@ package service;
 import dao.OrderDAO;
 import dao.ProfileMDAO.ProfileDAO;
 import model.entity.Order;
+import model.entity.OrderItem;
 import model.entity.User;
 
 import java.sql.SQLException;
@@ -56,4 +57,7 @@ public class ProfileService {
         return oDAO.getCancelledOrders(userId);
     }
 
+    public List<OrderItem> getAllOrdersItem(String orderId){
+        return oDAO.getAllOrdersItem(orderId);
+    }
 }
