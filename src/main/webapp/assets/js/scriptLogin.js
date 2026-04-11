@@ -81,3 +81,20 @@ function updateButtonState() {
     const allValid = Array.from(allRequirements).every(li => li.classList.contains('valid'));
     signUpBtn.disabled = !allValid;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    var forceShowRegister = "${showRegisterPanel}" === "true";
+
+    if (forceShowRegister) {
+        const container = document.getElementById('container');
+        if (container) {
+            container.classList.add("active");
+
+            const btnRegisterToggle = document.getElementById('register');
+            if (btnRegisterToggle) {
+                btnRegisterToggle.click();
+            }
+        }
+    }
+});

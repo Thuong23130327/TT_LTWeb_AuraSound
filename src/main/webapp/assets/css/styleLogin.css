@@ -266,5 +266,15 @@ form a:hover,
 .valid {
     color: #27ae60;
 }
-
+     /* CSS căn chỉnh cho thông báo lỗi đỏ dưới từng ô */
+ .inline-error {
+     font-size: 0.8rem;
+     color: #dc3545; /* text-danger */
+     text-align: left;
+     display: block;
+     width: 100%;
+     margin-top: -5px;
+     margin-bottom: 8px;
+     padding-left: 5px;
+ }
 
