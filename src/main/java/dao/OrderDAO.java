@@ -2,6 +2,7 @@ package dao;
 
 import model.entity.Order;
 import model.entity.OrderItem;
+import model.enums.OrderStatus;
 import org.jdbi.v3.core.Jdbi;
 
 import java.util.List;
@@ -49,13 +50,66 @@ public class OrderDAO {
 //        return jdbi.withHandle(handle -> handle.createQuery(sql).bind("uid", userId).mapToBean(Order.class).list());
 //    }
 
+    public List<Order> getAllOrderById(int userId) {
+        String sql = "SELECT * FROM orders WHERE users_id = :uid ORDER BY order_date DESC";
 
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("uid", userId)
+                        .mapToBean(Order.class)
+                        .list()
+        );
+    }
 
+    // lấy đon hàng theo trạng thái
+    public List<Order> getOrdersByStatus(int userId, String statusName) {
+
+        int statusValue;
+        try {
+            statusValue = OrderStatus.valueOf(statusName.toUpperCase()).getValue();
+        } catch (Exception e) {
+            statusValue = 0;
+        }
+
+        final int finalStatus = statusValue;
+        String sql = "SELECT * FROM orders WHERE users_id = :uid AND status = :status ORDER BY order_date DESC";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("uid", userId)
+                        .bind("status", finalStatus)
+                        .mapToBean(Order.class)
+                        .list()
+        );
+    }
+
+    //đơn hàng đang chờ duyệt
+    public List<Order> getPendingOrders(int userId) {
+        return getOrdersByStatus(userId, "PENDING");
+    }
+
+    //đơn hàng đang giao
+    public List<Order> getShippingOrders(int userId) {
+        return getOrdersByStatus(userId, "SHIPPING");
+    }
+
+    //đơn hàng đã hoàn thành
+    public List<Order> getCompletedOrders(int userId) {
+        return getOrdersByStatus(userId, "COMPLETED");
+    }
+
+    //đơn hàng đã hủy
+    public List<Order> getCancelledOrders(int userId) {
+        return getOrdersByStatus(userId, "CANCELLED");
+    }
 
     public static void main(String[] args) {
         OrderDAO dao = new OrderDAO();
      //   System.out.println(dao.getAll().toString());
         System.out.println("--");
-        System.out.println(dao.getOrderById("1"));
+//        System.out.println(dao.getOrderById("1"));
+        System.out.println(dao.getAllOrderById(1).toString());
+        System.out.println("---");
+        System.out.println(dao.getOrdersByStatus(1,"COMPLETED").toString());
     }
 }
