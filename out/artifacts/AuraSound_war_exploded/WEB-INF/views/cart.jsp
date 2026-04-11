@@ -53,7 +53,9 @@
                             </div>
 
                             <div class="item-price-col">
-                                <span class="item-price"><fmt:formatNumber value="${item.price}" pattern="#,##0"/>₫</span>
+
+                                <span class="item-price"><fmt:formatNumber value="${item.price}" pattern="#,###"/> đ
+                                    </span>
                             </div>
                         </div>
                         <div class="item-actions">
@@ -63,9 +65,13 @@
                             </span>
 
                             <div class="quantity-control">
-                                <button class="quantity-btn" onclick="location.href='cart?action=add&id=${item.productVariantId}&q=-1'">-</button>
+                                <button class="quantity-btn"
+                                        onclick="location.href='cart?action=add&id=${item.productVariantId}&q=-1'">-
+                                </button>
                                 <input class="quantity-input" type="text" value="${item.quantity}" readonly>
-                                <button class="quantity-btn" onclick="location.href='cart?action=add&id=${item.productVariantId}&q=1'">+</button>
+                                <button class="quantity-btn"
+                                        onclick="location.href='cart?action=add&id=${item.productVariantId}&q=1'">+
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -82,7 +88,9 @@
 
     <div class="cart-subtotal">
         <span>Tạm tính (${totalQuantity} sản phẩm):</span>
-        <span class="subtotal-price"><fmt:formatNumber value="${totalPrice}" pattern="#,##0"/>₫</span>
+
+        <span class="subtotal-price">
+            <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> đ</span>
     </div>
 
     <div class="checkout-button-container">

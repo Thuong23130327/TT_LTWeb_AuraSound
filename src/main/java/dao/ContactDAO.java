@@ -11,7 +11,7 @@ public class ContactDAO {
 
     public Contact getContact(int id) {
         return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM contactmails WHERE id = :id")
+                handle.createQuery("SELECT * FROM contacts WHERE id = :id")
                         .bind("id", id)
                         .mapToBean(Contact.class)
                         .findFirst()
@@ -21,7 +21,7 @@ public class ContactDAO {
 
     public boolean insertContact(Contact contact) {
         return jdbi.withHandle(handle ->
-                handle.createUpdate("INSERT INTO contactmails "
+                handle.createUpdate("INSERT INTO contacts "
                                 + "(Users_id, sender_name, sender_email, sender_phone, message, status, created_at) "
                                 + "VALUES (:usersID, :senderName, :senderMail, :phone, :mess, :status, NOW())")
                         .bindBean(contact)
@@ -31,12 +31,12 @@ public class ContactDAO {
 
     public List<Contact> getAllContacts() {
         return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM contactmails WHERE message IS NOT NULL AND TRIM(message) <> ''")
+                handle.createQuery("SELECT * FROM contacts WHERE message IS NOT NULL AND TRIM(message) <> ''")
                         .mapToBean(Contact.class).list());
     }
 
     public List<Contact> sort(String type) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM contactmails WHERE message IS NOT NULL AND TRIM(message) <> ''");
+        StringBuilder sql = new StringBuilder("SELECT * FROM contacts WHERE message IS NOT NULL AND TRIM(message) <> ''");
 
         if ("rep".equals(type)) sql.append(" AND status = 1");
         else if ("non".equals(type)) sql.append(" AND status = 0");

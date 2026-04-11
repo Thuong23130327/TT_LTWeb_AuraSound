@@ -23,9 +23,22 @@
             <h1>Đăng ký</h1>
             <input type="text" name="fullname" value="${fullname}" placeholder=" Họ và tên" required/>
             <input type="email" name="email" value="${regEmail}" placeholder=" Email" required/>
-            <input type="password" name="password" placeholder="Password" required/>
-            <input type="password" name="repassword" placeholder="Nhập lại password" required/>
+            <input type="password" name="password" id="regPassword" placeholder="Password" required/>
+
+            <ul id="password-requirements" class="requirement-list">
+                <li id="length" class="invalid">Ít nhất 8 ký tự</li>
+                <li id="uppercase" class="invalid">Có ít nhất 1 chữ hoa</li>
+                <li id="lowercase" class="invalid">Có ít nhất 1 chữ thường</li>
+                <li id="number" class="invalid">Có ít nhất 1 chữ số</li>
+                <li id="special" class="invalid">Có ít nhất 1 ký tự đặc biệt (@$!%*?&...)</li>
+            </ul>
+
+            <input type="password" name="repassword" id="rePassword" placeholder="Nhập lại password" required/>
             <span class="text-danger">${registerError}</span>
+            <ul id="password-requirements" class="requirement-list">
+                <li id="match" class="invalid">Mật khẩu nhập lại phải trùng khớp</li>
+            </ul>
+
             <button type="submit" id="signUp">Đăng Ký</button>
         </form>
     </div>
@@ -34,7 +47,8 @@
         <form action="login" method="post">
             <h1>Đăng Nhập</h1>
             <div class="social-icons">
-                <a href="https://accounts.google.com/o/oauth2/auth?scope=email+profile+openid&redirect_uri=http://localhost:8080/AuraSound_war/login&response_type=code&client_id=462941574651-08lfhtvomnhq4qhotkei01r5eu6uougj.apps.googleusercontent.com&approval_prompt=force" class="icon">
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email+profile+openid&redirect_uri=http://localhost:8080/AuraSound_war/login&response_type=code&client_id=462941574651-08lfhtvomnhq4qhotkei01r5eu6uougj.apps.googleusercontent.com&approval_prompt=force"
+                   class="icon">
                     <i class="fa-brands fa-google-plus-g"></i>
                 </a>
                 <a href="#" class="icon">
@@ -63,14 +77,16 @@
             <div class="toggle-panel toggle-left">
                 <h1>Xin Chào!</h1>
                 <p>
-                    Đăng ký thông tin cá nhân của bạn để để nhận nhiều ưu đãi nhé! <br> Nhấn nút Đăng Nhập nếu bạn đã có tài khoản
+                    Đăng ký thông tin cá nhân của bạn để để nhận nhiều ưu đãi nhé! <br> Nhấn nút Đăng Nhập nếu bạn đã có
+                    tài khoản
                 </p>
                 <button class="hidden" id="login">Đăng Nhập</button>
             </div>
             <div class="toggle-panel toggle-right">
                 <h1>Chào Mừng Quay Lại!</h1>
                 <p>
-                    Nhập thông tin cá nhân của bạn để sử dụng trang web <br> Nếu chưa có tài khoản, Nhấn nút Đăng Kí để nhận nhiều ưu đãi nhé!
+                    Nhập thông tin cá nhân của bạn để sử dụng trang web <br> Nếu chưa có tài khoản, Nhấn nút Đăng Kí để
+                    nhận nhiều ưu đãi nhé!
                 </p>
                 <button class="hidden" id="register">Đăng Ký</button>
 
@@ -80,7 +96,7 @@
 </div>
 <script src="assets/js/scriptLogin.js"></script>
 <%
-    if ( request.getAttribute("registerError") != null) {
+    if (request.getAttribute("registerError") != null) {
 %>
 <script>
     document.addEventListener("DOMContentLoaded", function () {

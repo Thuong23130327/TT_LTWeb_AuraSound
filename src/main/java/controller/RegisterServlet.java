@@ -15,7 +15,7 @@ public class RegisterServlet extends HttpServlet {
     private final UserService userService = new UserService();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,13 +25,22 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String repassword = request.getParameter("repassword");
 
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+
+        if (password == null || !password.matches(passwordPattern)) {
+            request.setAttribute("registerError", "Mật khẩu không đúng định dạng bảo mật!");
+            request.setAttribute("fullname", fullname);
+            request.setAttribute("regEmail", email);
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+            return;
+        }
         request.setAttribute("fullname", fullname);
         request.setAttribute("regEmail", email);
 
         //kiểm tra trùng password và repass
         if (password == null || !password.equals(repassword)) {
             request.setAttribute("registerError", "Mật khẩu không trùng khớp!");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
             return;
         }
 
@@ -45,6 +54,6 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("registerError", "Có lỗi xảy ra, vui lòng thử lại.");
         }
 
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
 }

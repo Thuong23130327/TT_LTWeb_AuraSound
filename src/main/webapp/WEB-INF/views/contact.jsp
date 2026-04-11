@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
 
-<%--css--%>
+    <%--css--%>
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleProfile.css">
@@ -41,29 +41,30 @@
                 <div class="alert alert-danger">${errorMessage}</div>
             </c:if>
 
-            <div class="input-group">
+            <div class="input-group ${not empty nameError ? 'error' : ''}">
                 <input type="text" id="ContactName" name="name"
                        value="${not empty name ? name : auth.fullName}"
                        placeholder="Họ tên" autocomplete="off">
+                <small class="error-msg">${not empty nameError ? nameError : 'Vui lòng nhập họ tên'}</small>
             </div>
 
-            <div class="input-group">
+            <div class="input-group ${not empty emailError ? 'error' : ''}">
                 <input type="email" id="ContactEmail" name="email"
                        value="${not empty email ? email : auth.email}"
                        placeholder="E-mail" autocomplete="off">
-                <small class="error-msg">Email không đúng định dạng</small>
+                <small class="error-msg">${not empty emailError ? emailError : 'Email không đúng định dạng (ví dụ: abc@gmail.com)'}</small>
             </div>
 
-            <div class="input-group">
+            <div class="input-group ${not empty phoneError ? 'error' : ''}">
                 <input type="tel" id="ContactPhone" name="phone"
                        value="${not empty phone ? phone : auth.phone}"
                        placeholder="Số điện thoại" autocomplete="off">
-                <small class="error-msg">Số điện thoại sai</small>
+                <small class="error-msg">${not empty phoneError ? phoneError : 'Số điện thoại sai (10 số, bắt đầu 03, 05, 07, 08, 09)'}</small>
             </div>
 
-            <div class="input-group">
+            <div class="input-group ${not empty messageError ? 'error' : ''}">
                 <textarea id="c-message" name="message" cols="30" rows="10" placeholder="Lời nhắn">${message}</textarea>
-                <small class="error-msg">Vui lòng nhập lời nhắn</small>
+                <small class="error-msg">${not empty messageError ? messageError : 'Nội dung lời nhắn không được để trống'}</small>
             </div>
 
             <button type="submit" class="send-btn">Gửi</button>
@@ -84,7 +85,7 @@
 
         <div class="map">
             <iframe
-                    src="https://maps.google.com/maps?q=Trường%20Đại%20học%20Nông%20Lâm%20TP.HCM,%20Thủ%20Đức,%20Hồ%20Chí%20Minh&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.25297734277!2d106.78659691136453!3d10.868370157450702!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752763982fd351%3A0xfa645fdc8bc56274!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBOw7RuZyBMw6JtIFRQLiBI4buTIENow60gTWluaA!5e0!3m2!1svi!2s!4v1712810000000!5m2!1svi!2s"
                     width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
             </iframe>
@@ -93,47 +94,7 @@
 </main>
 
 <jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
+<script src="assets/js/scriptContact.js"></script>
 
-<%--js--%>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const emailEl = document.getElementById('ContactEmail');
-        const messageEl = document.getElementById('c-message');
-
-        const showResult = (el, isValid) => {
-            const parent = el.parentElement;
-            if (isValid) {
-                parent.classList.add('success');
-                parent.classList.remove('error');
-            } else {
-                parent.classList.add('error');
-                parent.classList.remove('success');
-            }
-        };
-
-        emailEl.addEventListener('input', () => {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            showResult(emailEl, regex.test(emailEl.value));
-        });
-
-        messageEl.addEventListener('input', () => {
-            showResult(messageEl, messageEl.value.trim() !== '');
-        });
-    });
-
-    function validateFinal() {
-        const emailEl = document.getElementById('ContactEmail');
-        const messageEl = document.getElementById('c-message');
-
-        const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value);
-        const isMsgValid = messageEl.value.trim() !== '';
-
-        if (!isEmailValid || !isMsgValid) {
-            alert("Vui lòng điền đúng định dạng Email và Lời nhắn!");
-            return false;
-        }
-        return true;
-    }
-</script>
 </body>
 </html>
