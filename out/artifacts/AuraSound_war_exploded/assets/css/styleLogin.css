@@ -267,15 +267,4 @@ form a:hover,
     color: #27ae60;
 }
 
-.invalid::before {
-    content: "🔴";
-    margin-right: 8px;
-    font-size: 12px;
-}
-
-.valid::before {
-    content: "🟢";
-    margin-right: 8px;
-    font-size: 12px;
-}
 
