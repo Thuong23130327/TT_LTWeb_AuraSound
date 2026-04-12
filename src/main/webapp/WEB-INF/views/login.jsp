@@ -21,25 +21,30 @@
     <div class="form-container sign-up">
         <form action="register" method="post">
             <h1>Đăng ký</h1>
-            <input type="text" name="fullname" value="${fullname}" placeholder=" Họ và tên" required/>
-            <input type="email" name="email" value="${regEmail}" placeholder=" Email" required/>
-            <input type="password" name="password" id="regPassword" placeholder="Password" required/>
 
-            <ul id="password-requirements" class="requirement-list">
-                <li id="length" class="invalid">Ít nhất 8 ký tự</li>
-                <li id="uppercase" class="invalid">Có ít nhất 1 chữ hoa</li>
-                <li id="lowercase" class="invalid">Có ít nhất 1 chữ thường</li>
-                <li id="number" class="invalid">Có ít nhất 1 chữ số</li>
-                <li id="special" class="invalid">Có ít nhất 1 ký tự đặc biệt (@$!%*?&...)</li>
+            <input type="text" name="fullname" value="${fullname}" placeholder="Họ và tên" />
+            <span class="inline-error">${errorFullname}</span>
+
+            <input type="email" name="email" value="${regEmail}" placeholder="Email" />
+            <span class="inline-error">${errorEmail}</span>
+
+            <input type="password" name="password" id="regPassword" placeholder="Password" />
+            <span class="inline-error">${errorPassword}</span>
+
+            <ul id="password-requirements" class="requirement-list" style="display: none; list-style: none; padding-left: 0; font-size: 0.85rem; margin-top: -5px; margin-bottom: 10px;">
+                <li id="length" class="text-danger">Ít nhất 8 ký tự</li>
+                <li id="uppercase" class="text-danger">Có ít nhất 1 chữ hoa</li>
+                <li id="lowercase" class="text-danger">Có ít nhất 1 chữ thường</li>
+                <li id="number" class="text-danger">Có ít nhất 1 chữ số</li>
+                <li id="special" class="text-danger">Có ít nhất 1 ký tự đặc biệt (@$!%*?&...)</li>
             </ul>
 
-            <input type="password" name="repassword" id="rePassword" placeholder="Nhập lại password" required/>
-            <span class="text-danger">${registerError}</span>
-            <ul id="password-requirements" class="requirement-list">
-                <li id="match" class="invalid">Mật khẩu nhập lại phải trùng khớp</li>
-            </ul>
+            <input type="password" name="repassword" id="rePassword" placeholder="Nhập lại password" />
+            <span class="inline-error">${errorRepassword}</span>
 
-            <button type="submit" id="signUp">Đăng Ký</button>
+            <span class="text-danger" style="font-weight: bold; margin-bottom: 10px;">${registerError}</span>
+
+            <button type="submit" id="btnSubmitRegister">Đăng Ký</button>
         </form>
     </div>
 
