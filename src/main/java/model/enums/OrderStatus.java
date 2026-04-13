@@ -19,7 +19,6 @@ public enum OrderStatus {
     public static OrderStatus fromValue(int value) {
         for (OrderStatus s : values()) {
             if (s.value == value) return s;
-
         }
         return PENDING;
     }
