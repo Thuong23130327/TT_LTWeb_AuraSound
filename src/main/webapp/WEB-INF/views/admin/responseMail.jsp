@@ -45,6 +45,7 @@
                     </a>
                 </div>
             </div>
+
             <form action="${AuraSound}/admin/send-reply" method="POST">
                 <input type="hidden" name="id" value="${contact.id}">
                 <input type="hidden" name="email" value="${contact.senderMail}">
@@ -55,7 +56,6 @@
                         <div class="card-header">
                             <span><i class="fas fa-user-circle me-2"></i>Thông tin</span>
                         </div>
-
 
                         <div class="card-body">
                             <div class="row">
