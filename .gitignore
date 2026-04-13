@@ -31,6 +31,12 @@ bin/
 logs/
 temp/
 out/
+build.gradle
+gradle.properties
+gradlew
+gradlew.bat
+gradle/
+settings.gradle
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
