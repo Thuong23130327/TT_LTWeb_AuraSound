@@ -1,9 +1,12 @@
 package model.entity;
 
-import model.enums.Role;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class User {
 
@@ -19,12 +22,49 @@ public class User {
 
     @ColumnName("avatar_url")
     private String avatarUrl;
-    private String role;
 
     @ColumnName("is_locked")
     private boolean isLocked;
+
     @ColumnName("created_at")
     private LocalDateTime createdAt;
+
+    private List<Role> roles = new ArrayList<>();
+
+    private Set<String> mergedPermissions = new HashSet<>();
+
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+        updateMergedPermissions();
+    }
+
+    public Set<String> getMergedPermissions() {
+        return mergedPermissions;
+    }
+
+    public void setMergedPermissions(Set<String> mergedPermissions) {
+        this.mergedPermissions = mergedPermissions;
+    }
+
+    public void updateMergedPermissions() {
+        this.mergedPermissions.clear();
+        if (this.roles != null) {
+            for (Role r : this.roles) {
+                if (r.getPermissionsList() != null) {
+                    this.mergedPermissions.addAll(r.getPermissionsList());
+                }
+            }
+        }
+    }
+
+    public boolean hasPermission(String featureCode) {
+        return mergedPermissions.contains(featureCode);
+    }
 
     public int getId() {
         return id;
@@ -74,25 +114,6 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
-    public Role getERole() {
-        if (this.role == null) {
-            return null;
-        }
-        try {
-            return Role.valueOf(this.role.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return Role.CUSTOMER;
-        }
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public boolean isLocked() {
         return isLocked;
     }
@@ -100,7 +121,13 @@ public class User {
     public void setLocked(boolean isLocked) {
         this.isLocked = isLocked;
     }
+    public boolean isIsLocked() {
+        return isLocked;
+    }
 
+    public void setIsLocked(boolean isLocked) {
+        this.isLocked = isLocked;
+    }
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -109,18 +136,4 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    @Override
-    public String toString() {
-        return "\nUser{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", avatarUrl='" + avatarUrl + '\'' +
-                ", role=" + role +
-                ", isLocked=" + isLocked +
-                ", createdAt=" + createdAt +
-                '}';
-    }
 }

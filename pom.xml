@@ -91,11 +91,10 @@
             <version>3.51.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.10.1</version>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-gson2</artifactId>
+            <version>3.51.0</version>
         </dependency>
 
         <dependency>
