@@ -49,14 +49,14 @@ public class LoginServlet extends HttpServlet {
                 }
                 HttpSession session = request.getSession();
                 session.setAttribute("auth", user);
-                if (user.getERole() == Role.ADMIN) {
-                    session.setAttribute("author", user);
-                    response.sendRedirect(request.getContextPath() + "/admin/dashboard");
-                    return;
-                } else {
-                    response.sendRedirect("home");
-                    return;
-                }
+//                if (user.getERole() == Role.ADMIN) {
+//                    session.setAttribute("author", user);
+//                    response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+//                    return;
+//                } else {
+//                    response.sendRedirect("home");
+//                    return;
+//                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -93,15 +93,15 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("auth", user);
 
             //phân quyền điều hướng
-            if (user.getERole() == Role.ADMIN) {
-                session.setAttribute("author", user);
-                //qua AMDashboardServlet
-                response.sendRedirect(request.getContextPath() + "/admin/dashboard");
-                return;
-            } else {
-                response.sendRedirect("home");
-                return;
-            }
+//            if (user.getERole() == Role.ADMIN) {
+//                session.setAttribute("author", user);
+//                //qua AMDashboardServlet
+//                response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+//                return;
+//            } else {
+//                response.sendRedirect("home");
+//                return;
+//            }
         } else {
             if (!userService.checkExistMail(email)) {
                 request.setAttribute("regEmail", email);
