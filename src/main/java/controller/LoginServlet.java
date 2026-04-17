@@ -68,10 +68,10 @@ public class LoginServlet extends HttpServlet {
         } else {
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
         }
+
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -89,7 +89,6 @@ public class LoginServlet extends HttpServlet {
             //TH2 : login thất bại
             request.setAttribute("loginEmail", email);
             request.setAttribute("error", result.getMessage());
-
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
         }
     }

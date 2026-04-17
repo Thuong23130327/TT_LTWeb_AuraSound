@@ -18,6 +18,7 @@ public class UserDAO {
                         .one() > 0
         );
     }
+
     public int insertUser(User user) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate("INSERT INTO users (email, password_hash, full_name, avatar_url, is_locked) " +
@@ -48,6 +49,7 @@ public class UserDAO {
                         .list()
         );
     }
+
     // ktra đăng nhập
     public User checkLogin(String email, String passHash) {
         return jdbi.withHandle(handle ->
@@ -60,7 +62,7 @@ public class UserDAO {
         );
     }
 
-    // đăng ký tài khoản
+    // đăng ký tài khoản - ok
     public boolean register(String email, String passHash, String fullname) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate("INSERT INTO Users (email, password_hash, full_name) VALUES (:email, :pass, :name)")
@@ -91,15 +93,24 @@ public class UserDAO {
         );
     }
 
-    //tìm user bằng email
+    //tìm user bằng email - Login
     public User getUserByEmail(String email) {
+
+        int roleId = jdbi.withHandle(handle ->
+                handle.createQuery("SELECT role_id FROM user_roles WHERE user_id = 4")
+                        .bind("email", email)
+                        .mapToBean(Integer.class)
+                        .findFirst()
+                        .orElse(null)
+        );
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM Users WHERE email = :email")
                         .bind("email", email)
                         .mapToBean(User.class)
                         .findFirst()
-                        .orElse(null)
-        );
+                        .orElse(null));
+
+
     }
 
     public static void main(String[] args) {
@@ -107,7 +118,7 @@ public class UserDAO {
         System.out.println(dao.getAllUser().toString());
     }
 
-// Cơ chế brute force
+    // Cơ chế brute force - ok
     //tăng failed_attempts khi đăng nhập sai
     public void incrementFailedAttempts(String email) {
         jdbi.useHandle(handle ->
@@ -117,7 +128,8 @@ public class UserDAO {
         );
     }
 
-    //khóa tài khoản
+
+    //khóa tài khoản - ok
     public void lockAccount(String email) {
         jdbi.useHandle(handle ->
                 handle.createUpdate("UPDATE users SET is_locked = 1 WHERE email = :email")
@@ -126,7 +138,7 @@ public class UserDAO {
         );
     }
 
-    //reset failed_attempts về 0
+    //reset failed_attempts về 0 - ok
     public void resetFailedAttempts(String email) {
         jdbi.useHandle(handle ->
                 handle.createUpdate("UPDATE users SET failed_attempts = 0 WHERE email = :email")
