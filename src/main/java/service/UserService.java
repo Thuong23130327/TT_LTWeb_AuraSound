@@ -66,6 +66,7 @@ public class UserService {
 
         // Thành công: Reset và trả về user
         userDAO.resetFailedAttempts(email);
+        System.out.println(user.getMergedPermissions().toString() + "-"+user.getRoles().toString());
         return new LoginResult(user);
     }
 

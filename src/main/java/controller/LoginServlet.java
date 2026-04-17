@@ -12,12 +12,14 @@ import model.enums.Role;
 import service.UserService;
 import model.IconLogin.GoogleLogin;
 import model.entity.GoogleAccount;
+
 import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
 
     private final UserService userService = new UserService();
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String code = request.getParameter("code");
@@ -70,6 +72,7 @@ public class LoginServlet extends HttpServlet {
         }
 
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String email = request.getParameter("email");
@@ -81,9 +84,14 @@ public class LoginServlet extends HttpServlet {
             //TH1: login thành công
             User user = result.getUser();
             HttpSession session = request.getSession();
-
             session.setAttribute("auth", user);
-            response.sendRedirect("home");
+
+//            Không phải KH bình thường
+            if (user.isAdminOrStaff()) {
+                session.setAttribute("author", user);
+                response.sendRedirect("admin/dashboard");
+            } else
+                response.sendRedirect("home");
 
         } else {
             //TH2 : login thất bại
