@@ -2,8 +2,8 @@ const container = document.getElementById("container");
 const registerBtn = document.getElementById("register");
 const loginBtn = document.getElementById("login");
 const passwordInput = document.getElementById('regPassword');
-const signUpBtn = document.getElementById('signUp');
-const matchRequirement = document.getElementById('match');
+const signUpBtn = document.getElementById('btnSubmitRegister');
+// const matchRequirement = document.getElementById('match');
 const rePasswordInput = document.querySelector('input[name="repassword"]');
 
 // Xử lí hiệu ứng
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const allValid = Object.values(requirements).every(li => li.classList.contains('valid'));
         signUpBtn.disabled = !allValid;
-        checkMatch();
+        // checkMatch();
         updateButtonState();
     });
 
@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function validate(element, isValid) {
+    if (!element) return;
     if (isValid) {
         element.classList.remove('invalid');
         element.classList.add('valid');
@@ -61,25 +62,25 @@ function validate(element, isValid) {
     }
 }
 
-function checkMatch() {
-    const pass = passwordInput.value;
-    const rePass = rePasswordInput.value;
-
-    if (rePass !== "" && pass === rePass) {
-        matchRequirement.classList.remove('invalid');
-        matchRequirement.classList.add('valid');
-        return true;
-    } else {
-        matchRequirement.classList.remove('valid');
-        matchRequirement.classList.add('invalid');
-        return false;
-    }
-}
+// function checkMatch() {
+//     const pass = passwordInput.value;
+//     const rePass = rePasswordInput.value;
+//
+//     if (rePass !== "" && pass === rePass) {
+//         matchRequirement.classList.remove('invalid');
+//         matchRequirement.classList.add('valid');
+//         return true;
+//     } else {
+//         matchRequirement.classList.remove('valid');
+//         matchRequirement.classList.add('invalid');
+//         return false;
+//     }
+// }
 
 function updateButtonState() {
     const allRequirements = document.querySelectorAll('#password-requirements li');
     const allValid = Array.from(allRequirements).every(li => li.classList.contains('valid'));
-    signUpBtn.disabled = !allValid;
+    // signUpBtn.disabled = !allValid;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -97,4 +98,15 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
+    const formInputs = document.querySelectorAll('.form-container input');
+    formInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            const errorSpan = this.nextElementSibling;
+            if (errorSpan && errorSpan.classList.contains('inline-error')) {
+                errorSpan.textContent = '';
+            }
+            const generalError = document.querySelector('.text-danger[style*="font-weight: bold"]');
+            if (generalError) generalError.textContent = '';
+        });
+    });
 });
