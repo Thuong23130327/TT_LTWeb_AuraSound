@@ -80,7 +80,7 @@ function validate(element, isValid) {
 function updateButtonState() {
     const allRequirements = document.querySelectorAll('#password-requirements li');
     const allValid = Array.from(allRequirements).every(li => li.classList.contains('valid'));
-    // signUpBtn.disabled = !allValid;
+    signUpBtn.disabled = !allValid;
 }
 
 document.addEventListener("DOMContentLoaded", function () {

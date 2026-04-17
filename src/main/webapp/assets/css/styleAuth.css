@@ -1,0 +1,100 @@
+/*Style dùng chung cho các trang xác thực*/
+/*Tuân thủ bảng màu đã quy định*/
+:root {
+    --theme-color-primary: #4a6fff;
+    --theme-color-secondary: #b76bff;
+    --price: #d9534f;
+    --black: #000000;
+    --white: #ffffff;
+    --theme-gradient-button: linear-gradient(135deg, var(--theme-color-secondary), var(--theme-color-primary));
+    --theme-gradient-icon: linear-gradient(135deg, var(--theme-color-primary), var(--theme-color-secondary));
+    --theme-gradient-text: linear-gradient(90deg, var(--theme-color-secondary), var(--theme-color-primary));
+    --theme-gradient-button-light: linear-gradient(135deg, rgba(183, 107, 255, 0.8), rgba(74, 111, 255, 0.7));
+
+    --profile-text-dark: #333333;
+    --profile-border-light: #eeeeee;
+    --profile-background-light: #f9f9f9;
+    --profile-shipping-border: #f39c12;
+    --profile-history-border: #2ecc71;
+    --gray-text: #eee;
+}
+body {
+    background-color: var(--profile-background-light);
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 80px auto;
+    background: var(--white);
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--profile-border-light);
+    text-align: center;
+}
+
+.auth-container h2 {
+    color: var(--profile-text-dark);
+    margin-bottom: 10px;
+}
+
+.auth-container p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    font-size: 1rem;
+}
+
+.auth-container input:focus {
+    border-color: var(--theme-color-primary);
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    background: var(--theme-gradient-button);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.auth-btn:hover {
+    background: var(--theme-gradient-button-light);
+}
+
+.auth-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--theme-color-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Dùng lại css bắt lỗi từ register */
+.requirement-list li.valid { color: #2ecc71 !important; }
+.requirement-list li.invalid { color: var(--price) !important; }
