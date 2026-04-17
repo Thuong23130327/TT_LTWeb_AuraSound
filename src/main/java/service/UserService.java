@@ -1,6 +1,7 @@
 package service;
 
 import dao.AdminDAO.UserDAO;
+import model.dto.LoginResult;
 import model.entity.User;
 
 import java.math.BigInteger;
@@ -16,7 +17,7 @@ public class UserService {
     }
 
     // băm mk sang md5
-    private String hashPass(String password) {
+    public String hashPass(String password) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md5.digest(password.getBytes());
@@ -49,9 +50,39 @@ public class UserService {
     }
 
     //đăng nhập
-    public User login(String email, String password) {
-        String passHash = hashPass(password);
-        return userDAO.checkLogin(email, passHash);
+    public LoginResult checkLogin(String email, String password) {
+
+        String genericError = "Email hoặc mật khẩu không chính xác.";
+
+        String policyNote = " Tài khoản sẽ bị khóa nếu nhập sai quá 5 lần.";
+        User user = userDAO.getUserByEmail(email);
+
+        //TH1: email k tồn tại
+        if (user == null) {
+            return new LoginResult( genericError, 0, false);
+        }
+
+        //TH2: tk bị khóa
+        if (user.isLocked()) {
+            return new LoginResult("Tài khoản này hiện đang bị khóa. Hãy liên hệ Admin để mở lại.", 0, true);
+        }
+
+        //TH3: check pass
+        String hashInput = hashPass(password);
+        if (!user.getPasswordHash().equals(hashInput)) {
+            userDAO.incrementFailedAttempts(email);
+            int failedCount = user.getFailedAttempts() + 1;
+
+            if (failedCount >= 5) {
+                userDAO.lockAccount(email);
+                return new LoginResult("Bạn đã nhập sai 5 lần. Tài khoản đã bị khóa.", 0, true);
+            }
+            return new LoginResult(genericError + policyNote, 5 - failedCount, false);
+        }
+
+        // Thành công: Reset và trả về user
+        userDAO.resetFailedAttempts(email);
+        return new LoginResult(user);
     }
 
     public User getUserByEmail(String email) {

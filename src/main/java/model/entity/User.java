@@ -23,6 +23,9 @@ public class User {
     @ColumnName("avatar_url")
     private String avatarUrl;
 
+    @ColumnName("failed_attempts")
+    private int failedAttempts;
+
     @ColumnName("is_locked")
     private boolean isLocked;
 
@@ -136,4 +139,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public int getFailedAttempts() {
+        return failedAttempts;
+    }
+
+    public void setFailedAttempts(int failedAttempts) {
+        this.failedAttempts = failedAttempts;
+    }
 }
