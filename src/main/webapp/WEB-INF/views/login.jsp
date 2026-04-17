@@ -70,7 +70,7 @@
             <input type="password" name="password" placeholder="Password"/>
             <p class="text-danger">${error}
             </p>
-            <a href="#">Quên mật khẩu?</a>
+            <a href="<%= request.getContextPath() %>/forgot-password">Quên mật khẩu?</a>
             <span class="text-success">${registerMessage}</span>
             <button type="submit" id="signIn">Đăng Nhập</button>
             </a>
