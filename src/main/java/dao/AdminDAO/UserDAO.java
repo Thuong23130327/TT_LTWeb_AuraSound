@@ -75,11 +75,23 @@ public class UserDAO {
 
     // lấy tất cả user
     public List<User> getAllUser() {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM Users")
-                        .mapToBean(User.class)
-                        .list()
-        );
+        return jdbi.withHandle(handle -> {
+            List<User> users = handle.createQuery("SELECT * FROM users ORDER BY created_at DESC")
+                    .mapToBean(User.class)
+                    .list();
+
+            for (User user : users) {
+                List<Role> roles = handle.createQuery(
+                                "SELECT r.id, r.role_name, CAST(r.permissions AS CHAR) AS permissions " +
+                                        "FROM roles r JOIN user_roles ur ON r.id = ur.role_id " +
+                                        "WHERE ur.user_id = :userId")
+                        .bind("userId", user.getId())
+                        .mapToBean(Role.class)
+                        .list();
+                user.setRoles(roles);
+            }
+            return users;
+        });
     }
 
     // tìm user bằng id
@@ -95,22 +107,28 @@ public class UserDAO {
 
     //tìm user bằng email - Login
     public User getUserByEmail(String email) {
+        return jdbi.withHandle(handle -> {
 
-        int roleId = jdbi.withHandle(handle ->
-                handle.createQuery("SELECT role_id FROM user_roles WHERE user_id = 4")
-                        .bind("email", email)
-                        .mapToBean(Integer.class)
-                        .findFirst()
-                        .orElse(null)
-        );
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM Users WHERE email = :email")
-                        .bind("email", email)
-                        .mapToBean(User.class)
-                        .findFirst()
-                        .orElse(null));
+            User user = handle.createQuery("SELECT * FROM users WHERE email = :email")
+                    .bind("email", email)
+                    .mapToBean(User.class)
+                    .findOne()
+                    .orElse(null);
 
+            if (user != null) {
+                List<Role> roles = handle.createQuery(
+                                "SELECT r.id, r.role_name, CAST(r.permissions AS CHAR) AS permissions " +
+                                        "FROM roles r " +
+                                        "JOIN user_roles ur ON r.id = ur.role_id " +
+                                        "WHERE ur.user_id = :userId")
+                        .bind("userId", user.getId())
+                        .mapToBean(Role.class)
+                        .list();
+                user.setRoles(roles);
+            }
 
+            return user;
+        });
     }
 
     public static void main(String[] args) {

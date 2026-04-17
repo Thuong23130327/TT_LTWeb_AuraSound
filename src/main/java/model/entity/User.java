@@ -146,4 +146,17 @@ public class User {
     public void setFailedAttempts(int failedAttempts) {
         this.failedAttempts = failedAttempts;
     }
+
+    public boolean isAdminOrStaff() {
+        if (this.roles == null || this.roles.isEmpty()) {
+            return false;
+        }
+        for (Role r : this.roles) {
+              if (r.getId() != 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
