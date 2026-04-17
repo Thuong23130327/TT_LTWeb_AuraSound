@@ -52,7 +52,7 @@ public class ProductServlet extends HttpServlet {
         request.setAttribute("cateId", cateId);
         request.setAttribute("brandId", brandId);
         request.setAttribute("productList", productList);
-        request.getRequestDispatcher("/WEB-INF/views/admin/headphones.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/headphones.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

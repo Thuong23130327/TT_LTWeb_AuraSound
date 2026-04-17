@@ -59,13 +59,8 @@
                 <a href="${AuraSound}/login-facebook" class="icon">
                     <i class="fa-brands fa-facebook-f"></i>
                 </a>
-                <a href="admin/admin.jsp" class="icon">
-                    <i class="fa-brands fa-github"></i>
-                </a>
-                <a href="#" class="icon">
-                    <i class="fa-brands fa-linkedin-in"></i>
-                </a>
             </div>
+
             <input type="email" name="email" value="${loginEmail}" placeholder="Nhập Email"/>
             <input type="password" name="password" placeholder="Password"/>
             <p class="text-danger">${error}

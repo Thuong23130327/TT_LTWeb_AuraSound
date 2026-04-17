@@ -141,14 +141,7 @@
               <div class="login">Admin - Quản Lý</div>
             </a>
           </c:if>
-            <c:choose>
-                <c:when test="${not empty sessionScope.LOGIN_USER}">
-                    <span>Chào, ${sessionScope.LOGIN_USER.fullName}</span>
-                </c:when>
-                <c:otherwise>
-                    <a href="login.jsp">Đăng nhập</a>
-                </c:otherwise>
-            </c:choose>
+
 
         </div>
 

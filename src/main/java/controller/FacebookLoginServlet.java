@@ -20,6 +20,7 @@ import java.util.List;
 @WebServlet(name = "FacebookLoginServlet", value = "/login-facebook")
 public class FacebookLoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String code = request.getParameter("code");
 
         if (code == null || code.isEmpty()) {
@@ -39,9 +40,7 @@ public class FacebookLoginServlet extends HttpServlet {
 
     private void handleLoginWithDatabase(FacebookAccount fbAccount, HttpServletRequest request, HttpServletResponse response) throws IOException {
         UserDAO userDao = new UserDAO();
-
         User user = userDao.getUserByEmail(fbAccount.getEmail());
-
         if (user == null) {
             user = new User();
             user.setEmail(fbAccount.getEmail());
@@ -49,10 +48,8 @@ public class FacebookLoginServlet extends HttpServlet {
             user.setPasswordHash("");
             user.setLocked(false);
             user.setAvatarUrl("https://graph.facebook.com/" + fbAccount.getId() + "/picture?type=large");
-
             int newUserId = userDao.insertUser(user);
             user.setId(newUserId);
-
             userDao.assignRole(newUserId, 2);
         }
 
@@ -66,7 +63,7 @@ public class FacebookLoginServlet extends HttpServlet {
         System.out.println("DEBUG: User sau khi xử lý DB: " + user);
 
         if (user != null) {
-            request.getSession().setAttribute("LOGIN_USER", user);
+            request.getSession().setAttribute("auth", user);
             System.out.println("DEBUG: Đã lưu User vào Session thành công!");
         } else {
             System.out.println("DEBUG: User bị NULL rồi Thương ơi!");
