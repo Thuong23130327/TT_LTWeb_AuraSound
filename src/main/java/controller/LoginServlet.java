@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.dto.LoginResult;
 import model.entity.User;
 import model.enums.Role;
 import service.UserService;
@@ -16,6 +17,7 @@ import java.io.IOException;
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
 
+    private final UserService userService = new UserService();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String code = request.getParameter("code");
@@ -67,50 +69,28 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
         }
     }
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UserService userService = new UserService();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        request.setAttribute("registerMessage", null);
-        request.setAttribute("registerError", null);
+        LoginResult result = userService.checkLogin(email, password);
 
-        User user = null;
-        user = userService.login(email, password);
-        if (user != null) {
-            //Check bị khóa ko
-            if (user.isLocked()) {
-                request.setAttribute("error", "Tài khoản của bạn đã bị khóa");
-                request.setAttribute("loginEmail", email);
-                request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
-
-                return;
-            }
-
-            // đăng nhập thành công
+        if (result.getUser() != null) {
+            //TH1: login thành công
+            User user = result.getUser();
             HttpSession session = request.getSession();
-            session.setAttribute("auth", user);
 
-            //phân quyền điều hướng
-//            if (user.getERole() == Role.ADMIN) {
-//                session.setAttribute("author", user);
-//                //qua AMDashboardServlet
-//                response.sendRedirect(request.getContextPath() + "/admin/dashboard");
-//                return;
-//            } else {
-//                response.sendRedirect("home");
-//                return;
-//            }
+            session.setAttribute("auth", user);
+            response.sendRedirect("home");
+
         } else {
-            if (!userService.checkExistMail(email)) {
-                request.setAttribute("regEmail", email);
-                request.setAttribute("error", "Email chưa có tài khoản, vui lòng chọn Đăng kí");
-            } else {
-                request.setAttribute("loginEmail", email);
-                request.setAttribute("error", "Đăng nhập không thành công. Vui lòng kiểm tra tên đăng nhập và mật khẩu");
-            }
+            //TH2 : login thất bại
+            request.setAttribute("loginEmail", email);
+            request.setAttribute("error", result.getMessage());
+
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
 }

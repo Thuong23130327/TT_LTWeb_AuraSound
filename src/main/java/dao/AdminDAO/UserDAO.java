@@ -107,5 +107,33 @@ public class UserDAO {
         System.out.println(dao.getAllUser().toString());
     }
 
+// Cơ chế brute force
+    //tăng failed_attempts khi đăng nhập sai
+    public void incrementFailedAttempts(String email) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate("UPDATE users SET failed_attempts = failed_attempts + 1 WHERE email = :email")
+                        .bind("email", email)
+                        .execute()
+        );
+    }
+
+    //khóa tài khoản
+    public void lockAccount(String email) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate("UPDATE users SET is_locked = 1 WHERE email = :email")
+                        .bind("email", email)
+                        .execute()
+        );
+    }
+
+    //reset failed_attempts về 0
+    public void resetFailedAttempts(String email) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate("UPDATE users SET failed_attempts = 0 WHERE email = :email")
+                        .bind("email", email)
+                        .execute()
+        );
+    }
+//
 }
 
