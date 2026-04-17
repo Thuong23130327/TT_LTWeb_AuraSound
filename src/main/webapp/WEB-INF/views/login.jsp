@@ -17,7 +17,7 @@
 
 <body>
 
-<div class="container" id="container">
+<div class="container ${not empty showRegisterPanel ? 'active' : ''}" id="container">
     <div class="form-container sign-up">
         <form action="register" method="post">
             <h1>Đăng ký</h1>
@@ -100,18 +100,7 @@
     </div>
 </div>
 <script src="assets/js/scriptLogin.js"></script>
-<%
-    if (request.getAttribute("registerError") != null) {
-%>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const container = document.getElementById('container');
-        if (container) {
-            container.classList.add("active");
-        }
-    });
-</script>
-<% } %>
+
 
 </body>
 </html>

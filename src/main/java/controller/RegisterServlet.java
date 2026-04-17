@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.entity.User;
 import service.UserService;
 
 import java.io.IOException;
@@ -62,8 +64,10 @@ public class RegisterServlet extends HttpServlet {
         int result = userService.register(email, password, fullname);
 
         if (result == 1) {
-            request.setAttribute("registerMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
-            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+            User newUser = userService.getUserByEmail(email);
+            HttpSession session = request.getSession();
+            session.setAttribute("auth", newUser);
+            response.sendRedirect(request.getContextPath() + "/");
         } else if (result == 0) {
             request.setAttribute("errorEmail", "Email đã được sử dụng, vui lòng chọn email khác.");
             forwardWithData(request, response, fullname, email);
@@ -77,6 +81,7 @@ public class RegisterServlet extends HttpServlet {
         request.setAttribute("fullname", fullname);
         request.setAttribute("regEmail", email);
         request.setAttribute("hasRegisterError", true); // Cờ báo hiệu có lỗi
+        request.setAttribute("showRegisterPanel", "true");
         request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
 }
