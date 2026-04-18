@@ -5,12 +5,18 @@ import model.dto.LoginResult;
 import model.entity.User;
 import util.HashUtils;
 import java.util.List;
+import dao.AdminDAO.PasswordResetTokenDAO;
+import model.entity.PasswordResetToken;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class UserService {
     private final UserDAO userDAO;
+    private final PasswordResetTokenDAO tokenDAO;
 
     public UserService() {
         this.userDAO = new UserDAO();
+        this.tokenDAO = new PasswordResetTokenDAO();
     }
 
     public User getUserByEmail(String email) {
@@ -76,5 +82,45 @@ public class UserService {
         System.out.println(dao.checkExistMail("24@gmail.com"));
         System.out.println(dao.register("24@gmail.com", "abcdef","Nguyen"));
 
+    }
+
+    public boolean processForgotPassword(String email, String baseUrl) {
+        //  Ktra mail
+        if (!checkExistMail(email)) {
+            return false;
+        }
+
+        String token = UUID.randomUUID().toString();
+        // Cấp tgian hết hạn là 10 phút
+        LocalDateTime expiry = LocalDateTime.now().plusMinutes(10);
+
+        if (tokenDAO.insertToken(email, token, expiry)) {
+            String resetLink = baseUrl + "?token=" + token;
+            return EmailService.sendResetEmail(email, resetLink);
+        }
+        return false;
+    }
+
+        //  Ktra token còn hạn không
+    public boolean isTokenValid(String token) {
+        PasswordResetToken prt = tokenDAO.getToken(token);
+        return prt != null && prt.getExpiryDate().isAfter(LocalDateTime.now());
+    }
+
+        //  Đổi mk & vô hiệu hóa token
+    public boolean resetPassword(String token, String newPassword) {
+        PasswordResetToken prt = tokenDAO.getToken(token);
+
+        if (prt != null && prt.getExpiryDate().isAfter(LocalDateTime.now())) {
+
+        //  MD5
+            String hashedPass = HashUtils.hashPass(newPassword);
+
+            if (userDAO.updatePassword(prt.getEmail(), hashedPass)) {
+                tokenDAO.deleteToken(token); // Vô hiệu hóa token
+                return true;
+            }
+        }
+        return false;
     }
 }

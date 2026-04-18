@@ -42,9 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Validate pass & form resetpass
     const resetForm = document.getElementById('resetPasswordForm');
     const newPassword = document.getElementById('newPassword');
+    const reNewPassword = document.getElementById('reNewPassword'); // Lấy thêm phần tử này
     const btnReset = document.getElementById('btnSubmitReset');
+    const errSpanReset = document.getElementById('err-reset-msg'); // Đưa ra ngoài để dùng chung
 
-    if (resetForm && newPassword) {
+    if (resetForm && newPassword && reNewPassword) {
         const reqs = {
             length: document.getElementById('length'),
             uppercase: document.getElementById('uppercase'),
@@ -53,7 +55,23 @@ document.addEventListener("DOMContentLoaded", function () {
             special: document.getElementById('special')
         };
 
-        // Logic check mật khẩu dùng lại từ Register
+        // Hàm ktra tổng thể để mở khóa nút Submit
+        function checkPasswordMatch() {
+            const allValid = Object.values(reqs).every(li => li.classList.contains('valid'));
+            const isMatch = newPassword.value === reNewPassword.value && newPassword.value !== "";
+
+            // Chỉ mở khóa khi pass đủ mạnh và nhập lại khớp
+            btnReset.disabled = !(allValid && isMatch);
+
+            // Báo lỗi mk ko khớp
+            if (!isMatch && reNewPassword.value.length > 0) {
+                errSpanReset.textContent = "Mật khẩu nhập lại không trùng khớp!";
+            } else {
+                errSpanReset.textContent = "";
+            }
+        }
+
+        // Logic check mk dùng lại từ Register
         newPassword.addEventListener('input', function () {
             const val = this.value;
             validate(reqs.length, val.length >= 8);
@@ -62,24 +80,21 @@ document.addEventListener("DOMContentLoaded", function () {
             validate(reqs.number, /[0-9]/.test(val));
             validate(reqs.special, /[@$!%*?&]/.test(val));
 
-            const allValid = Object.values(reqs).every(li => li.classList.contains('valid'));
-            btnReset.disabled = !allValid;
+            checkPasswordMatch();
+        });
+
+        // Thêm event lắng nghe ô Nhập lại mật khẩu
+        reNewPassword.addEventListener('input', function () {
+            checkPasswordMatch();
         });
 
         // Submit Form Đổi Mật Khẩu
         resetForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            const repass = document.getElementById('reNewPassword').value;
-            const errSpan = document.getElementById('err-reset-msg');
             const successSpan = document.getElementById('success-reset-msg');
 
-            errSpan.textContent = "";
+            errSpanReset.textContent = "";
             successSpan.textContent = "";
-
-            if (newPassword.value !== repass) {
-                errSpan.textContent = "Mật khẩu nhập lại không trùng khớp!";
-                return;
-            }
 
             btnReset.textContent = "Đang xử lý...";
             btnReset.disabled = true;
@@ -96,13 +111,13 @@ document.addEventListener("DOMContentLoaded", function () {
                             window.location.href = "login";
                         }, 3000);
                     } else {
-                        errSpan.textContent = data.error;
+                        errSpanReset.textContent = data.error;
                         btnReset.disabled = false;
                         btnReset.textContent = "Cập Nhật Mật Khẩu";
                     }
                 })
                 .catch(err => {
-                    errSpan.textContent = "Lỗi hệ thống!";
+                    errSpanReset.textContent = "Lỗi hệ thống!";
                     btnReset.disabled = false;
                     btnReset.textContent = "Cập Nhật Mật Khẩu";
                 });
