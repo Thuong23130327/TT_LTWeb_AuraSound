@@ -22,14 +22,26 @@ public class ForgotPasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         String email = request.getParameter("email");
         String resetUrl = request.getRequestURL().toString().replace("forgot-password", "reset-password");
 
-        boolean success = pwdService.processForgotPassword(email, resetUrl);
-
         JsonObject json = new JsonObject();
-        json.addProperty("success", success);
-        json.addProperty(success ? "message" : "error", success ? "Vui lòng kiểm tra email!" : "Lỗi hệ thống hoặc email không tồn tại.");
+        //  Kiểm tra mail tồn tại không
+        if (!dao.AdminDAO.UserDAO.checkExistMail(email)) {
+            json.addProperty("success", false);
+            json.addProperty("error", "Email không tồn tại trong hệ thống.");
+        } else {
+            // Nếu mail tồn tại, chạy logic sinh token
+            boolean success = pwdService.processForgotPassword(email, resetUrl);
+            json.addProperty("success", success);
+
+            if (success) {
+                json.addProperty("message", "Vui lòng kiểm tra email để đặt lại mật khẩu!");
+            } else {
+                json.addProperty("error", "Hệ thống đang bận hoặc lỗi gửi mail. Vui lòng thử lại sau.");
+            }
+        }
         response.getWriter().write(json.toString());
     }
 }

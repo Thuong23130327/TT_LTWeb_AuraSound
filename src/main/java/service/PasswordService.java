@@ -34,7 +34,7 @@ public class PasswordService {
     public boolean resetPassword(String token, String newPassword) {
         PasswordResetToken prt = tokenDAO.getToken(token);
         if (prt != null && prt.getExpiryDate().isAfter(LocalDateTime.now())) {
-            String hashedPass = newPassword;
+            String hashedPass = util.HashUtils.hashPass(newPassword);
             if (userDAO.updatePassword(prt.getEmail(), hashedPass)) {
                 tokenDAO.deleteToken(token);
                 return true;
