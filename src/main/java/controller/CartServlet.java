@@ -29,7 +29,7 @@ public class CartServlet extends HttpServlet {
 
         boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) || "ajax".equals(request.getParameter("type")) || "ajax".equals(request.getParameter("newVariantId"));
         try {
-            if (action != null && idStr != null && !qStr.isEmpty()) {
+            if (action != null && idStr != null) {
                 int variantId = Integer.parseInt(idStr);
 
                 if ("delete".equals(action)) {
@@ -37,11 +37,11 @@ public class CartServlet extends HttpServlet {
                 }
 
                 if ("add".equals(action) || "updateQuantity".equals(action)) {
-                    int quantityChange = (qStr != null) ? Integer.parseInt(qStr) : 1;
+                    int quantityChange = (qStr != null && !qStr.isEmpty()) ? Integer.parseInt(qStr) : 1;
                     CartService.addOrUpdateItem(cartId, variantId, quantityChange);
                 }
-                //Ajax dùng tăng/giảm số lượng, tính tiền
-                else if (isAjax) {
+                //Ajax
+                if (isAjax && ("add".equals(action) || "updateQuantity".equals(action) || "delete".equals(action))) {
                     response.setContentType("application/json");
                     PrintWriter out = response.getWriter();
 

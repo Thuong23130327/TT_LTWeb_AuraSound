@@ -10,7 +10,7 @@ public class PasswordService {
     private PasswordResetTokenDAO tokenDAO = new PasswordResetTokenDAO();
     private UserDAO userDAO = new UserDAO();
 
-    // Sinh Token, set Timeout 15 phút và gửi Mail
+    // Sinh Token, set Timeout 10 phút và gửi Mail
     public boolean processForgotPassword(String email, String baseUrl) {
        if(!userDAO.checkExistMail(email)) return false;
 
