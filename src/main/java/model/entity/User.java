@@ -12,23 +12,17 @@ public class User {
 
     private int id;
     private String email;
-
     @ColumnName("password_hash")
     private String passwordHash;
-
     @ColumnName("full_name")
     private String fullName;
     private String phone;
-
     @ColumnName("avatar_url")
     private String avatarUrl;
-
     @ColumnName("failed_attempts")
     private int failedAttempts;
-
     @ColumnName("is_locked")
     private boolean isLocked;
-
     @ColumnName("created_at")
     private LocalDateTime createdAt;
 
