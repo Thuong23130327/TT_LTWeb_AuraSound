@@ -261,7 +261,19 @@ form a:hover,
 .valid::before {
     font-weight: bold;
 }
+#btnSendMagicLink {
+    background-color: #4e4e4e;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+}
 
+#btnSendMagicLink:disabled {
+    background-color: #ccc;
+}
 /*Da dat*/
 .valid {
     color: #27ae60;

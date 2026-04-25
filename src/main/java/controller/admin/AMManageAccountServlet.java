@@ -14,14 +14,16 @@ import java.util.List;
 
 @WebServlet(name = "AMManageAccountServlet", value = "/admin/user-manager")
 public class AMManageAccountServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User currentUser = (User) request.getSession().getAttribute("author");
 
-        if (currentUser == null || !currentUser.isAdminOrStaff() || !currentUser.hasPermission("USER_VIEW")) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập trang này!");
+        if (currentUser == null || !currentUser.hasPermission("USER_VIEW")) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập");
             return;
         }
+
         UserService userService = new UserService();
         List<User> userList = userService.getAllUsers();
         request.setAttribute("userList", userList);
@@ -30,4 +32,5 @@ public class AMManageAccountServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/admin/users.jsp").forward(request, response);
 
     }
+
 }

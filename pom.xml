@@ -83,7 +83,11 @@
             <version>7.0.2</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>5.0.0</version>
+        </dependency>
         <!-- Source: https://mvnrepository.com/artifact/org.jdbi/jdbi3-core -->
         <dependency>
             <groupId>org.jdbi</groupId>

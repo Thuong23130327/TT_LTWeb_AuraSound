@@ -46,12 +46,14 @@
             </a>
         </li>
 
-        <li class="nav-item">
-            <a href="${AuraSound}/admin/user-manager" class="nav-link ${activePage == "acc"? "active" : ""}">
-                <i class="fas fa-users me-2"></i>
-                Quản lý Tài Khoản
-            </a>
-        </li>
+        <c:if test="${sessionScope.author.hasPermission('USER_VIEW')}">
+            <li class="nav-item">
+                <a href="${AuraSound}/admin/user-manager" class="nav-link ${activePage == 'acc' ? 'active' : ''}">
+                    <i class="fas fa-users me-2"></i>
+                    Quản lý Tài Khoản
+                </a>
+            </li>
+        </c:if>
 
         <li class="nav-item">
             <a href="${AuraSound}/admin/voucher.jsp" class="nav-link ${activePage == "vou"? "active" : ""}">
