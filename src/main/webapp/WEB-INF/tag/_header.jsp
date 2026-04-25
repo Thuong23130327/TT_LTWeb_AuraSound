@@ -118,7 +118,7 @@
           <c:if test="${sessionScope.auth != null}">
             <div class="account-avatar">
               <a href="${AuraSound}/profile" class="avatar-link">
-                <img src="${sessionScope.loggedInUser.avatarUrl}" alt="Avatar">
+                <img src="${not empty sessionScope.loggedInUser ? sessionScope.loggedInUser.avatarUrl : '/assets/img/default.png'}" alt="Avatar">
               </a>
               <div class="account-menu">
                 <a class="account-menu-item" href="${AuraSound}/profile">Xin
