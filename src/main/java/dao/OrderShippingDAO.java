@@ -28,7 +28,7 @@ public class OrderShippingDAO {
     }
     public static void main(String[] args) {
         OrderShippingDAO dao = new OrderShippingDAO();
-        OrderShipping os = dao.getByOrderId(1); // Test với order_id = 1
+        OrderShipping os = dao.getByOrderId(2); // Test với order_id = 2
 
         System.out.println(os.getUserAddress());
     }

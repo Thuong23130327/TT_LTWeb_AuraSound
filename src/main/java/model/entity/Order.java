@@ -10,7 +10,7 @@ import java.util.List;
 public class Order {
 
     private int id;
-    private User user;
+    private int userId;
     private int vouchersId;
     private String orderCode;
     private LocalDateTime orderDate;
@@ -30,7 +30,7 @@ public class Order {
 
     @Override
 	public String toString() {
-		return "Order [id=" + id + ", user=" + user + ", vouchersId=" + vouchersId + ", orderCode=" + orderCode
+		return "Order [id=" + id + ", userId=" + userId + ", vouchersId=" + vouchersId + ", orderCode=" + orderCode
 				+ ", orderDate=" + orderDate + ", status=" + status + ", paymentStatus=" + paymentStatus
 				+ ", totalProductsPrice=" + totalProductsPrice + ", shippingFee=" + shippingFee + ", discountAmount="
 				+ discountAmount + ", finalAmount=" + finalAmount + ", adminNote=" + adminNote + ", finishedAt="
@@ -93,12 +93,12 @@ public class Order {
         this.vouchersId = vouchersId;
     }
 
-    public User getUser() {
-        return user;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getStatus() {

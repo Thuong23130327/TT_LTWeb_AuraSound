@@ -36,42 +36,41 @@
 <jsp:include page="/WEB-INF/tag/_header.jsp"></jsp:include>
 
 <main class="cart-container">
-    <div class="cart-items-list">
+    <div class="cart-items-list" id="cart-items-wrapper">
         <c:choose>
             <c:when test="${not empty cartItems}">
                 <c:forEach var="item" items="${cartItems}">
-                    <div class="cart-item" style="display: flex; align-items: center; gap: 15px;">
+                    <div class="cart-item" id="item-row-${item.productVariantId}" data-price="${item.price}" style="display: flex; align-items: center; gap: 15px;">
+
                         <div class="item-checkbox">
-                            <input type="checkbox" ${item.checked ? 'checked' : ''}
-                                   onclick="location.href='cart?action=check&id=${item.productVariantId}'">
+                            <input type="checkbox" class="item-check" ${item.checked ? 'checked' : ''}
+                                   onchange="recalculateCart()">
                         </div>
+
                         <div class="item-main">
                             <img class="item-img" src="${item.img}" alt="${item.name}">
-
                             <div class="item-details">
                                 <h4>${item.name}</h4>
                             </div>
-
                             <div class="item-price-col">
-
-                                <span class="item-price"><fmt:formatNumber value="${item.price}" pattern="#,###"/> đ
-                                    </span>
+                                <span class="item-price"><fmt:formatNumber value="${item.price}" pattern="#,###"/> đ</span>
                             </div>
                         </div>
+
                         <div class="item-actions">
-                            <span class="item-delete"
-                                  onclick="if(confirm('Xóa sản phẩm này?')) location.href='cart?action=delete&id=${item.productVariantId}'">
+                            <span class="item-delete" style="cursor: pointer; color: red;"
+                                  onclick="deleteItemAJAX(${item.productVariantId})">
                                 Xoá
                             </span>
 
                             <div class="quantity-control">
-                                <button class="quantity-btn"
-                                        onclick="location.href='cart?action=add&id=${item.productVariantId}&q=-1'">-
-                                </button>
-                                <input class="quantity-input" type="text" value="${item.quantity}" readonly>
-                                <button class="quantity-btn"
-                                        onclick="location.href='cart?action=add&id=${item.productVariantId}&q=1'">+
-                                </button>
+                                <button type="button" class="quantity-btn"
+                                        onclick="updateQuantityAJAX(${item.productVariantId}, -1)">-</button>
+
+                                <input class="quantity-input" id="qty-${item.productVariantId}" type="text" value="${item.quantity}" readonly>
+
+                                <button type="button" class="quantity-btn"
+                                        onclick="updateQuantityAJAX(${item.productVariantId}, 1)">+</button>
                             </div>
                         </div>
                     </div>
@@ -87,15 +86,15 @@
     </div>
 
     <div class="cart-subtotal">
-        <span>Tạm tính (${totalQuantity} sản phẩm):</span>
-
-        <span class="subtotal-price">
-            <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> đ</span>
+        <span>Tạm tính (<span id="total-qty-display">${totalQuantity}</span> sản phẩm):</span>
+        <span class="subtotal-price" id="total-price-display">
+            <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> đ
+        </span>
     </div>
 
     <div class="checkout-button-container">
         <a href="checkout.jsp">
-            <button class="checkout-button-tgdd">THANH TOÁN</button>
+            <button type="button" class="checkout-button-tgdd">THANH TOÁN</button>
         </a>
     </div>
 </main>
