@@ -56,11 +56,17 @@
                     <c:forEach var="order" items="${pendingOrders}">
                         <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail-success?id=${order.id}">
                             <div class="list-item">
-                                <div class="item-order pending">
-                                    #${order.orderCode} - Người nhận: ${order.recipientName}
-                                    | Đang chờ duyệt
+                                <div class="item-order shipping">
+                                    #${order.orderCode} - Người nhận: ${not empty order.recipientName ? order.recipientName : 'Trống tên'}
+                                    | Tổng tiền:
+                                    <c:choose>
+                                        <c:when test="${not empty order.finalAmount}">
+                                            <fmt:formatNumber value="${order.finalAmount}" type="currency" currencySymbol="VNĐ"/>
+                                        </c:when>
+                                        <c:otherwise>0 VNĐ</c:otherwise>
+                                    </c:choose>
                                     <br>
-                                    <small>Ngày đặt: <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></small>
+                                    <small>Ngày đặt: ${not empty order.orderDate ? order.orderDate : 'Chưa có ngày'}</small>
                                 </div>
                             </div>
                         </a>
