@@ -1,5 +1,3 @@
-
-
 // active ảnh nhỏ của minh họa sp
 function activeSmall(targetSrc) {
     const thumbnails = document.querySelectorAll(".small-img")
@@ -55,7 +53,6 @@ function prevImage() {
 }
 
 function selectVariant(e) {
-
     const id = e.getAttribute("data-id");
     const marketPrice = e.getAttribute("data-marketPrice");
     const stock = e.getAttribute("data-stock");
@@ -63,25 +60,27 @@ function selectVariant(e) {
     const targetImg = e.getAttribute("data-img");
 
     changeMainImg(targetImg);
-
     const formatter = new Intl.NumberFormat('vi-VN');
-    document.getElementById("new-price").innerText = formatter.format(sellPrice) + " đ";
-    document.getElementById("old-price").innerText = formatter.format(marketPrice) + " đ";
+    const newPriceElem = document.getElementById("new-price");
+    const oldPriceElem = document.getElementById("old-price");
+    if (newPriceElem) {
+        newPriceElem.innerText = formatter.format(sellPrice) + " đ";
+    }
+
+    if (oldPriceElem) {
+        oldPriceElem.innerText = formatter.format(marketPrice) + " đ";
+    }
     document.getElementById("stock").innerText = stock;
+    let stockElement = document.getElementById("stock");
+    stockElement.setAttribute("data-stock", stock);
 
     document.getElementById("selectedVariantId").value = id;
 
     const input = document.getElementById("quanProduct")
-
-    let stockElement = document.getElementById("stock");
     input.value = 1;
-    stockElement.setAttribute("data-stock", stock);
 
     const listVar = document.querySelectorAll(".color-item")
-    for (const eachVar of listVar) {
-        eachVar.classList.remove("active");
-    }
-
+    listVar.forEach(item => item.classList.remove("active"));
     e.classList.add("active");
 }
 

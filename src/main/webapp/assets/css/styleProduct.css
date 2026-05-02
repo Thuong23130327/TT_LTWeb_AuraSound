@@ -842,24 +842,6 @@ progress::-moz-progress-bar {
     margin-bottom: 1rem;
 }
 
-.rating {
-    display: flex;
-    justify-self: center;
-    align-items: center;
-    grid-gap: .5rem;
-    font-size: 2rem;
-    color: goldenrod;
-    margin-bottom: 2rem;
-}
-
-.rating .star {
-    cursor: pointer;
-}
-
-.rating .star:hover {
-    transform: scale(1.1);
-}
-
 textarea {
     width: 100%;
     background: #f0f0f0;

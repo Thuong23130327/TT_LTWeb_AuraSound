@@ -24,7 +24,8 @@ public class HomeServlet extends HttpServlet {
         List<Product> featuredProducts = service.getList(null, null, null, null, null, 1);
         request.setAttribute("bannerList", bannerList);
         request.setAttribute("brandList", brandList);
-//        System.out.println(bannerList + " " + brandList);
+        request.setAttribute("activePage", "home");
+        request.setAttribute("pageTitle", "Trang chủ - AuraSound");
         request.setAttribute("featuredProducts", featuredProducts);
         request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);
     }

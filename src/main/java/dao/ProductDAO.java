@@ -116,18 +116,17 @@ public class ProductDAO {
         System.out.println("all: " + totalAll);
 
 
-
     }
 
-
     public Product getById(String id) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM products WHERE id = :id")
-                        .bind("id", id)
-                        .mapToBean(Product.class)
-                        .findFirst()
-                        .orElse(null)
-        );
+        return jdbi.withHandle(handle -> {
+            handle.registerRowMapper(FieldMapper.factory(Product.class));
+            return handle.createQuery("SELECT * FROM products WHERE id = :id")
+                    .bind("id", id)
+                    .mapTo(Product.class)
+                    .findFirst()
+                    .orElse(null);
+        });
     }
 
     public List<Product> searchProductByText(String textSearch) {

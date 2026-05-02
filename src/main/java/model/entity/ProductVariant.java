@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 public class ProductVariant {
     private int id;
+    @ColumnName("products_id")
     private int productId;
     private String variantSku;
     private String colorName;
@@ -16,7 +17,6 @@ public class ProductVariant {
     private int stockQuantity;
     private int soldQuantity;
     private boolean isDefault;
-    private Product product;
 
     public int getId() {
         return id;
@@ -30,7 +30,6 @@ public class ProductVariant {
         return productId;
     }
 
-    @ColumnName("products_id")
     public void setProductId(int productId) {
         this.productId = productId;
     }
@@ -99,21 +98,12 @@ public class ProductVariant {
         this.isDefault = isDefault;
     }
 
-    public Product getProduct() {
-        return product;
+
+    @Override
+    public String toString() {
+        return "ProductVariant [id=" + id + ", productId=" + productId + ", variantSku=" + variantSku + ", colorName="
+                + colorName + ", mainImageUrl=" + mainImageUrl + ", marketPrice=" + marketPrice + ", sellPrice="
+                + sellPrice + ", stockQuantity=" + stockQuantity + ", soldQuantity=" + soldQuantity + ", isDefault="
+                + isDefault;
     }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-	@Override
-	public String toString() {
-		return "ProductVariant [id=" + id + ", productId=" + productId + ", variantSku=" + variantSku + ", colorName="
-				+ colorName + ", mainImageUrl=" + mainImageUrl + ", marketPrice=" + marketPrice + ", sellPrice="
-				+ sellPrice + ", stockQuantity=" + stockQuantity + ", soldQuantity=" + soldQuantity + ", isDefault="
-				+ isDefault + ", product=" + product + "]\n";
-	}
-
-
 }

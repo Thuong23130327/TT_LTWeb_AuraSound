@@ -55,7 +55,9 @@ public class ProductService {
     //lấy sp bằng id
     public Product getById(String pid) {
         Product p = productDAO.getById(pid);
+        System.out.println("product tu dao:" + p.toString());
         return p != null ? p : null;
+
     }
 
     public List<ProductSpec> getAllSpecByProductId(String productId){

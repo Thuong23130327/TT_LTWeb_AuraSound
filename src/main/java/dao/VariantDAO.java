@@ -1,8 +1,10 @@
 package dao;
 
 import model.entity.Brand;
+import model.entity.Product;
 import model.entity.ProductVariant;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.reflect.FieldMapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,11 +16,13 @@ public class VariantDAO {
     private static final Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
     public List<ProductVariant> getVariantsByProductId(String pid) {
-        String sql = "SELECT * FROM ProductVariants WHERE Products_id = :pid";
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("pid", pid)
-                        .mapToBean(ProductVariant.class).list());
+
+        return jdbi.withHandle(handle -> {
+            handle.registerRowMapper(FieldMapper.factory(ProductVariant.class));
+            return handle.createQuery("SELECT * FROM ProductVariants WHERE products_id = :pid")
+                    .bind("pid", pid)
+                    .mapTo(ProductVariant.class).list();
+        });
     }
 
 
