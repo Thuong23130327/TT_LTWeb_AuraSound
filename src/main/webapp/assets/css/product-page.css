@@ -29,7 +29,7 @@ a.a-nodecor {
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
 }
 
@@ -237,6 +237,7 @@ a.a-nodecor {
     scale: calc(1.05);
     font-size: 15px;
 }
+
 .filter-item {
     position: relative;
     display: inline-block;
@@ -326,6 +327,7 @@ a.a-nodecor {
     align-items: center;
     gap: 5px;
 }
+
 .nav-group-right {
     margin-right: 5px;
 }
@@ -371,6 +373,7 @@ a.a-nodecor {
 .sort-btn:hover {
     scale: calc(1.05);
 }
+
 .price-inputs {
     display: flex;
     align-items: center;
@@ -457,7 +460,7 @@ a.a-nodecor {
     pointer-events: auto;
     -webkit-appearance: none;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     transition: 0.2s;
 }
 
@@ -470,7 +473,7 @@ a.a-nodecor {
     border: 2px solid #3b82f6;
     pointer-events: auto;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .price-slider-container input[type="range"]::-webkit-slider-thumb:hover {
@@ -493,5 +496,22 @@ a.a-nodecor {
 .btn-apply-price-inline:hover {
     filter: brightness(1.1);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.master-filter-container {
+    background-color: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #eee;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    min-width: 850px !important;
+    padding: 25px !important;
+    border-radius: 12px;
+}
+
+.filter-group-title {
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1rem;
 }

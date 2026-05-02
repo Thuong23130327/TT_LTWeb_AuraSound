@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+//Lay sp ajax post - product servlet
 function loadAjaxProducts() {
     console.log(">>> Đang gửi Ajax với dữ liệu: ", filterState);
     $.ajax({
@@ -23,7 +24,9 @@ function loadAjaxProducts() {
             pageCurrent: filterState.pageCurrent,
             selectedBrands: filterState.selectedBrands,
             selectedCates: filterState.selectedCates,
-            selectedSort: filterState.selectedSort
+            selectedSort: filterState.selectedSort,
+            minPrice: filterState.minPrice,
+            maxPrice: filterState.maxPrice
         },
         dataType: "json",
         traditional: true,
@@ -49,38 +52,43 @@ function updateTittle() {
 }
 
 function clearFilter() {
+    //Set ve mac dinh
     filterState.pageCurrent = 1;
     filterState.selectedBrands = [];
     filterState.selectedCates = [];
     filterState.selectedSort = 'default';
+    filterState.minPrice = 0;
+    filterState.maxPrice = 20000000;
 
     $('.filter-option').removeClass('active');
     $('.sort-btn').removeClass('active');
     $('[data-sort="default"]').addClass('active');
+    updateParentButtonStatus('brand');
+    updateParentButtonStatus('category');
+    //reset thanh price
+    if (minSlider && maxSlider) {
+        minSlider.value = 0;
+        maxSlider.value = 20000000;
+        updateSlider();
+    }
     loadAjaxProducts();
 }
 
-
 function filter(element) {
-    // Lọc brand hay cate
-    const group = $(element).parent().data('filter-group');
+    // Lay group tu containter gan nhat
+    const group = $(element).closest('.filter-options').data('filter-group');
     const value = $(element).data('filter');
+    const isActivating = !$(element).hasClass('active');
 
-    $(element).toggleClass('active');
+    $(`.filter-options[data-filter-group="${group}"] .filter-option[data-filter="${value}"]`)
+        .toggleClass('active', isActivating);
 
     if (group === 'brand') {
         updateFilterArray(filterState.selectedBrands, value);
-    } else {
+    } else if (group === 'category') {
         updateFilterArray(filterState.selectedCates, value);
     }
-    const parentBtn = $(element).closest('.filter-item').find('> .btn-filter');
-    const currentArray = (group === 'brand') ? filterState.selectedBrands : filterState.selectedCates;
-
-    if (currentArray.length > 0) {
-        parentBtn.addClass('active');
-    } else {
-        parentBtn.removeClass('active');
-    }
+    updateParentButtonStatus(group);
     filterState.pageCurrent = 1;
     loadAjaxProducts();
 }
@@ -94,11 +102,28 @@ function sortOption(element) {
     loadAjaxProducts();
 }
 
+function updateParentButtonStatus(group) {
+    const currentArray = (group === 'brand') ? filterState.selectedBrands : filterState.selectedCates;
+    const parentBtns = $(`.filter-options[data-filter-group="${group}"]`).closest('.filter-item').find('> .btn-filter');
+
+    if (currentArray.length > 0) {
+        parentBtns.addClass('active');
+    } else {
+        parentBtns.removeClass('active');
+    }
+
+    const isAnyFilter = filterState.selectedBrands.length > 0 || filterState.selectedCates.length > 0;
+    $('.master-filter-container').closest('.filter-item').find('> .btn-filter').toggleClass('active', isAnyFilter);
+}
 
 function updateFilterArray(array, value) {
-    const index = array.indexOf(value);
-    if (index > -1) array.splice(index, 1); // co roi thi xoa di
-    else array.push(value); // chua co them vao
+    const stringValue = value.toString();
+    const index = array.indexOf(stringValue);
+    if (index > -1) {
+        array.splice(index, 1);
+    } else {
+        array.push(stringValue);
+    }
 }
 
 function renderPagination(totalPage, current) {
@@ -117,6 +142,7 @@ function changePage(page) {
     filterState.pageCurrent = page;
     loadAjaxProducts();
 }
+
 const minSlider = document.getElementById('min-range-slider');
 const maxSlider = document.getElementById('max-range-slider');
 const minInput = document.getElementById('min-price-input');
@@ -156,7 +182,7 @@ function updateSlider() {
 minSlider.addEventListener('input', updateSlider);
 maxSlider.addEventListener('input', updateSlider);
 
-document.getElementById('btn-apply-price').addEventListener('click', function() {
+document.getElementById('btn-apply-price').addEventListener('click', function () {
     loadAjaxProducts();
     $('.filter-dropdown').removeClass('active');
 });
