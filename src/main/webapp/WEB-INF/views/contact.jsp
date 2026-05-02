@@ -34,13 +34,6 @@
     <section id="form-details">
         <form action="${pageContext.request.contextPath}/contact" method="post" onsubmit="return validateFinal()">
 
-            <c:if test="${not empty successMessage}">
-                <div class="alert alert-success">${successMessage}</div>
-            </c:if>
-            <c:if test="${not empty errorMessage}">
-                <div class="alert alert-danger">${errorMessage}</div>
-            </c:if>
-
             <div class="input-group ${not empty nameError ? 'error' : ''}">
                 <input type="text" id="ContactName" name="name"
                        value="${not empty name ? name : auth.fullName}"
@@ -76,10 +69,14 @@
             <h3>LIÊN HỆ</h3>
             <h2>AuraSound có mặt chính hãng duy nhất tại</h2>
             <div class="info-list">
-                <li><i class="fal fa-map"></i> <p>Nong Lam University, Thủ Đức, TP. Hồ Chí Minh</p></li>
-                <li><i class="fal fa-envelope"></i> <p>Aurasound.work@gmail.com</p></li>
-                <li><i class="fal fa-phone-alt"></i> <p>1900 1919</p></li>
-                <li><i class="fal fa-clock"></i> <p>9:00 - 22:00 (Thứ 2 - Chủ Nhật)</p></li>
+                <li><i class="fal fa-map"></i>
+                    <p>Nong Lam University, Thủ Đức, TP. Hồ Chí Minh</p></li>
+                <li><i class="fal fa-envelope"></i>
+                    <p>Aurasound.work@gmail.com</p></li>
+                <li><i class="fal fa-phone-alt"></i>
+                    <p>1900 1919</p></li>
+                <li><i class="fal fa-clock"></i>
+                    <p>9:00 - 22:00 (Thứ 2 - Chủ Nhật)</p></li>
             </div>
         </div>
 
@@ -94,7 +91,17 @@
 </main>
 
 <jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
-<script src="assets/js/scriptContact.js"></script>
+<script src="${AuraSound}/assets/js/scriptContact.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        <c:if test="${not empty successMessage}">
+        showNotify('Thành công!', '${successMessage}', 'success');
+        </c:if>
 
+        <c:if test="${not empty errorMessage}">
+        showNotify('Thất bại!', '${errorMessage}', 'error');
+        </c:if>
+    });
+</script>
 </body>
 </html>

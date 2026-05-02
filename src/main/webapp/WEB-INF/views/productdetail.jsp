@@ -19,9 +19,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">
+    <%--    <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">--%>
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
+
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleProduct.css">
+    <link rel="stylesheet" href="${AuraSound}/assets/css/product-page.css">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleCart.css">
 </head>
 
@@ -65,12 +67,18 @@
                     <span>${product.avgRating}</span>
                     <i class='bx bxs-star'></i>
                 </div>
-
                 <div class="price-block">
-                    <span class="new-price" id="new-price"><fmt:formatNumber value="${product.sellPrice}"
-                                                                             pattern="#,###"/> đ</span>
-                    <span class="old-price" id="old-price"><fmt:formatNumber value="${product.oldPrice}"
-                                                                             pattern="#,###"/> đ</span>
+                    <div class="new-price" id="new-price">
+                        <fmt:formatNumber value="${product.sellPrice}" pattern="#,###"/> đ
+                    </div>
+
+                    <c:if test="${product.discountPercent > 0}">
+
+                        <div class="old-price" id="old-price">
+                            <fmt:formatNumber value="${product.oldPrice}" pattern="#,###"/> đ
+                        </div>
+                    </c:if>
+
                 </div>
                 <form action="cart" method="post">
                     <div class="product-options">
@@ -219,44 +227,49 @@
 
 
     </section>
-
-
     <section id="featured" class="my-5 pb-5">
         <div class="container text-center">
             <h3>Sản phẩm nổi bật</h3>
             <hr class="mx-auto">
             <p>Bạn có thể tìm thấy những sản phẩm nổi bật với giá cả hợp lí tại đây.</p>
         </div>
-        <div class="row mx-auto container-fluid">
-            <div class="product  col-lg-3 col-md-4 col-12">
-                <a href="sproduct.html" class="product-card loa page-1">
-                    <img src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/2162/356825/loa-bluetooth-jbl-partybox-720-1-638976840411732460-750x500.jpg"
-                         alt="Loa Bluetooth JBL Partybox 720">
+
+        <div class="product-grid" id="product-grid" style="margin: 0 20px">
+            <c:forEach items="${featuredProducts}" var="p">
+                <a href="detail?pid=${p.id}" class="product-card">
+                    <c:if test="${p.discountPercent > 0}">
+                        <div class="product-badge discount">Giảm ${p.discountPercent} %</div>
+                    </c:if>
+
+                    <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x300?text=No+Image'">
+
                     <div class="product-card-info">
-                        <h4>Loa Bluetooth JBL Partybox 720
-                        </h4>
+                        <h4>${p.name}</h4>
+
                         <div class="price-block">
-                            <span class="new-price">20.900.000đ</span>
+                            <div class="new-price">
+                                <fmt:formatNumber value="${p.sellPrice}" pattern="#,###"/> đ</div>
+
+                            <c:if test="${p.discountPercent > 0}">
+                                <div class="old-price">
+                                    <fmt:formatNumber value="${p.oldPrice}" pattern="#,###"/> đ</div>
+                            </c:if>
+
                         </div>
 
                         <div class="product-bottom-row">
                             <div class="rating">
                                 <i class="bi bi-star-fill"></i>
-                                <span>4.0</span>
+                                <span>${p.avgRating}</span>
                             </div>
                             <div class="favorite">
-                                <i class="bi bi-heart"></i> <i class="bi bi-heart-fill"></i>
-
+                                <i class="bi bi-heart"></i>
                                 <span>Yêu thích</span>
                             </div>
                         </div>
                     </div>
                 </a>
-                <a href="checkout.html">
-                    <button class="buy-btn">Mua Ngay</button>
-                </a>
-            </div>
-
+            </c:forEach>
         </div>
     </section>
 </main>

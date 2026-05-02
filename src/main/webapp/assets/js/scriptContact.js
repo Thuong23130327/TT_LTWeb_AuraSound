@@ -1,3 +1,16 @@
+
+function showNotify(title, text, icon) {
+    Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Đồng ý',
+        timer: 3000,
+        timerProgressBar: true
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector('form');
     const email = document.getElementById('ContactEmail');
@@ -24,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     message.addEventListener('blur', () => showError(message, message.value.trim() === ""));
 
     // Hàm validate cuối cùng khi submit
-    window.validateFinal = function() {
+    window.validateFinal = function () {
         let isEmailValid = emailRegex.test(email.value);
         let isPhoneValid = phoneRegex.test(phone.value);
         let isMessageValid = message.value.trim() !== "";
@@ -38,4 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return false; // Chặn submit
     };
+
+
 });

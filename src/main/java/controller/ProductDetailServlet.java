@@ -23,31 +23,30 @@ public class ProductDetailServlet extends HttpServlet {
         }
         ProductService productService = new ProductService();
         productService.updateViewCount(pid);
+        List<Product> featuredProducts = productService.getList(null, null, null, null, null, 1);
 
-            Product product = productService.getById(pid);
-            if (product == null) {
-                response.sendError(404, "Sản phẩm không tồn tại!");
-                return;
-            }
+        Product product = productService.getById(pid);
+        if (product == null) {
+            response.sendError(404, "Sản phẩm không tồn tại!");
+            return;
+        }
 
-            List<ProductSpec> specs = productService.getAllSpecByProductId(pid);
-            List<ProductVariant> variants = productService.getAllVariantByProductId(pid);
-            List<Image> imgs = productService.getImageByProductId(pid);
-            ProductVariant curVariant = productService.getVariantByImg(variants, product.getImg());
-            List<Category> categories = productService.getCategory(product.getCategoriesId());
+        List<ProductSpec> specs = productService.getAllSpecByProductId(pid);
+        List<ProductVariant> variants = productService.getAllVariantByProductId(pid);
+        List<Image> imgs = productService.getImageByProductId(pid);
+        ProductVariant curVariant = productService.getVariantByImg(variants, product.getImg());
+        List<Category> categories = productService.getCategory(product.getCategoriesId());
 
-            request.setAttribute("product", product);
-            request.setAttribute("variants", variants);
-            request.setAttribute("specs", specs);
-            request.setAttribute("images", imgs);
-            request.setAttribute("curVariant", curVariant);
-            request.setAttribute("categories", categories);
+        request.setAttribute("product", product);
+        request.setAttribute("variants", variants);
+        request.setAttribute("specs", specs);
+        request.setAttribute("images", imgs);
+        request.setAttribute("curVariant", curVariant);
+        request.setAttribute("categories", categories);
+        request.setAttribute("featuredProducts", featuredProducts);
 
+        System.out.println(variants.toString());
 
         request.getRequestDispatcher("/WEB-INF/views/productdetail.jsp").forward(request, response);
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
     }
 }
