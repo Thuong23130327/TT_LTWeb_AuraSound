@@ -16,7 +16,7 @@ public class ProductService {
     private SpecDAO specDAO = new SpecDAO();
     private GalleryDAO galleryDAO = new GalleryDAO();
 
-    private int pageSize = 12;
+    private int pageSize = 15;
 
     public List<Category> getAllCategories() {
         return categoryDAO.getAll();

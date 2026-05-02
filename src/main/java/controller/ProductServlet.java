@@ -26,7 +26,6 @@ public class ProductServlet extends HttpServlet {
     private ProductService productService = new ProductService();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String cateId = request.getParameter("cateId");
         String brandId = request.getParameter("brandId");
 
@@ -52,11 +51,12 @@ public class ProductServlet extends HttpServlet {
         request.setAttribute("cateId", cateId);
         request.setAttribute("brandId", brandId);
         request.setAttribute("productList", productList);
+        request.setAttribute("activePage", "product");
+
         request.getRequestDispatcher("/WEB-INF/views/headphones.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String[] selectedBrands = request.getParameterValues("selectedBrands");
         String[] selectedCates = request.getParameterValues("selectedCates");
         List<String> brandIds = (selectedBrands != null) ? Arrays.asList(selectedBrands) : null;
@@ -83,7 +83,6 @@ public class ProductServlet extends HttpServlet {
 
         request.setAttribute("productList", productList);
         request.setAttribute("pageCurrent", page);
-
         CharResponseWrapper wrapper = new CharResponseWrapper(response);
         request.getRequestDispatcher("/WEB-INF/views/ajax/_product_grid.jsp").include(request, wrapper);
         String htmlResult = wrapper.toString();
@@ -95,6 +94,5 @@ public class ProductServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonResponse);
-
     }
 }

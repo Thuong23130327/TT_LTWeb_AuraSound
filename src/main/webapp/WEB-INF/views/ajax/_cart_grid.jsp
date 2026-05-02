@@ -14,7 +14,6 @@
         </div>
 
         <div class="item-price-col">
-
                                 <span class="item-price"><fmt:formatNumber value="${item.price}" pattern="#,###"/> đ
                                     </span>
         </div>

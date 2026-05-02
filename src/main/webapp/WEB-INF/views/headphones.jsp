@@ -1,10 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
-<%
-    request.setAttribute("activePage", "product");
-%>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,10 +46,45 @@
                         </button>
 
                     </div>
-                    <div class="nav-group-center">
-                        <button class="btn-filter">
-                            <i class="bi bi-funnel-fill"></i> Bộ lọc
+                    <div class="nav-group-center"><div class="filter-item">
+                        <button type="button" class="btn-filter">
+                            <i class="bi bi-funnel-fill"></i> Bộ lọc <i class="bi bi-chevron-down ms-2"></i>
                         </button>
+                        <div class="filter-dropdown-content master-filter-container">
+                            <div class="row">
+                                <div class="col-md-4 mb-4">
+                                    <div class="filter-group-title">Hãng sản xuất</div>
+                                    <div class="filter-options d-flex flex-wrap" data-filter-group="brand">
+                                        <c:forEach items="${applicationScope.brandList}" var="brand">
+                                            <button onclick="filter(this)" type="button" class="filter-option" data-filter="${brand.id}">
+                                                    ${brand.name}
+                                            </button>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="filter-group-title">Phân loại</div>
+                                    <div class="filter-options d-flex flex-wrap" data-filter-group="category">
+                                        <c:forEach items="${applicationScope.MENU_TREE}" var="cate">
+                                            <button onclick="filter(this)" type="button" class="filter-option" data-filter="${cate.id}">
+                                                    ${cate.name}
+                                            </button>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-4">
+                                    <div class="filter-group-title">Khoảng giá</div>
+                                    <p class="text-muted small">Điều chỉnh thanh trượt giá bên ngoài để lọc chính xác hơn.</p>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearFilter()">Xóa tất cả bộ lọc</button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                <button type="button" class="btn btn-danger px-5" onclick="loadAjaxProducts()">Xem kết quả</button>
+                            </div>
+                        </div>
+                    </div>
                         <div class="filter-item">
                             <button type="button" class="btn-filter">
                                 Hãng <i class="bi bi-chevron-down ms-2"></i>
@@ -73,7 +104,8 @@
                             <button type="button" class="btn-filter">
                                 Giá <i class="bi bi-chevron-down ms-2"></i>
                             </button>
-                            <div class="filter-dropdown-content" style="min-width: 280px;     backdrop-filter: blur(12px) !important;">
+                            <div class="filter-dropdown-content"
+                                 style="min-width: 280px;     backdrop-filter: blur(12px) !important;">
                                 <div class="price-inputs">
                                     <div class="price-field">
                                         <input type="text" id="min-price-input" value="0" maxlength="7">
@@ -92,7 +124,8 @@
                                     <input type="range" min="0" max="20000000" step="100000" value="20000000"
                                            id="max-range-slider">
                                 </div>
-                                <button type="button" id="btn-apply-price" class="btn-apply-price-inline">Xem kết
+                                <button type="button" id="btn-apply-price" class="btn-apply-price-inline"
+                                        onclick="filter(this)">Xem kết
                                     quả
                                 </button>
                             </div>
@@ -129,11 +162,14 @@
                     <div class="nav-group-right">
                         <div class="sort-options" id="sort-options">
                             <span>Sắp xếp theo:</span>
-                            <button type="button" class="sort-btn active" onclick="sortOption(this)" data-sort="default">Nổi bật
+                            <button type="button" class="sort-btn active" onclick="sortOption(this)"
+                                    data-sort="default">Nổi bật
                             </button>
-                            <button type="button" class="sort-btn" onclick="sortOption(this)" data-sort="price-asc">Giá tăng dần
+                            <button type="button" class="sort-btn" onclick="sortOption(this)" data-sort="price-asc">Giá
+                                tăng dần
                             </button>
-                            <button type="button" class="sort-btn" onclick="sortOption(this)" data-sort="price-desc">Giá giảm
+                            <button type="button" class="sort-btn" onclick="sortOption(this)" data-sort="price-desc">Giá
+                                giảm
                                 dần
                             </button>
                         </div>
@@ -148,7 +184,9 @@
             </div>
         </form>
         <h1 id="namePage">${cateName != null ? cateName : 'Sản phẩm'}</h1>
+
         <div class="product-grid" id="product-grid">
+
             <c:forEach items="${productList}" var="p">
                 <a href="detail?pid=${p.id}" class="product-card">
                     <c:if test="${p.discountPercent > 0}">

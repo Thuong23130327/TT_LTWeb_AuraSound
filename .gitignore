@@ -3,14 +3,14 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .kotlin
-
+*.properties
 ### IntelliJ IDEA ###
 **/.idea/
 **/*.iml
 **/.smarttomcat/
 *.iml
 *.ipr
-*.jar
+*.jard
 *.war
 *.ear
 
@@ -22,6 +22,7 @@ target/
 .springBeans
 .sts4-cache
 *.class
+*.mvn
 target/
 bin/
 .metadata/

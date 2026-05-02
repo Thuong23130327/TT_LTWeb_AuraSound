@@ -7,16 +7,19 @@
             <div class="product-badge discount">Giảm ${p.discountPercent} %</div>
         </c:if>
 
-        <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/300x300?text=No+Image'">
+        <img src="${p.img}" alt="${p.name}"
+             onerror="this.src='https://placehold.co/300x300?text=No+Image'">
 
         <div class="product-card-info">
             <h4>${p.name}</h4>
 
             <div class="price-block">
-                <div class="new-price"><fmt:formatNumber value="${p.sellPrice}" pattern="#,###"/> đ</div>
+                <div class="new-price"><fmt:formatNumber value="${p.sellPrice}" pattern="#,###"/> đ
+                </div>
 
                 <c:if test="${p.discountPercent > 0}">
-                    <div class="old-price"><fmt:formatNumber value="${p.oldPrice}" pattern="#,###"/> đ</div>
+                    <div class="old-price"><fmt:formatNumber value="${p.oldPrice}" pattern="#,###"/> đ
+                    </div>
                 </c:if>
 
             </div>
@@ -34,3 +37,4 @@
         </div>
     </a>
 </c:forEach>
+
