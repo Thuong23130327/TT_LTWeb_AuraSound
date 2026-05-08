@@ -2,6 +2,7 @@ package service;
 
 import dao.OrderDAO;
 import dao.ProfileMDAO.ProfileDAO;
+import model.entity.CartItem;
 import model.entity.Order;
 import model.entity.OrderItem;
 import model.entity.User;
@@ -60,4 +61,11 @@ public class ProfileService {
     public List<OrderItem> getAllOrdersItem(String orderId){
         return oDAO.getAllOrdersItem(orderId);
     }
+
+    public static void main(String[] args) {
+
+    }
+
 }
+
+
