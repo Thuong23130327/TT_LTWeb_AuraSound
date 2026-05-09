@@ -5,6 +5,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.dto.CartItemDTO;
 import model.entity.Cart;
+import model.entity.User;
 import service.CartService;
 
 import java.io.IOException;
@@ -18,14 +19,23 @@ public class CartServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
 
-        //Chưa có chức năng đăng nhập, tạm thời để
-        int userId = 1;
+
+        User auth = (User) session.getAttribute("auth");
+        int userId = (auth != null) ? auth.getId() : 1;
         Cart cart = CartService.getOrCreateCartByUserId(userId);
         int cartId = cart.getId();
 
         String action = request.getParameter("action");
         String idStr = request.getParameter("id"); //variantId
         String qStr = request.getParameter("q");
+
+        if ("getCount".equals(action)) {
+            int totalQty = CartService.getTotalQuantity(cartId);
+            session.setAttribute("cartQty", totalQty); // Lưu vào session
+            response.setContentType("application/json");
+            response.getWriter().print("{\"cartQty\": " + totalQty + "}");
+            return;
+        }
 
         boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) || "ajax".equals(request.getParameter("type")) || "ajax".equals(request.getParameter("newVariantId"));
         try {
@@ -136,8 +146,10 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            //Lấy tạm userId = 1
-            int userId = 1;
+            HttpSession session = request.getSession();
+
+            User auth = (User) session.getAttribute("auth");
+            int userId = (auth != null) ? auth.getId() : 1;
 
             Cart cart = CartService.getOrCreateCartByUserId(userId);
             int cartId = cart.getId();

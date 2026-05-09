@@ -7,8 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.dto.LoginResult;
+import model.entity.Cart;
 import model.entity.User;
 import model.enums.Role;
+import service.CartService;
 import service.UserService;
 import model.IconLogin.GoogleLogin;
 import model.entity.GoogleAccount;
@@ -31,6 +33,20 @@ public class LoginServlet extends HttpServlet {
                 GoogleAccount acc = gg.getUserInfo(access);
                 UserService userService = new UserService();
                 User user = userService.getUserByEmail(acc.getEmail());
+
+                //Kiểm tra giỏ hàng
+                if (user == null) {
+                    String randomPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
+                    String fullName = acc.getName() != null ? acc.getName() : acc.getEmail().split("@")[0];
+                    int registerStatus = userService.register(acc.getEmail(), randomPassword, fullName);
+                    if (registerStatus == 1) {
+                        user = userService.getUserByEmail(acc.getEmail());
+                    } else {
+                        request.setAttribute("error", "Có lỗi xảy ra khi tạo tài khoản từ Google.");
+                        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+                        return;
+                    }
+                }
                 //Kiểm tra tài khoản tồn tại chưa
                 if (user == null) {
                     String randomPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
@@ -85,6 +101,11 @@ public class LoginServlet extends HttpServlet {
             User user = result.getUser();
             HttpSession session = request.getSession();
             session.setAttribute("auth", user);
+
+            //Đồng bộ cart vs tk của kh
+            Cart userCart = CartService.getOrCreateCartByUserId(user.getId());
+            int currentCartQty = CartService.getTotalQuantity(userCart.getId());
+            session.setAttribute("cartQty", currentCartQty);
 
 //            Không phải KH bình thường
             if (user.isAdminOrStaff()) {
