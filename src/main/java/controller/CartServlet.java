@@ -48,6 +48,8 @@ public class CartServlet extends HttpServlet {
                     double totalPrice = CartService.getTotalPrice(cartId);
                     int totalQty = CartService.getTotalQuantity(cartId);
 
+                    request.getSession().setAttribute("cartQty", totalQty);
+
                     out.print("{\"status\": \"success\", \"cartTotal\": " + totalPrice + ", \"cartQty\": " + totalQty + "}");
                     out.flush();
                     return;
@@ -111,9 +113,12 @@ public class CartServlet extends HttpServlet {
             double totalPrice = CartService.getTotalPrice(cartId);
             int totalQuantity = CartService.getTotalQuantity(cartId);
 
+            request.getSession().setAttribute("cartQty", totalQuantity);
+
             request.setAttribute("cartItems", cartItems);
             request.setAttribute("totalPrice", totalPrice);
             request.setAttribute("totalQuantity", totalQuantity);
+
 
             request.getRequestDispatcher("/WEB-INF/views/cart.jsp").forward(request, response);
         } catch (Exception e) {
@@ -149,6 +154,9 @@ public class CartServlet extends HttpServlet {
 
             //cập nhật qty
             CartService.addOrUpdateItem(cartId, variantId, qty);
+
+            int updatedTotalQty = CartService.getTotalQuantity(cartId);
+            request.getSession().setAttribute("cartQty", updatedTotalQty);
 
             //redirect về doget để load ds hiển thị
             response.sendRedirect(request.getContextPath() + "/cart");
