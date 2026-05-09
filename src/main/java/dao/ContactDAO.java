@@ -9,7 +9,7 @@ public class ContactDAO {
 
     private static final Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
-    public Contact getContact(int id) {
+    public Contact getContact(String id) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM contacts WHERE id = :id")
                         .bind("id", id)
@@ -45,6 +45,14 @@ public class ContactDAO {
         else sql.append(" ORDER BY created_at DESC");
 
         return jdbi.withHandle(handle -> handle.createQuery(sql.toString()).mapToBean(Contact.class).list());
+    }
+    public void saveReply(String mailId, String replyContent) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate("UPDATE contactmails SET status = 'Replied', reply_content = :replyContent WHERE id = :id")
+                        .bind("replyContent", replyContent)
+                        .bind("id", mailId)
+                        .execute()
+        );
     }
 
 }
