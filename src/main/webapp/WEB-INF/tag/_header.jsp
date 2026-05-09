@@ -109,8 +109,8 @@
                     <div class="cart ${activePage =='cart'?'active':''}">
                         <i class="bi bi-cart"></i> Giỏ hàng
                         <span id="cart-badge" class="badge bg-danger rounded-pill"
-                              style="font-size: 0.7rem; vertical-align: top; ${sessionScope.cart == null ? 'display:none' : ''}">
-                            ${sessionScope.cart != null ? sessionScope.cart.totalQuantity : 0}
+                              style="font-size: 0.7rem; vertical-align: top; ${sessionScope.cartQty == null || sessionScope.cartQty == 0 ? 'display:none' : 'display:inline-block'}">
+                            ${sessionScope.cartQty != null ? sessionScope.cartQty : 0}
                         </span>
                     </div>
                 </a>

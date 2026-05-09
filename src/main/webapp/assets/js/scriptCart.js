@@ -1,3 +1,17 @@
+function updateHeaderBadge(quantity) {
+    const cartBadge = document.getElementById('cart-badge');
+    if (cartBadge) {
+        cartBadge.innerText = quantity;
+
+        // Nếu có sản phẩm thì hiện thẻ span lên, nếu = 0 thì ẩn đi
+        if (quantity > 0) {
+            cartBadge.style.display = 'inline-block';
+        } else {
+            cartBadge.style.display = 'none';
+        }
+    }
+}
+
 $(document).ready(function() {
     function formatVND(value) {
         return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
