@@ -22,15 +22,14 @@ public class ContactServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("activePage", "contact");
         HttpSession session = request.getSession();
-        if (session.getAttribute("successMessage") != null) {
-            request.setAttribute("successMessage", session.getAttribute("successMessage"));
-            session.removeAttribute("successMessage");
-        }
-        if (session.getAttribute("errorMessage") != null) {
-            request.setAttribute("errorMessage", session.getAttribute("errorMessage"));
-            session.removeAttribute("errorMessage");
-        }
-
+//        if (session.getAttribute("successMessage") != null) {
+//            request.setAttribute("successMessage", session.getAttribute("successMessage"));
+//            session.removeAttribute("successMessage");
+//        }
+//        if (session.getAttribute("errorMessage") != null) {
+//            request.setAttribute("errorMessage", session.getAttribute("errorMessage"));
+//            session.removeAttribute("errorMessage");
+//        }
         if (session.getAttribute("old_name") != null) {
             request.setAttribute("name", session.getAttribute("old_name"));
             session.removeAttribute("old_name");
