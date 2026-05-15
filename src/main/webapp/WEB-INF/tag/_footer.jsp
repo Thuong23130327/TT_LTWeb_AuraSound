@@ -3,7 +3,7 @@
 <footer class="footer-container">
   <div class="row container mx-auto pt-5">
     <div class="footer-one col-lg-3 col-md-6 col-12">
-      <a class=" a-nodecor" href="${AuraSound}/index.jsp">
+      <a class=" a-nodecor" href="${AuraSound}/home">
         <div class="logo-container">
           <div class="logo-wave">
             <div class="sound-wave wave1"></div>

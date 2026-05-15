@@ -56,7 +56,7 @@
         </c:if>
 
         <li class="nav-item">
-            <a href="${AuraSound}/admin/voucher.jsp" class="nav-link ${activePage == "vou"? "active" : ""}">
+            <a href="${AuraSound}/admin/voucher" class="nav-link ${activePage == "vou"? "active" : ""}">
                 <i class="fa-solid fa-comment-dots me-2"></i>
                 Quản lý Voucher
             </a>

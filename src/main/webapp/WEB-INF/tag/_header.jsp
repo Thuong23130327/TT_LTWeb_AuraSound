@@ -21,7 +21,7 @@
         </div>
         <div class="head-right">
             <div class="info-item"><a href="${AuraSound}/contact">Liên hệ chi tiết</a></div>
-            <div class="info-item"><a href="${AuraSound}/profileM/order-history.jsp">Tra cứu đơn hàng</a></div>
+            <div class="info-item"><a href="${AuraSound}/profileM/order-history">Tra cứu đơn hàng</a></div>
             <div class="info-item"><a href="tel:19001919">1900 1919</a></div>
         </div>
     </div>
@@ -140,7 +140,7 @@
                     </c:if>
 
                     <c:if test="${sessionScope.author != null}">
-                        <a class="a-nodecor login-link" href="${AuraSound}/admin/admin.jsp">
+                        <a class="a-nodecor login-link" href="${AuraSound}/admin/dashboard">
                             <div class="login">Admin - Quản Lý</div>
                         </a>
                     </c:if>
@@ -174,7 +174,7 @@
 
 
     <c:if test="${sessionScope.auth != null}">
-        <div class="mobile-menu-item"><a href="${AuraSound}/profileM/profile.jsp">Thông tin tài khoản</a></div>
+        <div class="mobile-menu-item"><a href="${AuraSound}/profileM/profile">Thông tin tài khoản</a></div>
         <div class="mobile-menu-item"><a href="${AuraSound}/logout">Đăng xuất</a></div>
     </c:if>
 

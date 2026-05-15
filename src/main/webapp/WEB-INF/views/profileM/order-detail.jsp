@@ -66,12 +66,13 @@
         </div>
 
         <div class="profile-content">
-            <a href="profileM/order-history.jsp" class="back-link">
+            <a href="profileM/order-history" class="back-link">
                 <i class="fa-solid fa-arrow-left"></i> TRỞ LẠI
             </a>
 
             <div class="order-detail-header">
                 <h3 class="title" style="margin-bottom: 0; border-bottom: none;">Chi tiết đơn hàng #AS0891</h3>
+
                 <span class="order-status cancelled">
                         <i class="fa-solid fa-ban"></i> Đã hủy
                     </span>
