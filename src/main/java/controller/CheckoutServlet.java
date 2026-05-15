@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "CheckoutServlet", value = "/CheckoutServlet")
+@WebServlet(name = "CheckoutServlet", value = "/checkout")
 public class CheckoutServlet extends HttpServlet {
     private CheckoutService checkoutService = new CheckoutService();
     @Override
@@ -26,7 +26,7 @@ public class CheckoutServlet extends HttpServlet {
         Cart cart = (Cart) session.getAttribute("cart");
 
         List<CheckoutItemDTO> checkoutList = new ArrayList<>();
-
+0
         if (cart != null && cart.getListItems() != null) {
             ProductDAO productDAO = new ProductDAO();
 
@@ -46,7 +46,7 @@ public class CheckoutServlet extends HttpServlet {
         // Gửi list mới sang jsp
         request.setAttribute("checkoutDisplayList", checkoutList);
 
-        request.getRequestDispatcher("checkout.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(request, response);
     }
 
     @Override

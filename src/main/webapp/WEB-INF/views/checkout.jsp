@@ -43,7 +43,7 @@
         <div class="customer-details">
             <h2>Thông tin giao hàng</h2>
             <c:if test="${sessionScope.user == null}">
-                <p>Bạn đã có tài khoản? <a href="login.jsp">Đăng nhập</a> để điền nhanh thông tin.</p>
+                <p>Bạn đã có tài khoản? <a href="${AuraSound}/login">Đăng nhập</a> để điền nhanh thông tin.</p>
             </c:if>
 
             <div class="form-group">

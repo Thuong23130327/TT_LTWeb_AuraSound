@@ -93,7 +93,7 @@
     </div>
 
     <div class="checkout-button-container">
-        <a href="checkout.jsp">
+        <a href="${AuraSound}/checkout">
             <button type="button" class="checkout-button-tgdd">THANH TOÁN</button>
         </a>
     </div>
