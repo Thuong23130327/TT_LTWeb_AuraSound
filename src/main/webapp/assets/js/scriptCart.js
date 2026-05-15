@@ -12,7 +12,7 @@ function updateHeaderBadge(quantity) {
     }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     function formatVND(value) {
         return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
     }
@@ -26,8 +26,8 @@ $(document).ready(function() {
                 id: id,
                 q: change
             },
-            success: function(res) {
-                if(res.status === 'success') {
+            success: function (res) {
+                if (res.status === 'success') {
                     $('#total-price').text(formatVND(res.totalPrice));
                     $('#total-qty').text(res.totalQty);
                 }
@@ -35,7 +35,7 @@ $(document).ready(function() {
         });
     }
 
-    $('.qty-btn').click(function() {
+    $('.qty-btn').click(function () {
         let btn = $(this);
         let id = btn.data('id');
         let change = btn.data('change');
@@ -47,7 +47,7 @@ $(document).ready(function() {
             updateCart(id, change, 'updateQty');
         }
     });
-    $(document).on('click', '.ajax-qty', function() {
+    $(document).on('click', '.ajax-qty', function () {
         let id = $(this).data('id');
         let q = $(this).data('qty');
 
@@ -55,8 +55,8 @@ $(document).ready(function() {
             url: 'cart',
             type: 'GET',
             data: { action: 'updateQty', id: id, q: q },
-            success: function(res) {
-                if(res.status === 'success') {
+            success: function (res) {
+                if (res.status === 'success') {
                     // Đè toàn bộ HTML mới vào grid
                     $('.cart-items-list').html(res.html);
 
@@ -67,8 +67,8 @@ $(document).ready(function() {
             }
         });
     });
-    $('.delete-btn').click(function() {
-        if(confirm('Bạn muốn xóa sản phẩm này?')) {
+    $('.delete-btn').click(function () {
+        if (confirm('Bạn muốn xóa sản phẩm này?')) {
             let id = $(this).data('id');
             let row = $(this).closest('.cart-item');
 
@@ -76,11 +76,11 @@ $(document).ready(function() {
                 url: 'cart',
                 type: 'GET',
                 data: { action: 'delete', id: id },
-                success: function(res) {
+                success: function (res) {
                     row.remove();
                     $('#total-price').text(formatVND(res.totalPrice));
                     $('#total-qty').text(res.totalQty);
-                    if($('.cart-item').length === 0) location.reload();
+                    if ($('.cart-item').length === 0) location.reload();
                 }
             });
         }
@@ -129,6 +129,9 @@ function updateQuantityAJAX(variantId, changeAmount) {
             if (data.status === 'success') {
                 qtyInput.value = newQty;
                 recalculateCart();
+                updateHeaderBadge(data.cartQty);
+
+
             }
         })
         .catch(error => console.error('Lỗi AJAX:', error));
@@ -146,6 +149,7 @@ function deleteItemAJAX(variantId) {
                 if (itemRow) itemRow.remove();
 
                 recalculateCart();
+                updateHeaderBadge(data.cartQty);
 
                 // Cập nhật giao diện
                 const remainingItems = document.querySelectorAll('.cart-item');
