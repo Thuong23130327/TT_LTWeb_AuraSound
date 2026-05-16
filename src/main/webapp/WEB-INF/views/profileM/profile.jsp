@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
 <%
-    request.setAttribute("activePage", "product");
+    request.setAttribute("activePage", "profile");
 %>
 
 <head>

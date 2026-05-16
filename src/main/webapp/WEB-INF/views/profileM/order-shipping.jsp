@@ -2,7 +2,8 @@
 <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
 <%
-  request.setAttribute("activePage", "product");
+  request.setAttribute("pageTitle", "Đơn hàng đang vận chuyển - AuraSound");
+  request.setAttribute("activePage", "profile");
 %>
 
 <head>
@@ -61,7 +62,7 @@
                   #${order.orderCode} - Người nhận: ${order.recipientName}
                   | Tổng tiền: <fmt:formatNumber value="${order.finalAmount}" type="currency" currencySymbol="VNĐ"/>
                   <br>
-                  <small>Ngày đặt: <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></small>
+                  <small>Ngày đặt: <c:out value="${fn:replace(order.orderDate, 'T', ' ')}"/></small>
                 </div>
               </div>
             </a>

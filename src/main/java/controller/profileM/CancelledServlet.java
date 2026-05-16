@@ -45,5 +45,6 @@ public class CancelledServlet  extends HttpServlet {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+            return;
     }
 }

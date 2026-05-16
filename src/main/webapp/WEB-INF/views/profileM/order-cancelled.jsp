@@ -67,7 +67,7 @@
                         <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail?id=${order.id}">
                             <div class="list-item">
                                 <div class="item-order cancelled">
-                                    #${order.orderCode} - Đã hủy: <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
+                                    #${order.orderCode} - Đã hủy: <c:out value="${fn:replace(order.orderDate, 'T', ' ')}"/>
                                 </div>
                             </div>
                         </a>
