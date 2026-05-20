@@ -140,4 +140,39 @@ public class OrderDAO {
         System.out.println("-2-");
         System.out.println(dao.getAllOrdersItem("4").toString());
     }
+    //Tạo đơn mới
+    public int createOrder(int userId, Integer vouchersId,
+                           double totalProductsPrice, double shippingFee,
+                           double discountAmount,     double finalAmount) {
+
+        String orderCode = "ORD-" + java.util.UUID.randomUUID()
+                .toString()
+                .substring(0, 8)
+                .toUpperCase();
+        return jdbi.withHandle(handle -> {
+            handle.createUpdate(
+                            "INSERT INTO orders " +
+                                    "  (users_id, vouchers_id, order_code, order_date, " +
+                                    "   status, payment_status, " +
+                                    "   total_products_price, shipping_fee, discount_amount, final_amount) " +
+                                    "VALUES " +
+                                    "  (:userId, :vouchersId, :orderCode, NOW(), " +
+                                    "   0, 0, " +                          // 0 = PENDING
+                                    "   :totalProductsPrice, :shippingFee, :discountAmount, :finalAmount)"
+                    )
+                    .bind("userId",             userId)
+                    .bind("vouchersId",         vouchersId)    // null nếu ko sài voucher
+                    .bind("orderCode",          orderCode)
+                    .bind("totalProductsPrice", totalProductsPrice)
+                    .bind("shippingFee",        shippingFee)
+                    .bind("discountAmount",     discountAmount)
+                    .bind("finalAmount",        finalAmount)
+                    .execute();
+
+            return handle.createQuery("SELECT LAST_INSERT_ID()")
+                    .mapTo(Integer.class)
+                    .findFirst()
+                    .orElse(0);
+        });
+    }
 }

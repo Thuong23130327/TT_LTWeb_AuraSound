@@ -30,6 +30,23 @@ public class OrderItemDAO {
                 .mapToBean(OrderItem.class)
                 .list());
     }
+    //Thêm 1 sp vào orderitems
+    public void insertOrderItem(int ordersId, int productvariantsId,
+                                int quantity,  double priceAtPurchase) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate(
+                                "INSERT INTO orderitems " +
+                                        "  (orders_id, productvariants_id, quantity, price_at_purchase) " +
+                                        "VALUES " +
+                                        "  (:ordersId, :productvariantsId, :quantity, :priceAtPurchase)"
+                        )
+                        .bind("ordersId",          ordersId)
+                        .bind("productvariantsId", productvariantsId)
+                        .bind("quantity",          quantity)
+                        .bind("priceAtPurchase",   priceAtPurchase)
+                        .execute()
+        );
+    }
 
     public static void main(String[] args) {
         OrderItemDAO dao = new OrderItemDAO();

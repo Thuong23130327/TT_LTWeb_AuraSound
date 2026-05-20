@@ -129,7 +129,7 @@ public class ProductDAO {
         });
     }
 
-    public List<Product> searchProductByText(String textSearch) {
+    public List<Product> searchProductByText(String textSearch, int limit) {
         String searchTerm = "%" + textSearch + "%";
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT p.* FROM products p " +
@@ -140,8 +140,10 @@ public class ProductDAO {
                                 "OR p.display_sell_price LIKE :search " +
                                 "OR p.display_market_price LIKE :search " +
                                 "OR b.name LIKE :search " +
-                                "OR c.name LIKE :search")
+                                "OR c.name LIKE :search " +
+                                "LIMIT :limit")
                         .bind("search", searchTerm)
+                        .bind("limit", limit)
                         .mapToBean(Product.class)
                         .list()
         );

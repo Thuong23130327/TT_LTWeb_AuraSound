@@ -59,6 +59,10 @@ public class ProductService {
         return p != null ? p : null;
 
     }
+    // search theo keyword, limit kqua
+    public List<Product> searchProducts(String keyword, int limit) {
+        return productDAO.searchProductByText(keyword, limit);
+    }
 
     public List<ProductSpec> getAllSpecByProductId(String productId){
         List<ProductSpec> specs = specDAO.getSpecsByProductId(productId);

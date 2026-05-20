@@ -188,3 +188,64 @@
     </div>
 </div>
 <div class="overlay" id="menu-overlay"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    let searchTimer;
+
+    function searchAjax(input) {
+        clearTimeout(searchTimer);
+        const keyword = input.value.trim();
+        const resultDiv = document.getElementById("result-search");
+
+        if (keyword.length < 2) {
+            resultDiv.style.display = "none";
+            resultDiv.innerHTML = "";
+            return;
+        }
+
+        searchTimer = setTimeout(function() {
+            $.ajax({
+                type: "GET",
+                url: path + "/search",
+                data: { search: keyword, ajax: "true" },
+                dataType: "json",
+                success: function(res) {
+                    let html = "";
+
+                    if (res.products && res.products.length > 0) {
+                        res.products.forEach(function(p) {
+                            html += '<a href="' + path + '/detail?pid=' + p.id + '" class="search-result-item">';
+                            html += '  <img src="' + (p.img || '') + '" alt="" style="width:40px;height:40px;object-fit:cover;margin-right:8px;">';
+                            html += '  <div>';
+                            html += '    <div class="search-item-name">' + p.name + '</div>';
+                            html += '    <div class="search-item-price">' + new Intl.NumberFormat('vi-VN').format(p.sellPrice) + ' đ</div>';
+                            html += '  </div>';
+                            html += '</a>';
+                        });
+
+                        html += '<a href="' + path + '/search?search=' + encodeURIComponent(keyword) + '" class="search-view-all">';
+                        html += '  Xem tất cả kết quả cho "' + keyword + '"';
+                        html += '</a>';
+                    } else {
+                        html = '<div class="search-no-result">Không tìm thấy sản phẩm</div>';
+                    }
+
+                    resultDiv.innerHTML = html;
+                    resultDiv.style.display = "block";
+                },
+                error: function(e) {
+                    console.error("Search error: ", e);
+                }
+            });
+        }, 300);
+    }
+
+    // Ẩn dropdown
+    document.addEventListener("click", function(e) {
+        const searchForm = document.querySelector(".formSearch");
+        const resultDiv = document.getElementById("result-search");
+        if (searchForm && !searchForm.contains(e.target)) {
+            resultDiv.style.display = "none";
+        }
+    });
+</script>
