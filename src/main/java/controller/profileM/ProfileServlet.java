@@ -76,5 +76,6 @@ public class ProfileServlet extends HttpServlet {
             request.setAttribute("error", "Lỗi kết nối cơ sở dữ liệu.");
             doGet(request, response);
         }
+        return;
     }
 }

@@ -46,6 +46,8 @@
                 <ul class="nav-list">
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Thông
                         tin tài khoản</a></li>
+                    <li><a class="nav-link" href="favorites.jsp"><i class="fa-solid fa-heart icon"></i> Sản
+                        phẩm yêu thích</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-shipping"><i
                             class="fa-solid fa-truck icon"></i> Đang
                         vận chuyển</a></li>
@@ -61,76 +63,35 @@
                 </ul>
             </div>
         </div>
+        <section class="profile-content">
+            <h3 class="title">Đơn hàng đang chờ duyệt</h3>
+            <c:choose>
+                <c:when test="${not empty succOrders}">
+                    <c:forEach var="order" items="${succOrders}">
+                        <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail-success?id=${order.id}">
+                            <div class="list-item">
+                                <div class="item-order shipping">
+                                    #${order.orderCode} - Người nhận: ${not empty order.recipientName ? order.recipientName : 'Trống tên'}
+                                    | Tổng tiền:
+                                    <c:choose>
+                                        <c:when test="${not empty order.finalAmount}">
+                                            <fmt:formatNumber value="${order.finalAmount}" type="currency" currencySymbol="VNĐ"/>
+                                        </c:when>
+                                        <c:otherwise>0 VNĐ</c:otherwise>
+                                    </c:choose>
+                                    <br>
+                                    <small>Ngày đặt: <c:out value="${fn:replace(order.orderDate, 'T', ' ')}"/> </small>
+                                </div>
+                            </div>
+                        </a>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <div class="alert alert-info">Bạn hiện không có đơn hàng đã hoàn thành nào.</div>
+                </c:otherwise>
+            </c:choose>
+        </section>
 
-        <div class="profile-content">
-            <a href="profileM/order-history.jsp" class="back-link">
-                <i class="fa-solid fa-arrow-left"></i> TRỞ LẠI
-            </a>
-
-            <div class="order-detail-header">
-                <h3 class="title" style="margin-bottom: 0; border-bottom: none;">Chi tiết đơn hàng #AS0780</h3>
-                <span class="order-status completed">
-                    <i class="fa-solid fa-check-circle"></i> Hoàn tất
-                </span>
-            </div>
-
-            <div class="order-detail-block">
-                <h4>Sản phẩm</h4>
-                <div class="block-content">
-                    <div class="product-item-detail">
-                        <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/l/o/loa-bluetooth-harman-kardon-aura-studio-5-den_7_.png"
-                             alt="Sản phẩm 1">
-                        <div class="product-info">
-                            <p class="product-name">Loa Bluetooth Harman Kardon Aura Studio 5</p>
-                            <p class="product-qty">x 1</p>
-                        </div>
-                        <div class="product-price">8.400.000₫</div>
-                    </div>
-
-                    <div class="order-total">
-                        <span>Thành tiền:</span>
-                        <span class="total-price">8.400.000₫</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="order-detail-block">
-                <h4>Thông tin đơn hàng</h4>
-                <div class="block-content">
-                    <ul class="order-info-list">
-                        <li>
-                            <strong>Mã đơn hàng:</strong>
-                            <span>#AS0780</span>
-                        </li>
-                        <li>
-                            <strong>Ngày đặt:</strong>
-                            <span>01-08-2025 10:15</span>
-                        </li>
-                        <li>
-                            <strong>Ngày giao hàng:</strong>
-                            <span>03-08-2025 14:00</span>
-                        </li>
-                        <li>
-                            <strong>Trạng thái:</strong>
-                            <span>Đã giao hàng thành công</span>
-                        </li>
-                        <li>
-                            <strong>Phương thức thanh toán:</strong>
-                            <span>COD</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="order-detail-block">
-                <h4>Địa chỉ nhận hàng</h4>
-                <div class="block-content address-info">
-                    <strong>Nguyễn Hoài Thương</strong>
-                    <p>0708870329</p>
-                    <p>10 Đường số 5, Phường Linh Xuân, TP.HCM</p>
-                </div>
-            </div>
-        </div>
     </div>
 </main>
 

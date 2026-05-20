@@ -46,6 +46,8 @@
                 <ul class="nav-list">
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Thông
                         tin tài khoản</a></li>
+                    <li><a class="nav-link" href="favorites.jsp"><i class="fa-solid fa-heart icon"></i> Sản
+                        phẩm yêu thích</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-shipping"><i class="fa-solid fa-truck icon"></i> Đang
                         vận chuyển</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-pending"><i class="fa-solid fa-clock icon"></i> Đang
@@ -65,7 +67,7 @@
                         <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail?id=${order.id}">
                             <div class="list-item">
                                 <div class="item-order cancelled">
-                                    #${order.orderCode} - Đã hủy: <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
+                                    #${order.orderCode} - Đã hủy: <c:out value="${fn:replace(order.orderDate, 'T', ' ')}"/>
                                 </div>
                             </div>
                         </a>

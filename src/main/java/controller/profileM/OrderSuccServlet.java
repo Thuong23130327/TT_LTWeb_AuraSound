@@ -51,7 +51,7 @@ public class OrderSuccServlet extends HttpServlet {
                         profileService.getOrderById(orderId);
 
                 request.setAttribute("orderItems", activeItems);
-                request.setAttribute("order", order);
+                request.setAttribute("succOrders", order);
             }
 
             request.getRequestDispatcher(
@@ -68,5 +68,6 @@ public class OrderSuccServlet extends HttpServlet {
                 );
             }
         }
+        return;
     }
 }

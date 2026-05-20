@@ -134,11 +134,11 @@ public class OrderDAO {
      //   System.out.println(dao.getAll().toString());
         System.out.println("--");
 //        System.out.println(dao.getOrderById("1"));
-        System.out.println(dao.getAllOrderById(2).toString());
+        System.out.println(dao.getAllOrderById(10).toString());
         System.out.println("-1-");
-        System.out.println(dao.getOrdersByStatus(2,"COMPLETED").toString());
+        System.out.println(dao.getOrdersByStatus(10,"COMPLETED").toString());
         System.out.println("-2-");
-        System.out.println(dao.getAllOrdersItem("2").toString());
+        System.out.println(dao.getAllOrdersItem("4").toString());
     }
     //Tạo đơn mới
     public int createOrder(int userId, Integer vouchersId,

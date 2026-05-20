@@ -3,7 +3,7 @@
 
 <%
     request.setAttribute("pageTitle", "Đơn hàng chờ xử lý - AuraSound");
-    request.setAttribute("activePage", "product");
+    request.setAttribute("activePage", "profile");
 %>
 
 <head>
@@ -38,6 +38,8 @@
                 <ul class="nav-list">
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Thông
                         tin tài khoản</a></li>
+                    <li><a class="nav-link" href="favorites.jsp"><i class="fa-solid fa-heart icon"></i> Sản
+                        phẩm yêu thích</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-shipping"><i class="fa-solid fa-truck icon"></i> Đang
                         vận chuyển</a></li>
                     <li><a class="nav-link active" href="${pageContext.request.contextPath}/order-pending"><i class="fa-solid fa-clock icon"></i>
@@ -54,7 +56,8 @@
             <c:choose>
                 <c:when test="${not empty pendingOrders}">
                     <c:forEach var="order" items="${pendingOrders}">
-                        <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail-success?id=${order.id}">
+                        <%-- Sửa link từ order-detail-success sang order-detail --%>
+                        <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail?id=${order.id}">
                             <div class="list-item">
                                 <div class="item-order shipping">
                                     #${order.orderCode} - Người nhận: ${not empty order.recipientName ? order.recipientName : 'Trống tên'}
@@ -66,7 +69,7 @@
                                         <c:otherwise>0 VNĐ</c:otherwise>
                                     </c:choose>
                                     <br>
-                                    <small>Ngày đặt: ${not empty order.orderDate ? order.orderDate : 'Chưa có ngày'}</small>
+                                    <small>Ngày đặt: <c:out value="${fn:replace(order.orderDate, 'T', ' ')}"/></small>
                                 </div>
                             </div>
                         </a>

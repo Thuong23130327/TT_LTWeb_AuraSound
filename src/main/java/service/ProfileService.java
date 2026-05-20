@@ -63,7 +63,15 @@ public class ProfileService {
     }
 
     public static void main(String[] args) {
-
+        ProfileService dao = new ProfileService();
+        //   System.out.println(dao.getAll().toString());
+        System.out.println("--");
+//        System.out.println(dao.getOrderById("1"));
+        System.out.println(dao.getHistoryOrders(10).toString());
+        System.out.println("-1-");
+        System.out.println(dao.getCompletedOrders(10).toString());
+        System.out.println("-2-");
+        System.out.println(dao.getAllOrdersItem("4").toString());
     }
 
 }
