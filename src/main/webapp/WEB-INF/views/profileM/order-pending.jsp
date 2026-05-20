@@ -56,10 +56,9 @@
             <c:choose>
                 <c:when test="${not empty pendingOrders}">
                     <c:forEach var="order" items="${pendingOrders}">
-                        <%-- Sửa link từ order-detail-success sang order-detail --%>
                         <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail?id=${order.id}">
                             <div class="list-item">
-                                <div class="item-order shipping">
+                                <div class="item-order pending">
                                     #${order.orderCode} - Người nhận: ${not empty order.recipientName ? order.recipientName : 'Trống tên'}
                                     | Tổng tiền:
                                     <c:choose>

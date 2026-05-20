@@ -112,6 +112,26 @@ public class Order {
         return status;
     }
 
+    public String getStatusClass() {
+        if (status == null) return "secondary";
+
+        switch (status) {
+            case PENDING:
+                return "warning";
+
+            case SHIPPING:
+                return "primary";
+
+            case COMPLETED:
+                return "success";
+
+            case CANCELLED:
+                return "danger";
+
+            default:
+                return "secondary";
+        }
+    }
     public int getPaymentStatus() {
         return paymentStatus != null ? paymentStatus.getValue() : 0;
     }

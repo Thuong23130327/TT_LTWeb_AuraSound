@@ -67,10 +67,15 @@
             <h3 class="title">Đơn hàng đang chờ duyệt</h3>
             <c:choose>
                 <c:when test="${not empty succOrders}">
-                    <c:forEach var="order" items="${succOrders}">
-                        <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail-success?id=${order.id}">
+<%--                    <c:if test="${not empty succOrders}">--%>
+<%--                        <p>Mã đơn: #${succOrders.orderCode}</p>--%>
+<%--                        <p>Tổng tiền: <fmt:formatNumber value="${succOrders.finalAmount}" type="currency" currencySymbol="VNĐ"/></p>--%>
+<%--                        <p>Ngày đặt: <c:out value="${fn:replace(succOrders.orderDate.toString(), 'T', ' ')}"/></p>--%>
+<%--                    </c:if>--%>
+                    <c:forEach var="order" items="${pendingOrders}">
+                        <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail?id=${order.id}">
                             <div class="list-item">
-                                <div class="item-order shipping">
+                                <div class="item-order history">
                                     #${order.orderCode} - Người nhận: ${not empty order.recipientName ? order.recipientName : 'Trống tên'}
                                     | Tổng tiền:
                                     <c:choose>
@@ -80,7 +85,7 @@
                                         <c:otherwise>0 VNĐ</c:otherwise>
                                     </c:choose>
                                     <br>
-                                    <small>Ngày đặt: <c:out value="${fn:replace(order.orderDate, 'T', ' ')}"/> </small>
+                                    <small>Ngày đặt: <c:out value="${fn:replace(order.orderDate, 'T', ' ')}"/></small>
                                 </div>
                             </div>
                         </a>
