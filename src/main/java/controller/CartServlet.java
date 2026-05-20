@@ -46,12 +46,12 @@ public class CartServlet extends HttpServlet {
                     CartService.deleteItem(cartId, variantId);
                 }
 
-                if ("add".equals(action) || "updateQuantity".equals(action)) {
+                if ("add".equals(action) || "updateQuantity".equals(action) || "updateQty".equals(action)) {
                     int quantityChange = (qStr != null && !qStr.isEmpty()) ? Integer.parseInt(qStr) : 1;
                     CartService.addOrUpdateItem(cartId, variantId, quantityChange);
                 }
                 //Ajax
-                if (isAjax && ("add".equals(action) || "updateQuantity".equals(action) || "delete".equals(action))) {
+                if (isAjax && ("add".equals(action) || "updateQuantity".equals(action) || "updateQty".equals(action) || "delete".equals(action))) {
                     response.setContentType("application/json");
                     PrintWriter out = response.getWriter();
 

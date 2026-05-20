@@ -32,5 +32,44 @@ public class OrderShippingDAO {
 
         System.out.println(os.getUserAddress());
     }
+    //Tạo dchi giao hàng mới
+    public int insertUserAddress(int userId, String recipientName,
+                                 String phone, String city,
+                                 String address) {
+        return jdbi.withHandle(handle -> {
+            handle.createUpdate(
+                            "INSERT INTO useraddresses " +
+                                    "  (users_id, recipient_name, phone, city, address, is_default) " +
+                                    "VALUES " +
+                                    "  (:userId, :recipientName, :phone, :city, :address, 0)"
+                    )
+                    .bind("userId",        userId)
+                    .bind("recipientName", recipientName)
+                    .bind("phone",         phone)
+                    .bind("city",          city)
+                    .bind("address",       address)
+                    .execute();
 
+            return handle.createQuery("SELECT LAST_INSERT_ID()")
+                    .mapTo(Integer.class)
+                    .findFirst()
+                    .orElse(0);
+        });
+    }
+
+    //Lket đơn hàng vs dchi giao
+    public void insertOrderShipping(int ordersId, int userAddressId, String note) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate(
+                                "INSERT INTO ordershippings " +
+                                        "  (orders_id, useraddresses_id, note) " +
+                                        "VALUES " +
+                                        "  (:ordersId, :userAddressId, :note)"
+                        )
+                        .bind("ordersId",       ordersId)
+                        .bind("userAddressId",  userAddressId)
+                        .bind("note",           note)
+                        .execute()
+        );
+    }
 }
