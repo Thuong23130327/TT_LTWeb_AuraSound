@@ -8,7 +8,7 @@ public class OrderShippingDAO {
     private Jdbi jdbi = dao.DB.DBConnect.getJdbi();
 
     public OrderShipping getByOrderId(int orderId) {
-        String sql = "SELECT os.*, " +
+        String sql = "SELECT os.id, os.orders_id, os.note, " +
                 "ua.id AS ua_id, " +
                 "ua.users_id AS ua_users_id, " +
                 "ua.recipient_name AS ua_recipient_name, " +
@@ -22,7 +22,26 @@ public class OrderShippingDAO {
 
         return jdbi.withHandle(handle -> handle.createQuery(sql)
                 .bind("orderId", orderId)
-                .mapToBean(OrderShipping.class)
+                .map((rs, ctx) -> {
+                    OrderShipping os = new OrderShipping();
+                    os.setId(rs.getInt("id"));
+                    os.setOrderId(rs.getInt("orders_id"));
+                    os.setNote(rs.getString("note"));
+
+                    if (rs.getObject("ua_id") != null) {
+                        model.entity.UserAddress ua = new model.entity.UserAddress();
+                        ua.setId(rs.getInt("ua_id"));
+                        ua.setUserId(rs.getInt("ua_users_id"));
+                        ua.setRecipientName(rs.getString("ua_recipient_name"));
+                        ua.setPhone(rs.getString("ua_phone"));
+                        ua.setAddress(rs.getString("ua_address"));
+                        ua.setCity(rs.getString("ua_city"));
+                        ua.setDefault(rs.getBoolean("ua_is_default"));
+
+                        os.setUserAddress(ua);
+                    }
+                    return os;
+                })
                 .findOne()
                 .orElse(null));
     }

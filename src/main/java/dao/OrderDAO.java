@@ -126,7 +126,7 @@ public class OrderDAO {
 
     public List<OrderItem> getAllOrdersItem(String orderId) {
         String sql = "SELECT oi.*, " +
-                "       p.name AS pv_product_name, " +
+                "       p.name AS productName, " +
                 "       pv.id AS pv_id, " +
                 "       pv.products_id AS pv_products_id, " +
                 "       pv.variant_sku AS pv_variant_sku, " +

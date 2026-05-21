@@ -2,10 +2,7 @@ package service;
 
 import dao.OrderDAO;
 import dao.ProfileMDAO.ProfileDAO;
-import model.entity.CartItem;
-import model.entity.Order;
-import model.entity.OrderItem;
-import model.entity.User;
+import model.entity.*;
 
 import java.sql.SQLException;
 import java.util.List;
