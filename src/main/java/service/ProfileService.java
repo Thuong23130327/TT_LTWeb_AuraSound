@@ -1,6 +1,7 @@
 package service;
 
 import dao.OrderDAO;
+import dao.OrderShippingDAO;
 import dao.ProfileMDAO.ProfileDAO;
 import model.entity.*;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public class ProfileService {
     private ProfileDAO pDAO = new ProfileDAO();
     private OrderDAO oDAO = new OrderDAO();
+    private OrderShippingDAO osDAO = new OrderShippingDAO();
 
     public User getUserById(int userId) throws SQLException {
         return pDAO.getUserById(userId);
@@ -71,6 +73,9 @@ public class ProfileService {
         System.out.println(dao.getAllOrdersItem("4").toString());
     }
 
+    public OrderShipping getOrderShipping(int orderId) {
+        return osDAO.getByOrderId(orderId);
+    }
 }
 
 
