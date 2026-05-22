@@ -9,6 +9,7 @@ public class OrderItem {
 	private ProductVariant productVariant;
 	private int quantity;
 	private BigDecimal price_at_purchase;
+	private String productName;
 
 	
 //	Get-set
@@ -53,6 +54,12 @@ public class OrderItem {
 		this.price_at_purchase = price_at_purchase;
 	}
 
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 	@Override
 	public String toString() {
 		return "OrderItem [id=" + id + ", ordersId=" + ordersId + ", productVariant=" + productVariant + ", quantity="

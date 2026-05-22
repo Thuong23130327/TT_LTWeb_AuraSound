@@ -35,7 +35,6 @@
 
 <main class="profile-page-main">
     <div class="profile-container">
-
         <div class="profile-sidebar" id="profileSidebar">
             <div class="user-info">
                 <img class="img-profile" src="${not empty userDetail.avatarUrl ? userDetail.avatarUrl : '../assets/img/avatar/default.png'}" alt="Avatar">

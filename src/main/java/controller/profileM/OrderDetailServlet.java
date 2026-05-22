@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.entity.Order;
 import model.entity.OrderItem;
+import model.entity.OrderShipping;
 import model.entity.User;
 import service.ProfileService;
 
@@ -30,20 +31,54 @@ public class OrderDetailServlet extends HttpServlet {
         }
 
         try {
-            User userDetail = profileService.getUserById(user.getId());
-            request.setAttribute("userDetail", userDetail);
-
-            String orderId = request.getParameter("id");
-            if (orderId != null) {
-
-                List<OrderItem> cancelledItems = profileService.getAllOrdersItem(orderId);
-                Order order = profileService.getOrderById(orderId);
-
-                request.setAttribute("orderItems", cancelledItems);
-                request.setAttribute("order", order);
+//            User userDetail = profileService.getUserById(user.getId());
+//            request.setAttribute("userDetail", userDetail);
+//
+//            String orderId = request.getParameter("id");
+//            if (orderId != null) {
+//
+//                List<OrderItem> cancelledItems = profileService.getAllOrdersItem(orderId);
+//                Order order = profileService.getOrderById(orderId);
+//
+//                request.setAttribute("orderItems", cancelledItems);
+//                request.setAttribute("order", order);
+//            }
+//
+//            request.getRequestDispatcher("/WEB-INF/views/profileM/order-detail.jsp").forward(request, response);
+            String orderIdParam = request.getParameter("id");
+            if (orderIdParam == null || orderIdParam.trim().isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/order-history");
+                return;
             }
 
-            request.getRequestDispatcher("/WEB-INF/views/profileM/order-detail.jsp").forward(request, response);
+            int orderId;
+            try {
+                orderId = Integer.parseInt(orderIdParam.trim());
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/order-history");
+                return;
+            }
+
+            Order order = profileService.getOrderById(orderIdParam);
+            if (order == null) {
+                response.sendRedirect(request.getContextPath() + "/order-history");
+                return;
+            }
+
+            List<OrderItem> orderItems = profileService.getAllOrdersItem(orderIdParam);
+
+            OrderShipping orderShipping = profileService.getOrderShipping(orderId);
+
+            User userDetail = profileService.getUserById(user.getId());
+
+            request.setAttribute("userDetail", userDetail);
+            request.setAttribute("order", order);
+            request.setAttribute("orderItems", orderItems);
+            request.setAttribute("orderShipping", orderShipping);
+
+            request.getRequestDispatcher("/WEB-INF/views/profileM/order-detail.jsp")
+                    .forward(request, response);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,5 +86,4 @@ public class OrderDetailServlet extends HttpServlet {
         }
         return;
     }
-
 }

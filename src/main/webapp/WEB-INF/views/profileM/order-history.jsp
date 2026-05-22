@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="model.entity.Order" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 <%
     request.setAttribute("pageTitle", "Lịch sử mua hàng - AuraSound");
@@ -9,38 +12,39 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${pageTitle}</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleHome.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleProfile.css">
+    <title>Lịch sử mua hàng - AuraSound</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleHome.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleProfile.css">
 </head>
 
 <body>
 
 <jsp:include page="/WEB-INF/tag/_header.jsp"></jsp:include>
 
-<main style="margin-top: 100px;">
-    <div class="container container-profile">
-        <div class="profile-sidebar">
-            <div class="profile-user">
-                <img src="${not empty userDetail.avatarUrl ? userDetail.avatarUrl : 'https://i.pinimg.com/736x/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg'}" alt="Avatar" class="profile-avatar">
-                <div class="profile-info">
-                    <p class="profile-username">${not empty userDetail.fullName ? userDetail.fullName : 'Người dùng AuraSound'}</p>
-                    <p class="profile-email">${userDetail.email}</p>
-                </div>
+<main class="profile-page-main">
+    <div class="profile-container">
+        <div class="profile-sidebar" id="profileSidebar">
+            <div class="user-info">
+                <img class="img-profile" src="${not empty userDetail.avatarUrl ? userDetail.avatarUrl : '../assets/img/avatar/default.png'}" alt="Avatar">
+                <h5 class="user-name">Chào, ${userDetail.fullName}</h5>
+                <p class="user-email">${userDetail.email}</p>
             </div>
-            <div class="menu-profile">
-                <ul>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Tài khoản của tôi</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-pending"><i class="fa-solid fa-clock icon"></i> Chờ xử lý</a></li>
+
+            <div class="side-menu mobile-hidden" id="sideMenuContent">
+                <ul class="nav-list">
+                    <li><a class="nav-link" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Thông tin tài khoản</a></li>
+                    <li><a class="nav-link" href="favorites.jsp"><i class="fa-solid fa-heart icon"></i> Sản phẩm yêu thích</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-shipping"><i class="fa-solid fa-truck icon"></i> Đang vận chuyển</a></li>
+                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-pending"><i class="fa-solid fa-clock icon"></i> Đang chờ duyệt</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-cancelled"><i class="fa-solid fa-ban icon"></i> Đã hủy</a></li>
                     <li><a class="nav-link active" href="${pageContext.request.contextPath}/order-history"><i class="fa-solid fa-history icon"></i> Lịch sử mua hàng</a></li>
                 </ul>
@@ -49,56 +53,55 @@
 
         <section class="profile-content">
             <h3 class="title">Lịch sử đơn hàng</h3>
-            <c:choose>
-                <c:when test="${not empty historyOrders}">
-                    <c:forEach var="order" items="${historyOrders}">
 
-                        <c:set var="statusClass" value="default" />
-                        <c:set var="statusText" value="Không xác định" />
+            <%
+                List<Order> historyOrders = (List<Order>) request.getAttribute("historyOrders");
+                if (historyOrders != null && !historyOrders.isEmpty()) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    for (Order order : historyOrders) {
 
-                        <c:choose>
-                            <c:when test="${order.status.value == 0}">
-                                <c:set var="statusClass" value="pending" />
-                                <c:set var="statusText" value="Chờ duyệt" />
-                            </c:when>
-                            <c:when test="${order.status.value == 1}">
-                                <c:set var="statusClass" value="shipping" />
-                                <c:set var="statusText" value="Đang giao" />
-                            </c:when>
-                            <c:when test="${order.status.value == 2}">
-                                <c:set var="statusClass" value="success" />
-                                <c:set var="statusText" value="Thành công" />
-                            </c:when>
-                            <c:when test="${order.status.value == 3}">
-                                <c:set var="statusClass" value="cancelled" />
-                                <c:set var="statusText" value="Đã hủy" />
-                            </c:when>
-                        </c:choose>
+                        String cssClass = "pending";
+                        int statusValue = order.getStatus();
+                        if (statusValue == 1) cssClass = "shipping";
+                        else if (statusValue == 2) cssClass = "history";
+                        else if (statusValue == 3) cssClass = "cancelled";
 
-                        <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail?id=${order.id}">
-                            <div class="list-item">
-                                <div class="item-order ${statusClass}">
-                                    #${order.orderCode} - ${statusText} -
+                        String formattedDate = "";
+                        if (order.getOrderDate() != null) {
+                            formattedDate = order.getOrderDate().format(formatter);
+                        }
 
-                                        <%-- Giải pháp an toàn ép kiểu LocalDateTime sang String hiển thị ngày --%>
-                                    <c:choose>
-                                        <c:when test="${not empty order.orderDate}">
-                                            <c:out value="${fn:replace(order.orderDate.toString(), 'T', ' ')}"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            Không rõ ngày đặt
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-                        </a>
-                    </c:forEach>
-                </c:when>
+                        String amountStr = "0 VNĐ";
+                        if (order.getFinalAmount() != null) {
+                            amountStr = String.format("%,.0f", order.getFinalAmount()) + " VNĐ";
+                        }
 
-                <c:otherwise>
-                    <div class="alert alert-info">Bạn chưa có đơn hàng nào trong lịch sử.</div>
-                </c:otherwise>
-            </c:choose>
+                        String statusDesc = "Đang xử lý";
+                        if (order.getEOrderStatus() != null) {
+                            statusDesc = order.getEOrderStatus().name();
+                        }
+            %>
+            <a class="a-nodecor" href="${pageContext.request.contextPath}/order-detail?id=<%= order.getId() %>">
+                <div class="list-item">
+                    <div class="item-order <%= cssClass %>">
+                        Mã đơn: <%= order.getOrderCode() %> - Người nhận: <%= order.getRecipientName() != null ? order.getRecipientName() : "Trống tên" %>
+                        | Tổng tiền: <%= amountStr %>
+                        | Trạng thái: <span style="font-weight: 600;"><%= statusDesc %></span>
+                        <br>
+                        <small>Ngày đặt: <%= formattedDate %></small>
+                    </div>
+                </div>
+            </a>
+            <%
+                }
+            } else {
+            %>
+            <div class="alert alert-info">
+                Bạn chưa có đơn hàng nào trong lịch sử.
+            </div>
+            <%
+                }
+            %>
         </section>
     </div>
 </main>

@@ -50,8 +50,24 @@ public class OrderDAO {
 //        return jdbi.withHandle(handle -> handle.createQuery(sql).bind("uid", userId).mapToBean(Order.class).list());
 //    }
 
+//    public List<Order> getAllOrderById(int userId) {
+//        String sql = "SELECT * FROM orders WHERE users_id = :uid ORDER BY order_date DESC";
+//
+//        return jdbi.withHandle(handle ->
+//                handle.createQuery(sql)
+//                        .bind("uid", userId)
+//                        .mapToBean(Order.class)
+//                        .list()
+//        );
+//    }
+
     public List<Order> getAllOrderById(int userId) {
-        String sql = "SELECT * FROM orders WHERE users_id = :uid ORDER BY order_date DESC";
+        String sql = "SELECT o.*, ua.recipient_name AS recipient_name " +
+                "FROM orders o " +
+                "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
+                "WHERE o.users_id = :uid " +
+                "ORDER BY o.order_date DESC";
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -72,7 +88,12 @@ public class OrderDAO {
         }
 
         final int finalStatus = statusValue;
-        String sql = "SELECT * FROM orders WHERE users_id = :uid AND status = :status ORDER BY order_date DESC";
+        String sql = "SELECT o.*, ua.recipient_name AS recipient_name " +
+                "FROM orders o " +
+                "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
+                "WHERE o.users_id = :uid AND o.status = :status " +
+                "ORDER BY o.order_date DESC";
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -105,7 +126,7 @@ public class OrderDAO {
 
     public List<OrderItem> getAllOrdersItem(String orderId) {
         String sql = "SELECT oi.*, " +
-                "       p.name AS pv_product_name, " +
+                "       p.name AS productName, " +
                 "       pv.id AS pv_id, " +
                 "       pv.products_id AS pv_products_id, " +
                 "       pv.variant_sku AS pv_variant_sku, " +
@@ -140,6 +161,7 @@ public class OrderDAO {
         System.out.println("-2-");
         System.out.println(dao.getAllOrdersItem("4").toString());
     }
+
     //Tạo đơn mới
     public int createOrder(int userId, Integer vouchersId,
                            double totalProductsPrice, double shippingFee,
