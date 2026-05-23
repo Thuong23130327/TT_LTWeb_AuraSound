@@ -72,7 +72,9 @@ public class CheckoutServlet extends HttpServlet {
         request.getSession().setAttribute("checkoutSelectedIds", selectedIds);
 
         // Tính tiền
-        double totalPrice  = CartService.getTotalPrice(cartId);
+        double totalPrice  = cartItems.stream()
+                .mapToDouble(CartItemDTO::getTotalItemPrice)
+                .sum();
         double shippingFee = 30_000;
         double finalTotal  = totalPrice + shippingFee;
 

@@ -32,24 +32,26 @@ public class OrderService {
             Cart cart = CartService.getOrCreateCartByUserId(userId);
             int  cartId = cart.getId();
 
-            List<CartItemDTO> items = CartService.getListItems(cartId);
-            if (items == null || items.isEmpty()) return -1;
+            List<CartItemDTO> allItems = CartService.getListItems(cartId);
+            if (allItems == null || allItems.isEmpty()) return -1;
 
             //Lọc sp theo id đc chọn
             List<CartItemDTO> itemsToOrder;
             if (selectedVariantIds != null && !selectedVariantIds.isEmpty()) {
-                itemsToOrder = items.stream()
+                itemsToOrder = allItems.stream()
                         .filter(item -> selectedVariantIds.contains(item.getProductVariantId()))
                         .collect(Collectors.toList());
             } else {
-                itemsToOrder = items; // fallback
+                itemsToOrder = allItems; // fallback
             }
 
             if (itemsToOrder.isEmpty()) return -1;
 
             //Tính tiền
-            double totalProductsPrice = CartService.getTotalPrice(cartId);
-            double shippingFee        = 30.000;
+            double totalProductsPrice = itemsToOrder.stream()
+                    .mapToDouble(CartItemDTO::getTotalItemPrice)
+                    .sum();
+            double shippingFee        = 30_000;
             double discountAmount     = 0;
             Integer vouchersId        = null;
 
@@ -67,7 +69,7 @@ public class OrderService {
             if (orderId <= 0) return -1;
 
             //Lưu sp
-            for (CartItemDTO item : items) {
+            for (CartItemDTO item : itemsToOrder) {
                 orderItemDAO.insertOrderItem(
                         orderId,
                         item.getProductVariantId(),

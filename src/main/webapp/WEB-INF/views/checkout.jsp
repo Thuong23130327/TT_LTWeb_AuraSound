@@ -175,7 +175,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
-<script src="${pageContext.request.contextPath}/assets/js/scriptCheckout.js"></script>
+<%--<script src="${pageContext.request.contextPath}/assets/js/scriptCheckout.js"></script>--%>
 <script src="${pageContext.request.contextPath}/assets/js/scriptProfile.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/checkout.js"></script>
 
