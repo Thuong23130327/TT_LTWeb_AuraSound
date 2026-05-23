@@ -18,7 +18,10 @@ public class ProductDAO {
     static Map<Integer, Product> data = new HashMap<>();
 
     public List<Product> getAllProduct() {
-        return jdbi.withHandle(handle -> handle.createQuery("select * from products").mapToBean(Product.class).list());
+        return jdbi.withHandle(handle -> {
+            handle.registerRowMapper(FieldMapper.factory(Product.class));
+            return handle.createQuery("select * from products").mapTo(Product.class).list();
+        });
     }
 
 

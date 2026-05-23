@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
+
 
 <%
     request.setAttribute("pageTitle", "Quản lý Liên hệ - AuraSound");
@@ -26,7 +27,7 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <jsp:include page="/tag/_adminMenu.jsp"/>
+        <jsp:include page="/WEB-INF/tag/_adminMenu.jsp"/>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="mail-content-center-wrapper mx-auto">

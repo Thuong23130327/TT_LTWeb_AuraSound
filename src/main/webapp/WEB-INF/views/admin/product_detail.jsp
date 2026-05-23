@@ -1,5 +1,5 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="/tag/_taglibs.jsp" %>
+<%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
 <%
     request.setAttribute("pageTitle", "QUẢN LÝ SẢN PHẨM - AuraSound");
@@ -35,7 +35,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <jsp:include page="/tag/_adminMenu.jsp"/>
+        <jsp:include page="/WEB-INF/tag/_adminMenu.jsp"/>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 

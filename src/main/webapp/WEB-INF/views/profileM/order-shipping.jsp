@@ -60,7 +60,7 @@
               <div class="list-item">
                 <div class="item-order shipping">
                   #${order.orderCode} - Người nhận: ${order.recipientName}
-                  | Tổng tiền: <fmt:formatNumber value="${order.finalAmount}" type="currency" currencySymbol="VNĐ"/>
+                  | Tổng tiền: <fmt:formatNumber value="${order.finalAmount}" type="currency" pattern="#,###"/>đ
                   <br>
                   <small>Ngày đặt: <c:out value="${fn:replace(order.orderDate, 'T', ' ')}"/></small>
                 </div>
