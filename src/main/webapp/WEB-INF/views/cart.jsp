@@ -94,13 +94,18 @@
 
     <div class="checkout-button-container">
         <a href="${AuraSound}/checkout">
-            <button type="button" class="checkout-button-tgdd">THANH TOÁN</button>
+            <button type="button" class="checkout-button-tgdd" onclick="goToCheckout()">
+                THANH TOÁN
+            </button>
         </a>
     </div>
 </main>
 
 <jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
 
+<script>
+    const ctxPath = '${pageContext.request.contextPath}';
+</script>
 <script src="${AuraSound}/assets/js/script.js"></script>
 <script src="${AuraSound}/assets/js/scriptProfile.js"></script>
 <script src="${AuraSound}/assets/js/scriptStore.js"></script>

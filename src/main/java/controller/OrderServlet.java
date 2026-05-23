@@ -7,6 +7,7 @@ import model.entity.User;
 import service.OrderService;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "OrderServlet", value = "/order")
 public class OrderServlet extends HttpServlet {
@@ -35,6 +36,10 @@ public class OrderServlet extends HttpServlet {
             );
             return;
         }
+
+        @SuppressWarnings("unchecked")
+        List<Integer> selectedIds =
+                (List<Integer>) session.getAttribute("checkoutSelectedIds");
 
         String fullName    = request.getParameter("fullName");
         String phone       = request.getParameter("phone");
@@ -71,10 +76,13 @@ public class OrderServlet extends HttpServlet {
                     ward.trim(),
                     address.trim(),
                     notes != null ? notes.trim() : "",
-                    voucherCode
+                    voucherCode,
+                    selectedIds
             );
 
             if (orderId > 0) {
+                session.removeAttribute("checkoutSelectedIds");
+
                 response.setStatus(200);
                 response.getWriter().write(
                         "{\"status\":\"success\",\"orderId\":" + orderId + "}"

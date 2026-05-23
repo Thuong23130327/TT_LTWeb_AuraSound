@@ -9,12 +9,14 @@ import model.dto.CartItemDTO;
 import model.entity.Cart;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderService {
 
     private static final OrderDAO         orderDAO         = new OrderDAO();
     private static final OrderItemDAO     orderItemDAO     = new OrderItemDAO();
     private static final OrderShippingDAO orderShippingDAO = new OrderShippingDAO();
+
 
     public static int placeOrder(int    userId,
                                  String recipientName,
@@ -23,7 +25,8 @@ public class OrderService {
                                  String ward,
                                  String address,
                                  String notes,
-                                 String voucherCode) {
+                                 String voucherCode,
+                                 List<Integer> selectedVariantIds) {
         try {
             //Lấy ttin cart
             Cart cart = CartService.getOrCreateCartByUserId(userId);
@@ -31,6 +34,18 @@ public class OrderService {
 
             List<CartItemDTO> items = CartService.getListItems(cartId);
             if (items == null || items.isEmpty()) return -1;
+
+            //Lọc sp theo id đc chọn
+            List<CartItemDTO> itemsToOrder;
+            if (selectedVariantIds != null && !selectedVariantIds.isEmpty()) {
+                itemsToOrder = items.stream()
+                        .filter(item -> selectedVariantIds.contains(item.getProductVariantId()))
+                        .collect(Collectors.toList());
+            } else {
+                itemsToOrder = items; // fallback
+            }
+
+            if (itemsToOrder.isEmpty()) return -1;
 
             //Tính tiền
             double totalProductsPrice = CartService.getTotalPrice(cartId);
@@ -71,7 +86,9 @@ public class OrderService {
             orderShippingDAO.insertOrderShipping(orderId, userAddressId, notes);
 
             // Xóa giỏ sau khi mua
-            CartService.deleteAllItems(cartId);
+            for (CartItemDTO item : itemsToOrder) {
+                CartService.deleteItem(cartId, item.getProductVariantId());
+            }
 
             return orderId;
 
