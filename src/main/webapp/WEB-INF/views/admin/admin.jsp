@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-
+<%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
 <%
     request.setAttribute("pageTitle", "Quản lý Tổng quát - AuraSound");
@@ -22,7 +21,6 @@
 
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleAdmin.css">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
-    <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 </head>
 
