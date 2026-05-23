@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.core" %>
+<%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
@@ -29,6 +28,7 @@
 <body>
 <div class="container-fluid">
     <div class="row">
+        <jsp:include page="/WEB-INF/tag/_adminMenu.jsp"/>
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-2 border-bottom">
@@ -73,9 +73,8 @@
                                         gian:</strong> ${contact.stringCreatedAt}
                                     </p>
                                     <p>
-                                        <span class="badge ${contact.status == 'New' ? 'bg-danger' : 'bg-success'}">
-                                            ${contact.stringStatus}
-                                        </span>
+<span class="badge ${contact.stringStatus == 'New' ? 'bg-danger' : 'bg-success'}"> ${contact.stringStatus}
+</span>
                                     </p>
                                 </div>
                                 <div class="col-7 mt-2">
@@ -109,22 +108,24 @@
                             <div class="mb-4">
                                 <label for="mail-content" class="form-label fw-bold">
                                     Nội dung phản hồi</label>
-                                <textarea ${contact.replyMess != null && !contact.replyMess.trim().equals('') ?'readonly':''} id="mail-content"
-                                                                                      name="content"
-                                                                                      class="form-control"
-                                                                                      style="height: 250px; resize: vertical;"
-                                                                                      placeholder="Nhập nội dung bạn muốn gửi tới khách hàng..."><c:if
+                                <textarea ${contact.replyMess != null && !contact.replyMess.trim().equals('') ?'readonly':''}
+                                        id="mail-content"
+                                        name="content"
+                                        class="form-control"
+                                        style="height: 250px; resize: vertical;"
+                                        placeholder="Nhập nội dung bạn muốn gửi tới khách hàng..."><c:if
                                         test="${contact.replyMess == null || contact.replyMess.trim().equals('')}">
-Chào ${contact.senderName}, Cảm ơn bạn đã liên hệ với AuraSound.
+                                    Chào ${contact.senderName}, Cảm ơn bạn đã liên hệ với AuraSound.
 
-Về vấn đề của bạn "${contact.mess}",
+                                    Về vấn đề của bạn "${contact.mess}",
 
-Chúng tôi xin phản hồi như sau: ...
+                                    Chúng tôi xin phản hồi như sau: ...
 
 
-./ Trân trọng!
-                                </c:if><c:if test="${contact.replyMess != null && !contact.replyMess.trim().equals('') }">
- ${contact.replyMess} </c:if>
+                                    ./ Trân trọng!
+                                </c:if><c:if
+                                        test="${contact.replyMess != null && !contact.replyMess.trim().equals('') }">
+                                    ${contact.replyMess} </c:if>
 
                                         </textarea>
                             </div>
