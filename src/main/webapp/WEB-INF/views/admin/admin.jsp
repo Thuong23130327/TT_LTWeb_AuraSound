@@ -118,7 +118,7 @@
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h5 class="card-title">Năm ${currentYear}</h5>
-                                            <p class="h3 fw-bold"><fmt:formatNumber value="${stats.yearRevenue}" type="number" maxFractionDigits="0" /> VNĐ</p>
+                                            <p class="h3 fw-bold"><fmt:formatNumber value="${stats.yearRevenue}" type="number" maxFractionDigits="0" pattern="#,###" /> đ</p>
                                         </div>
                                     </div>
                                 </div>
@@ -128,7 +128,7 @@
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h5 class="card-title">T${currentMonth}/${currentYear}</h5>
-                                            <p class="h3 fw-bold"><fmt:formatNumber value="${stats.monthRevenue}" type="number" maxFractionDigits="0" /> VNĐ</p>
+                                            <p class="h3 fw-bold"><fmt:formatNumber value="${stats.monthRevenue}" type="number" maxFractionDigits="0" pattern="#,###"  /> đ</p>
                                         </div>
                                     </div>
                                 </div>
@@ -138,7 +138,7 @@
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h5 class="card-title">Hôm nay</h5>
-                                            <p class="h3 fw-bold"><fmt:formatNumber value="${stats.dayRevenue}" type="number" maxFractionDigits="0" /> VNĐ</p>
+                                            <p class="h3 fw-bold"><fmt:formatNumber value="${stats.dayRevenue}" type="number" maxFractionDigits="0" pattern="#,###" /> đ</p>
                                         </div>
                                     </div>
                                 </div>

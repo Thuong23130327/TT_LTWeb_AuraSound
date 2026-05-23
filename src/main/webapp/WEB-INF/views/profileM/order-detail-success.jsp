@@ -80,7 +80,7 @@
                                     | Tổng tiền:
                                     <c:choose>
                                         <c:when test="${not empty order.finalAmount}">
-                                            <fmt:formatNumber value="${order.finalAmount}" type="currency" currencySymbol="VNĐ"/>
+                                            <fmt:formatNumber value="${order.finalAmount}" type="currency" pattern="#,###"/>đ
                                         </c:when>
                                         <c:otherwise>0 VNĐ</c:otherwise>
                                     </c:choose>
