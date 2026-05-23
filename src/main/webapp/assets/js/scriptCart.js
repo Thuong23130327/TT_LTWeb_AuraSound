@@ -1,3 +1,5 @@
+
+
 function updateHeaderBadge(quantity) {
     const cartBadge = document.getElementById('cart-badge');
     if (cartBadge) {
@@ -164,3 +166,4 @@ function deleteItemAJAX(variantId) {
         })
         .catch(error => console.error('Lỗi AJAX:', error));
 }
+

@@ -93,17 +93,44 @@
     </div>
 
     <div class="checkout-button-container">
-        <a href="${AuraSound}/checkout">
-            <button type="button" class="checkout-button-tgdd">THANH TOÁN</button>
-        </a>
+            <button type="button" class="checkout-button-tgdd" onclick="goToCheckout()">
+                THANH TOÁN
+            </button>
     </div>
 </main>
 
 <jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
 
-<script src="${AuraSound}/assets/js/script.js"></script>
-<script src="${AuraSound}/assets/js/scriptProfile.js"></script>
-<script src="${AuraSound}/assets/js/scriptStore.js"></script>
-<script src="${AuraSound}/assets/js/scriptCart.js"></script>
+<script>
+    const ctxPath = '${pageContext.request.contextPath}';
+</script>
+<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/scriptProfile.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/scriptStore.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/scriptCart.js"></script>
+<script>
+    if (typeof goToCheckout === 'undefined') {
+        function goToCheckout() {
+            const checkedBoxes = document.querySelectorAll('.item-check:checked');
+            if (checkedBoxes.length === 0) {
+                alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
+                return;
+            }
+            const form = document.createElement('form');
+            form.method = 'GET';
+            form.action = ctxPath + '/checkout';
+            checkedBoxes.forEach(function(checkbox) {
+                const variantId = checkbox.closest('.cart-item').id.replace('item-row-', '');
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selectedIds';
+                input.value = variantId;
+                form.appendChild(input);
+            });
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
 </body>
 </html>

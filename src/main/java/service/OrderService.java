@@ -9,12 +9,14 @@ import model.dto.CartItemDTO;
 import model.entity.Cart;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderService {
 
     private static final OrderDAO         orderDAO         = new OrderDAO();
     private static final OrderItemDAO     orderItemDAO     = new OrderItemDAO();
     private static final OrderShippingDAO orderShippingDAO = new OrderShippingDAO();
+
 
     public static int placeOrder(int    userId,
                                  String recipientName,
@@ -23,18 +25,33 @@ public class OrderService {
                                  String ward,
                                  String address,
                                  String notes,
-                                 String voucherCode) {
+                                 String voucherCode,
+                                 List<Integer> selectedVariantIds) {
         try {
             //Lấy ttin cart
             Cart cart = CartService.getOrCreateCartByUserId(userId);
             int  cartId = cart.getId();
 
-            List<CartItemDTO> items = CartService.getListItems(cartId);
-            if (items == null || items.isEmpty()) return -1;
+            List<CartItemDTO> allItems = CartService.getListItems(cartId);
+            if (allItems == null || allItems.isEmpty()) return -1;
+
+            //Lọc sp theo id đc chọn
+            List<CartItemDTO> itemsToOrder;
+            if (selectedVariantIds != null && !selectedVariantIds.isEmpty()) {
+                itemsToOrder = allItems.stream()
+                        .filter(item -> selectedVariantIds.contains(item.getProductVariantId()))
+                        .collect(Collectors.toList());
+            } else {
+                itemsToOrder = allItems; // fallback
+            }
+
+            if (itemsToOrder.isEmpty()) return -1;
 
             //Tính tiền
-            double totalProductsPrice = CartService.getTotalPrice(cartId);
-            double shippingFee        = 30.000;
+            double totalProductsPrice = itemsToOrder.stream()
+                    .mapToDouble(CartItemDTO::getTotalItemPrice)
+                    .sum();
+            double shippingFee        = 30_000;
             double discountAmount     = 0;
             Integer vouchersId        = null;
 
@@ -52,7 +69,7 @@ public class OrderService {
             if (orderId <= 0) return -1;
 
             //Lưu sp
-            for (CartItemDTO item : items) {
+            for (CartItemDTO item : itemsToOrder) {
                 orderItemDAO.insertOrderItem(
                         orderId,
                         item.getProductVariantId(),
@@ -71,7 +88,9 @@ public class OrderService {
             orderShippingDAO.insertOrderShipping(orderId, userAddressId, notes);
 
             // Xóa giỏ sau khi mua
-            CartService.deleteAllItems(cartId);
+            for (CartItemDTO item : itemsToOrder) {
+                CartService.deleteItem(cartId, item.getProductVariantId());
+            }
 
             return orderId;
 
