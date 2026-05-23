@@ -110,7 +110,7 @@
                                     <div class="product-price">
                                         <fmt:formatNumber value="${item.price_at_purchase}"
                                                           type="number"
-                                                          groupingUsed="true"/> VNĐ
+                                                          pattern="#,###">đ</fmt:formatNumber>
                                     </div>
                                 </div>
                                 <hr>
