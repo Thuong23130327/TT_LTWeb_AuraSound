@@ -32,7 +32,7 @@
     <div class="row">
         <jsp:include page="/WEB-INF/tag/_adminMenu.jsp"/>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-3 px-md-4">
 
             <nav>
                 <div class="nav-container content">
@@ -61,8 +61,8 @@
             <p class="text-muted">Sửa, xóa sản phẩm và quản lý xuất nhập hàng.</p>
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <div class="table-scroll-wrapper">
-                        <table id="productTable" class="table table-striped table-sm">
+                    <div class="table-responsive">
+                        <table id="productTable" class="table table-striped table-sm text-nowrap">
                             <thead>
                             <tr>
                                 <th>Stt</th>
@@ -85,11 +85,11 @@
                                     <td>${varCountMap[p.id] > 0 ? varCountMap[p.id]:0}</td>
                                     <td>${totalStockMap[p.id] > 0 ? totalStockMap[p.id]:0}</td>
 
-                                    <td data-order="${p.oldPrice}" class="old-price"><fmt:formatNumber
+                                    <td data-order="${p.oldPrice}"><fmt:formatNumber
                                             value="${p.oldPrice > p.sellPrice ? p.oldPrice : 0}" pattern="#,###"/>
                                         đ
                                     </td>
-                                    <td data-order="${p.sellPrice}" class="new-price"><fmt:formatNumber
+                                    <td data-order="${p.sellPrice}" ><fmt:formatNumber
                                             value="${p.sellPrice}" pattern="#,###"/> đ
                                     </td>
                                     <td>
