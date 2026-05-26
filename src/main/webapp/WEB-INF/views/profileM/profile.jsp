@@ -79,7 +79,7 @@
                 </div>
                 <button type="button" id="btnOpenEdit" class="btn-primary">Cập nhật thông tin</button>
 
-                <form id="editForm" action="${pageContext.request.contextPath}/profile" method="post">
+                <form id="editForm" action="${pageContext.request.contextPath}/profile" method="post" enctype="multipart/form-data">
                     <div id="modal-edit-profile" class="modal-container">
                         <div class="modal-header">
                             <h3>Chỉnh sửa hồ sơ</h3>
@@ -92,7 +92,7 @@
                                 <div class="avatar-preview-box">
                                     <img id="avatarPreview" src="${not empty userDetail.avatarUrl ? userDetail.avatarUrl : '../assets/img/avatar/default.png'}"
                                          alt="Avatar Preview">
-                                    <input type="file" id="imageUpload" accept="image/*" hidden>
+                                    <input type="file" id="imageUpload" name="avatar" accept="image/*" hidden>
                                     <label for="imageUpload" class="camera-icon">
                                         <i class="bi bi-camera-fill"></i>
                                     </label>

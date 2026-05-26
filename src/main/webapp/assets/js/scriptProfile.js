@@ -98,18 +98,21 @@ document.addEventListener("DOMContentLoaded", function () {
             const newName = document.getElementById('editName').value;
             const newPhone = document.getElementById('editPhone').value;
 
-            // Cập nhật ra ngoài giao diện chính (Demo)
-            document.querySelector('.user-name').innerText = "Chào, " + newName;
-            document.getElementById('fullName').value = newName;
-            document.getElementById('phone').value = newPhone;
-
-            // Cập nhật avatar chính nếu có thay đổi
-            if (avatarPreview.src !== mainAvatar.src) {
-                mainAvatar.src = avatarPreview.src;
+            // Validate input
+            if (!newName || newName.trim().length < 2) {
+                alert("Họ tên phải có ít nhất 2 ký tự!");
+                return;
+            }
+            if (!newPhone || newPhone.trim().length < 10) {
+                alert("Số điện thoại không hợp lệ!");
+                return;
             }
 
-            alert("Đã lưu thông tin thành công!");
-            closeModal();
+            // Submit the form
+            const editForm = document.getElementById('editForm');
+            if (editForm) {
+                editForm.submit();
+            }
         });
     }
 });

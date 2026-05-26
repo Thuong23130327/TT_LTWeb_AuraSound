@@ -28,4 +28,13 @@ public class ProfileDAO {
                         .execute() > 0
         );
     }
+
+    public boolean updateAvatarUrl(int userId, String avatarUrl) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE users SET avatar_url = :avatarUrl WHERE id = :id")
+                        .bind("avatarUrl", avatarUrl)
+                        .bind("id", userId)
+                        .execute() > 0
+        );
+    }
 }
