@@ -33,6 +33,14 @@ public class ProfileService {
         return isSuccess ? "success" : "Cập nhật thất bại tại hệ thống.";
     }
 
+    public String updateAvatar(int userId, String avatarUrl) throws SQLException {
+        if (avatarUrl == null || avatarUrl.trim().isEmpty()) {
+            return "Avatar URL không được để trống.";
+        }
+        boolean isSuccess = pDAO.updateAvatarUrl(userId, avatarUrl.trim());
+        return isSuccess ? "success" : "Cập nhật avatar thất bại.";
+    }
+
     public Order getOrderById(String orderId){
         return oDAO.getOrderById(orderId);
     }

@@ -108,9 +108,7 @@
                                         <p>Màu: ${item.productVariant.colorName} | SL: ${item.quantity}</p>
                                     </div>
                                     <div class="product-price">
-                                        <fmt:formatNumber value="${item.price_at_purchase}"
-                                                          type="number"
-                                                          pattern="#,###">đ</fmt:formatNumber>
+                                        <fmt:formatNumber value="${item.price_at_purchase}" type="currency" />
                                     </div>
                                 </div>
                                 <hr>
