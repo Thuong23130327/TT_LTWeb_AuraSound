@@ -78,7 +78,7 @@
                     </c:if>
 
                 </div>
-                <form action="cart" method="post">
+                <form action="cart" method="post" onsubmit="addToCartAjax(event)">
                     <div class="product-options">
                         <h4>Màu sắc: </h4>
                         <div class="color-options">
@@ -246,11 +246,13 @@
 
                         <div class="price-block">
                             <div class="new-price">
-                                <fmt:formatNumber value="${p.sellPrice}" pattern="#,###"/> đ</div>
+                                <fmt:formatNumber value="${p.sellPrice}" pattern="#,###"/> đ
+                            </div>
 
                             <c:if test="${p.discountPercent > 0}">
                                 <div class="old-price">
-                                    <fmt:formatNumber value="${p.oldPrice}" pattern="#,###"/> đ</div>
+                                    <fmt:formatNumber value="${p.oldPrice}" pattern="#,###"/> đ
+                                </div>
                             </c:if>
 
                         </div>
@@ -338,15 +340,29 @@
             if (msg.equals("success")) {
     %>
     <script>
-        alert("Cập nhật THÀNH CÔNG!!");
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Đánh giá của bạn đã được gửi thành công!',
+            confirmButtonColor: '#2ecc71',
+            timer: 2500,
+            timerProgressBar: true
+        });
     </script>
+
     <%
         }
         if (msg.equals("fail")) {
     %>
     <script>
-        alert("Cập nhật THẤT BẠI!!");
+        Swal.fire({
+            icon: 'error',
+            title: 'Thất bại!',
+            text: 'Gửi đánh giá thất bại. Vui lòng thử lại!',
+            confirmButtonColor: '#e74c3c'
+        });
     </script>
+
     <%
             }
             session.removeAttribute("msg");
@@ -364,9 +380,20 @@
             var myModal = new bootstrap.Modal(document.getElementById('addVariantModal'));
             myModal.show();
         } else {
-            alert("Vui lòng đăng nhập để tiếp tục đánh giá sản phẩm!");
-
-            window.location.href = '${AuraSound}/login';
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chưa đăng nhập',
+                text: 'Vui lòng đăng nhập để tiếp tục đánh giá sản phẩm!',
+                confirmButtonText: 'Đăng nhập ngay',
+                confirmButtonColor: '#3498db',
+                showCancelButton: true,
+                cancelButtonText: 'Hủy',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '${AuraSound}/login';
+                }
+            });
         }
     }
 </script>

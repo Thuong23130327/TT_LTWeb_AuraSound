@@ -142,9 +142,9 @@ public class CartServlet extends HttpServlet {
 
         }
     }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean isAjax = "true".equals(request.getParameter("ajax"));
         try {
             HttpSession session = request.getSession();
 
@@ -170,11 +170,31 @@ public class CartServlet extends HttpServlet {
             int updatedTotalQty = CartService.getTotalQuantity(cartId);
             request.getSession().setAttribute("cartQty", updatedTotalQty);
 
+            if (isAjax) {
+                // Trả JSON cho AJAX request từ trang chi tiết sản phẩm
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter out = response.getWriter();
+                out.print("{\"status\": \"success\", \"cartQty\": " + updatedTotalQty + "}");
+                out.flush();
+                return;
+            }
+
             //redirect về doget để load ds hiển thị
             response.sendRedirect(request.getContextPath() + "/cart");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/cart?error=add_failed");
+            if (isAjax) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(500);
+                PrintWriter out = response.getWriter();
+                out.print("{\"status\": \"error\", \"message\": \"Thêm vào giỏ hàng thất bại\"}");
+                out.flush();
+            } else {
+                response.sendRedirect(request.getContextPath() + "/cart?error=add_failed");
+            }
         }
     }
+
 }
