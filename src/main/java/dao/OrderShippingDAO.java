@@ -36,7 +36,7 @@ public class OrderShippingDAO {
                         ua.setPhone(rs.getString("ua_phone"));
                         ua.setAddress(rs.getString("ua_address"));
                         ua.setCity(rs.getString("ua_city"));
-                        ua.setDefault(rs.getBoolean("ua_is_default"));
+                        ua.setIsDefault(rs.getBoolean("ua_is_default"));
 
                         os.setUserAddress(ua);
                     }

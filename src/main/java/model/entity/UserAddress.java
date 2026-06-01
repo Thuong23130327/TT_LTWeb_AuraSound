@@ -20,9 +20,9 @@ public class UserAddress {
         public void setId(int id) { this.id = id; }
 
         public int getUserId() { return userId; }
-    @ColumnName("users_id")
-
-    public void setUserId(int userId) { this.userId = userId; }
+        
+        @ColumnName("users_id")
+        public void setUserId(int userId) { this.userId = userId; }
 
         public String getRecipientName() { return recipientName; }
         public void setRecipientName(String recipientName) { this.recipientName = recipientName; }
@@ -37,9 +37,10 @@ public class UserAddress {
         public void setCity(String city) { this.city = city; }
 
         // Jdbi sẽ tự động hiểu isDefault từ cột is_default trong DB
-        public boolean isDefault() { return isDefault; }
-    @ColumnName("is_default")
-    public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
+        public boolean getIsDefault() { return isDefault; }
+        
+        @ColumnName("is_default")
+        public void setIsDefault(boolean isDefault) { this.isDefault = isDefault; }
 
         public User getUser() { return user; }
         public void setUser(User user) { this.user = user; }

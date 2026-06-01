@@ -46,6 +46,8 @@
                 <ul class="nav-list">
                     <li><a class="nav-link active" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Thông
                         tin tài khoản</a></li>
+                    <li><a class="nav-link" href="${pageContext.request.contextPath}/address"><i class="fa-solid fa-map-location-dot icon"></i> Địa
+                        Chỉ</a></li>
                     <li><a class="nav-link" href="favorites.jsp"><i class="fa-solid fa-heart icon"></i> Sản
                         phẩm yêu thích</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-shipping"><i class="fa-solid fa-truck icon"></i> Đang
