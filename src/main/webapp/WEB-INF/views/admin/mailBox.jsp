@@ -62,19 +62,16 @@
                                         <td>${eachMail.mess}</td>
                                         <td>${eachMail.stringCreatedAt}</td>
                                         <td>
-                                            <c:if test="${eachMail.stringStatus =='New'}">
-                                                <a
-                                                        href="${AuraSound}/admin/mail_detail?id=${eachMail.id}">
-                                                    <button class="btn-new">${eachMail.stringStatus}</button>
-                                                </a>
+                                            <c:if test="${eachMail.stringStatus =='Mới'}"> <a
+                                                    href="${AuraSound}/admin/mail_detail?id=${eachMail.id}">
+                                                <button class="btn-new">${eachMail.stringStatus}</button>
+                                            </a>
                                             </c:if>
 
-                                            <c:if test="${eachMail.stringStatus =='Replied'}">
+                                            <c:if test="${eachMail.stringStatus =='Đã phản hồi'}">
                                                 <a href="${AuraSound}/admin/mail_detail?id=${eachMail.id}">
-
-                                                    <button class="btn-replied">${eachMail.stringStatus}</button>
-
-                                                </a>
+                                                    <button class="btn-sm">${eachMail.stringStatus=='Đã phản hồi'? "Chi tiết": "Phản hồi"}</button>
+                                            </a>
                                             </c:if>
                                         </td>
 
