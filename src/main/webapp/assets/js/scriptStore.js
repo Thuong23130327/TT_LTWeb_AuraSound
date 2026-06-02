@@ -125,18 +125,38 @@ function updateFilterArray(array, value) {
         array.push(stringValue);
     }
 }
-
 function renderPagination(totalPage, current) {
     let total = parseInt(totalPage) || 1;
     let cur = parseInt(current) || 1;
 
     let html = '';
-    for (let i = 1; i <= total; i++) {
+
+    if (cur > 1) {
+        html += `<button class="page-btn" onclick="changePage(1)">Đầu</button>`;
+    }
+
+    let start = Math.max(1, cur - 2);
+    let end = Math.min(total, cur + 2);
+
+    if (start > 1) {
+        html += `<span class="page-dots">...</span>`;
+    }
+    for (let i = start; i <= end; i++) {
         html += `<button class="page-btn ${i === cur ? 'active' : ''}"
                  onclick="changePage(${i})">${i}</button>`;
     }
+
+    if (end < total) {
+        html += `<span class="page-dots">...</span>`;
+    }
+
+    if (cur < total) {
+        html += `<button class="page-btn" onclick="changePage(${total})">Cuối</button>`;
+    }
+
     $("#pagination-buttons").html(html);
 }
+
 
 function changePage(page) {
     filterState.pageCurrent = page;

@@ -167,48 +167,48 @@ main {
     text-align: center;
     border: 2px solid #a0a0a0;
 }
-
-/* Container bao quanh cả cụm */
 .quantity-group {
     display: inline-flex;
     align-items: center;
-    border: 1px solid #e0e0e0; /* Border xám mờ */
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
     overflow: hidden;
     background: #fff;
+    height: 42px;
 }
-
 .quantity-group .quantity-btn {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 100%;
     border: none;
-    background: transparent;
-    color: #666;
-    font-size: 18px;
+    background: #fdfdfd;
+    color: #333;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease-in-out;
 }
-
 .quantity-group .quantity-btn:hover {
-    background-color: #f5f5f5;
+    background-color: var(--theme-color-primary); /* Đổi màu nền thành màu chủ đạo */
+    color: white;
 }
-
-
 .quantity-group input#quanProduct {
-    width: 50px;
-    height: 40px;
+    width: 55px;
+    height: 100%;
     border: none;
     border-left: 1px solid #f0f0f0;
     border-right: 1px solid #f0f0f0;
     text-align: center;
     font-weight: 600;
+    font-size: 16px;
+    color: var(--theme-color-primary);
     margin: 0;
     outline: none;
     -moz-appearance: textfield;
 }
-
-.quantity-group input::-webkit-outer-spin-button,
-.quantity-group input::-webkit-inner-spin-button {
+.quantity-group input#quanProduct::-webkit-outer-spin-button,
+.quantity-group input#quanProduct::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
@@ -220,7 +220,6 @@ main {
     background: #f9f9f9;
     cursor: pointer;
 }
-
 .sproduct input#quanProduct {
     width: 50px;
     height: 40px;
@@ -231,6 +230,7 @@ main {
     border-top: 1px solid #ddd;
     border-radius: 0;
 }
+
 .sproduct input:focus {
     outline: auto;
 }
