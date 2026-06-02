@@ -145,9 +145,9 @@ a.a-nodecor {
     margin-top: 40px;
     margin-bottom: 30px;
 }
-
 .page-btn {
-    width: 35px;
+    min-width: 35px;
+    padding: 0 8px;
     height: 35px;
     border: 1px solid #d1d5db;
     background: #fff;
@@ -156,6 +156,16 @@ a.a-nodecor {
     font-weight: 500;
     transition: 0.2s;
 }
+.page-dots {
+    display: flex;
+    align-items: end;
+    padding: 0 4px;
+    color: #6b7280;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+}
+
 
 .page-btn.active, .page-btn:hover {
     background: #8b5cf6;
@@ -641,10 +651,11 @@ a.a-nodecor {
     .pagination {
         gap: 4px;
     }
-
     .page-btn {
-        width: 30px;
+        min-width: 30px;
+        padding: 0 6px;
         height: 30px;
         font-size: 12px;
     }
+
 }

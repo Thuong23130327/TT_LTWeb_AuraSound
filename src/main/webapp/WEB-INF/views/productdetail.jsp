@@ -101,10 +101,10 @@
                         <h4>Số lượng còn:
                             <span id="stock" data-stock="${curVariant.stockQuantity}">${curVariant.stockQuantity}</span>
                         </h4>
-                        <div class="quantity-controls">
-                            <button type="button" class="quantity-btn" onclick="updateQuan(-1)">-</button>
+                        <div class="quantity-group shadow-sm">
+                            <button type="button" class="quantity-btn" onclick="updateQuan(-1)"><i class="bi bi-dash"></i></button>
                             <input name="quantity" id="quanProduct" type="number" onchange="checkInput()" value="1">
-                            <button type="button" class="quantity-btn" onclick="updateQuan(+1)">+</button>
+                            <button type="button" class="quantity-btn" onclick="updateQuan(+1)"><i class="bi bi-plus"></i></button>
                         </div>
 
                         <input type="hidden" name="variants" id="ipListVar" value="${variants}">
