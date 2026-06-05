@@ -1,4 +1,7 @@
+
 document.addEventListener("DOMContentLoaded", function () {
+
+
     const addVoucherModalEl = document.getElementById('addVoucherModal');
     if (addVoucherModalEl) {
         const shouldOpen = addVoucherModalEl.getAttribute('data-should-open') === 'true';
@@ -16,40 +19,38 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 4000);
     }
 
-    const codeInput = document.getElementById('voucherCode');
+
+    const codeInput     = document.getElementById('voucherCode');
     const discountInput = document.querySelector('input[name="discountAmount"]');
-    const previewCode = document.getElementById('previewCode');
+    const previewCode    = document.getElementById('previewCode');
     const previewDiscount = document.getElementById('previewDiscount');
 
     function updatePreview() {
         if (!codeInput || !discountInput) return;
-        const code = (codeInput.value || 'VOUCHER').toUpperCase();
+
+        const code   = codeInput.value.toUpperCase() || 'VOUCHER';
         const amount = parseInt(discountInput.value) || 0;
-        codeInput.value = code; // ép viết hoa khi gõ
-        if (previewCode) previewCode.textContent = code;
-        if (previewDiscount) {
-            previewDiscount.innerHTML = 'Giảm <strong>' + amount.toLocaleString('vi-VN') + 'đ</strong>';
-        }
+
+        if (previewCode)     previewCode.textContent  = code;
+        if (previewDiscount) previewDiscount.innerHTML = 'Giảm <strong>' + amount.toLocaleString('vi-VN') + 'đ</strong>';
     }
 
-    if (codeInput && discountInput) {
-        codeInput.addEventListener('input', updatePreview);
-        discountInput.addEventListener('input', updatePreview);
-    }
+    if (codeInput)     codeInput.addEventListener('input', updatePreview);
+    if (discountInput) discountInput.addEventListener('input', updatePreview);
 
-    const inp = document.getElementById('endDateInput');
-    if (inp) {
+    const endDateInput = document.getElementById('endDateInput');
+    if (endDateInput) {
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        inp.min = now.toISOString().slice(0, 16);
+        endDateInput.min = now.toISOString().slice(0, 16);
     }
 
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('input', function () {
             const keyword = this.value.toLowerCase().trim();
-            const rows = document.querySelectorAll('#voucherTable tbody tr');
-            let visible = 0;
+            const rows    = document.querySelectorAll('#voucherTable tbody tr');
+            let visible   = 0;
             rows.forEach(row => {
                 const badge = row.querySelector('.code-badge');
                 if (!badge) { row.style.display = ''; return; }
@@ -64,27 +65,26 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function confirmDelete(id, code) {
-    const deleteIdInp = document.getElementById('deleteId');
+    const deleteIdInp      = document.getElementById('deleteId');
     const deleteCodeDisplay = document.getElementById('deleteCodeDisplay');
-    const confirmModalEl = document.getElementById('confirmDeleteModal');
+    const confirmModalEl   = document.getElementById('confirmDeleteModal');
 
-    if (deleteIdInp && deleteCodeDisplay && confirmModalEl) {
-        deleteIdInp.value = id;
-        deleteCodeDisplay.textContent = code;
-        new bootstrap.Modal(confirmModalEl).show();
-    }
+    if (deleteIdInp)      deleteIdInp.value           = id;
+    if (deleteCodeDisplay) deleteCodeDisplay.textContent = code;
+    if (confirmModalEl)   new bootstrap.Modal(confirmModalEl).show();
 }
 
 function copyCode(code, el) {
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(code).then(() => {
         const orig = el.innerHTML;
-        el.innerHTML = '<i class="bi bi-check2"></i> Đã sao chép!';
+        el.innerHTML        = '<i class="bi bi-check2"></i> Đã sao chép!';
         el.style.background = '#e8f8f1';
-        el.style.color = '#1a9e5c';
+        el.style.color      = '#1a9e5c';
         setTimeout(() => {
-            el.innerHTML = orig;
+            el.innerHTML        = orig;
             el.style.background = '';
-            el.style.color = '';
+            el.style.color      = '';
         }, 1800);
     });
 }

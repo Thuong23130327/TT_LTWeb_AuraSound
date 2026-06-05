@@ -13,7 +13,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleAdmin.css">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
-
     <link rel="stylesheet" href="${AuraSound}/assets/css/admin/styleVoucher.css">
 </head>
 
@@ -24,6 +23,7 @@
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-3">
 
+            <%-- Flash toast --%>
             <c:if test="${not empty flashMsg}">
                 <div class="flash-toast ${flashType}" id="flashToast">
                     <i class="bi ${flashType eq 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'}"></i>
@@ -32,6 +32,7 @@
                 </div>
             </c:if>
 
+            <%-- Header --%>
             <div class="voucher-header-card">
                 <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
                     <div>
@@ -44,36 +45,47 @@
                 </div>
             </div>
 
-            <c:set var="cntTotal"   value="0" />
-            <c:set var="cntActive"  value="0" />
-            <c:set var="cntExpired" value="0" />
-            <c:forEach items="${voucher}" var="v">
-                <c:set var="cntTotal" value="${cntTotal + 1}" />
+            <c:set var="cntTotal"   value="0"/>
+            <c:set var="cntActive"  value="0"/>
+            <c:set var="cntExpired" value="0"/>
+            <c:forEach items="${vouchers}" var="v">
+                <c:set var="cntTotal" value="${cntTotal + 1}"/>
                 <c:choose>
-                    <c:when test="${v.endDate != null and v.endDate.isBefore(java.time.LocalDateTime.now())}">
-                        <c:set var="cntExpired" value="${cntExpired + 1}" />
+                    <c:when test="${v.endDate != null and v.endDate.isBefore(now)}">
+                        <c:set var="cntExpired" value="${cntExpired + 1}"/>
                     </c:when>
                     <c:when test="${v.usageLimit > 0}">
-                        <c:set var="cntActive" value="${cntActive + 1}" />
+                        <c:set var="cntActive" value="${cntActive + 1}"/>
                     </c:when>
                 </c:choose>
             </c:forEach>
 
+            <%-- Stats pills --%>
             <div class="d-flex gap-3 mb-4 flex-wrap">
                 <div class="stat-pill">
-                    <div class="icon" style="background:#eef0ff;color:#667eea"><i class="bi bi-ticket-perforated"></i></div>
-                    <div><p class="label">Tổng voucher</p><p class="value">${cntTotal}</p></div>
+                    <div class="stat-icon icon-total"><i class="bi bi-ticket-perforated"></i></div>
+                    <div>
+                        <p class="stat-label">Tổng voucher</p>
+                        <p class="stat-value">${cntTotal}</p>
+                    </div>
                 </div>
                 <div class="stat-pill">
-                    <div class="icon" style="background:#e8f8f1;color:#1a9e5c"><i class="bi bi-check-circle"></i></div>
-                    <div><p class="label">Đang hoạt động</p><p class="value">${cntActive}</p></div>
+                    <div class="stat-icon icon-active"><i class="bi bi-check-circle"></i></div>
+                    <div>
+                        <p class="stat-label">Đang hoạt động</p>
+                        <p class="stat-value">${cntActive}</p>
+                    </div>
                 </div>
                 <div class="stat-pill">
-                    <div class="icon" style="background:#fff1f1;color:#e74c3c"><i class="bi bi-x-circle"></i></div>
-                    <div><p class="label">Đã hết hạn</p><p class="value">${cntExpired}</p></div>
+                    <div class="stat-icon icon-expired"><i class="bi bi-x-circle"></i></div>
+                    <div>
+                        <p class="stat-label">Đã hết hạn</p>
+                        <p class="stat-value">${cntExpired}</p>
+                    </div>
                 </div>
             </div>
 
+            <%-- Table --%>
             <div class="voucher-table-wrap">
                 <div class="table-toolbar">
                     <i class="bi bi-search text-muted"></i>
@@ -100,7 +112,7 @@
                         </thead>
                         <tbody>
                         <c:choose>
-                            <c:when test="${empty voucher}">
+                            <c:when test="${empty vouchers}">
                                 <tr>
                                     <td colspan="9">
                                         <div class="empty-state">
@@ -111,23 +123,22 @@
                                 </tr>
                             </c:when>
                             <c:otherwise>
-                                <c:forEach items="${voucher}" var="v" varStatus="st">
-                                    <c:set var="expired" value="${v.endDate != null and v.endDate.isBefore(java.time.LocalDateTime.now())}" />
-                                    <c:set var="usedUp"  value="${v.usageLimit <= 0}" />
-
+                                <c:forEach items="${vouchers}" var="v" varStatus="st">
+                                    <c:set var="expired" value="${v.endDate != null and v.endDate.isBefore(now)}"/>
+                                    <c:set var="usedUp"  value="${v.usageLimit <= 0}"/>
                                     <tr>
                                         <td class="text-muted">${st.index + 1}</td>
-
                                         <td>
                                             <span class="code-badge" onclick="copyCode('${v.code}', this)" title="Nhấn để sao chép">
                                                 <i class="bi bi-clipboard"></i>${v.code}
                                             </span>
                                         </td>
-
-                                        <td><strong style="color:#764ba2"><fmt:formatNumber value="${v.discountAmount}" pattern="#,###"/>đ</strong></td>
-
+                                        <td>
+                                            <strong class="discount-price">
+                                                <fmt:formatNumber value="${v.discountAmount}" pattern="#,###"/>đ
+                                            </strong>
+                                        </td>
                                         <td><fmt:formatNumber value="${v.minimumOrderAmount}" pattern="#,###"/>đ</td>
-
                                         <td>
                                             <span style="font-weight:600">${v.usageLimit}</span>
                                             <c:if test="${v.usageLimit <= 0}">
@@ -137,25 +148,17 @@
                                                 <span class="text-warning ms-1" style="font-size:.78rem">(Sắp hết)</span>
                                             </c:if>
                                         </td>
-
                                         <td>
                                             <c:choose>
-                                                <c:when test="${v.endDate != null}">
-                                                    ${v.endDate.format(java.time.format.DateTimeFormatter.ofPattern('dd/MM/yyyy HH:mm'))}
+                                                <c:when test="${not empty v.endDateFormatted}">
+                                                    ${v.endDateFormatted}
                                                 </c:when>
                                                 <c:otherwise><span class="text-muted">Không giới hạn</span></c:otherwise>
                                             </c:choose>
                                         </td>
-
                                         <td class="text-muted" style="font-size:.82rem">
-                                            <c:choose>
-                                                <c:when test="${v.createdAt != null}">
-                                                    ${v.createdAt.format(java.time.format.DateTimeFormatter.ofPattern('dd/MM/yyyy HH:mm'))}
-                                                </c:when>
-                                                <c:otherwise>—</c:otherwise>
-                                            </c:choose>
+                                                ${v.createdAtFormatted}
                                         </td>
-
                                         <td>
                                             <c:choose>
                                                 <c:when test="${expired}">
@@ -169,7 +172,6 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
-
                                         <td>
                                             <button class="btn-tbl-delete" onclick="confirmDelete(${v.id}, '${v.code}')">
                                                 <i class="bi bi-trash me-1"></i>Xóa
@@ -188,24 +190,25 @@
     </div>
 </div>
 
-<div class="modal fade" id="addVoucherModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" data-should-open="${not empty showModal or not empty errorMsg}">
+<%-- Modal thêm voucher --%>
+<div class="modal fade" id="addVoucherModal" tabindex="-1"
+     data-bs-backdrop="static" data-bs-keyboard="false"
+     data-should-open="${not empty showModal or not empty errorMsg}">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Tạo Voucher Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
-            <form action="${pageContext.request.contextPath}/admin/voucher" method="post" id="addVoucherForm" novalidate>
+            <form action="${pageContext.request.contextPath}/admin/voucher" method="post"
+                  id="addVoucherForm" novalidate>
                 <input type="hidden" name="action" value="add">
-
                 <div class="modal-body">
                     <c:if test="${not empty errorMsg}">
                         <div class="alert alert-danger py-2 px-3 mb-3" style="border-radius:9px;font-size:.88rem">
                             <i class="bi bi-exclamation-circle me-1"></i>${errorMsg}
                         </div>
                     </c:if>
-
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="form-label">Mã Voucher <span class="text-danger">*</span></label>
@@ -215,12 +218,11 @@
                                 </span>
                                 <input type="text" class="form-control" name="code" id="voucherCode"
                                        value="${formCode}" placeholder="VD: SUMMER2026"
-                                       style="text-transform:uppercase;border-radius:0 9px 9px 0"
+                                       style="border-radius:0 9px 9px 0"
                                        maxlength="30" required>
                             </div>
                             <small class="form-text">Chỉ dùng chữ IN HOA, số, dấu _ hoặc - (3–30 ký tự)</small>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">Số tiền giảm (đ) <span class="text-danger">*</span></label>
                             <div class="input-group">
@@ -230,7 +232,6 @@
                                 <span class="input-group-text" style="border-radius:0 9px 9px 0;border-color:#ddd">đ</span>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">Đơn tối thiểu (đ) <span class="text-danger">*</span></label>
                             <div class="input-group">
@@ -241,7 +242,6 @@
                             </div>
                             <small class="form-text">Nhập 0 nếu không giới hạn</small>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">Số lượt dùng <span class="text-danger">*</span></label>
                             <div class="input-group">
@@ -253,16 +253,14 @@
                                        style="border-radius:0 9px 9px 0" required>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">Ngày hết hạn</label>
                             <input type="datetime-local" class="form-control" name="endDate"
                                    value="${formEndDate}" id="endDateInput">
                             <small class="form-text">Để trống = không giới hạn thời gian</small>
                         </div>
-
                         <div class="col-12">
-                            <div style="background:#fdf8ff;border:1px dashed #c8aaed;border-radius:10px;padding:12px 16px">
+                            <div class="voucher-preview-box">
                                 <small class="text-muted d-block mb-1" style="font-weight:600">Xem trước:</small>
                                 <span class="code-badge" style="cursor:default">
                                     <i class="bi bi-ticket-perforated"></i>
@@ -275,16 +273,19 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:9px;font-size:.9rem">Hủy</button>
-                    <button type="submit" class="btn-submit-voucher"><i class="bi bi-check-circle me-1"></i>Tạo Voucher</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                            style="border-radius:9px;font-size:.9rem">Hủy</button>
+                    <button type="submit" class="btn-submit-voucher">
+                        <i class="bi bi-check-circle me-1"></i>Tạo Voucher
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<%-- Modal xác nhận xóa --%>
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
@@ -298,11 +299,14 @@
                 <p class="mt-2 mb-0 text-muted" style="font-size:.83rem">Hành động này không thể hoàn tác.</p>
             </div>
             <div class="modal-footer justify-content-center gap-2">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:8px">Hủy</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                        style="border-radius:8px">Hủy</button>
                 <form id="deleteForm" action="${pageContext.request.contextPath}/admin/voucher" method="post">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" id="deleteId">
-                    <button type="submit" class="btn-confirm-delete"><i class="bi bi-trash me-1"></i>Xóa ngay</button>
+                    <button type="submit" class="btn-confirm-delete">
+                        <i class="bi bi-trash me-1"></i>Xóa ngay
+                    </button>
                 </form>
             </div>
         </div>
@@ -312,7 +316,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="${AuraSound}/assets/js/script.js"></script>
 <script src="${AuraSound}/assets/js/scriptAdmin.js"></script>
-
 <script src="${AuraSound}/assets/js/admin/scriptVoucher.js"></script>
 </body>
 </html>
