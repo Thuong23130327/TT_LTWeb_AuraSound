@@ -1,21 +1,27 @@
 package model.entity;
-import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Voucher {
     private int id;
-    private String code; // Mã Vou để app
-    private double discountAmount; // % giảm
-    private double minimumOrderAmount; // giá trị tối thiểu
-    private int usageLimit; // Số lần Voucher đc dùng
-    private LocalDateTime createdAt; // Ngày bắt đầu hiệu lực
+    private String code;
+    private double discountAmount;
+    private double minimumOrderAmount;
+    private int usageLimit;
+    private LocalDateTime createdAt;
     private LocalDateTime endDate;
 
-    public Voucher() {
-    }
 
-    public Voucher(int id, String code, double discountAmount, double minimumOrderAmount, int usageLimit, LocalDateTime endDate, LocalDateTime createdAt) {
+    private static final DateTimeFormatter DISPLAY_FMT =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+    public Voucher() {}
+
+    public Voucher(int id, String code, double discountAmount,
+                   double minimumOrderAmount, int usageLimit,
+                   LocalDateTime endDate, LocalDateTime createdAt) {
         this.id = id;
         this.code = code;
         this.discountAmount = discountAmount;
@@ -25,60 +31,35 @@ public class Voucher {
         this.createdAt = createdAt;
     }
 
-    public int getId() {
-        return id;
+    public int getId()                   { return id; }
+    public String getCode()              { return code; }
+    public double getDiscountAmount()    { return discountAmount; }
+    public double getMinimumOrderAmount(){ return minimumOrderAmount; }
+    public int getUsageLimit()           { return usageLimit; }
+    public LocalDateTime getEndDate()    { return endDate; }
+    public LocalDateTime getCreatedAt()  { return createdAt; }
+    public String getEndDateFormatted() {
+        return endDate != null ? endDate.format(DISPLAY_FMT) : "";
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getCreatedAtFormatted() {
+        return createdAt != null ? createdAt.format(DISPLAY_FMT) : "—";
     }
+    public void setId(int id)                         { this.id = id; }
+    public void setCode(String code)                  { this.code = code; }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public double getDiscountAmount() {
-        return discountAmount;
-    }
     @ColumnName("discount_amount")
-    public void setDiscountAmount(double discountAmount) {
-        this.discountAmount = discountAmount;
-    }
+    public void setDiscountAmount(double v)           { this.discountAmount = v; }
 
-    public double getMinimumOrderAmount() {
-        return minimumOrderAmount;
-    }
     @ColumnName("min_order_value")
-    public void setMinimumOrderAmount(double minimumOrderAmount) {
-        this.minimumOrderAmount = minimumOrderAmount;
-    }
+    public void setMinimumOrderAmount(double v)       { this.minimumOrderAmount = v; }
 
-    public int getUsageLimit() {
-        return usageLimit;
-    }
     @ColumnName("usage_limit")
-    public void setUsageLimit(int usageLimit) {
-        this.usageLimit = usageLimit;
-    }
+    public void setUsageLimit(int v)                  { this.usageLimit = v; }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
     @ColumnName("end_date")
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
+    public void setEndDate(LocalDateTime v)           { this.endDate = v; }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
     @ColumnName("created_at")
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
+    public void setCreatedAt(LocalDateTime v)         { this.createdAt = v; }
 }
