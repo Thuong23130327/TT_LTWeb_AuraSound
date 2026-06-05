@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
 <%
-    request.setAttribute("activePage", "profile");
+    request.setAttribute("activePage", "address");
 %>
 
 <head>
@@ -20,11 +20,11 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleProfile.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleHeadphones.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleAddress.css.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleStore.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleHome.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleProfile.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleHeadphones.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleAddress.css">
 
 </head>
 
@@ -33,29 +33,23 @@
 
 <main class="profile-page-main">
     <div class="profile-container">
+        <c:set var="userObj" value="${not empty userDetail ? userDetail : sessionScope.auth}" />
         <div class="profile-sidebar" id="profileSidebar">
             <div class="user-info">
-                <img class="img-profile" src="${not empty userDetail.avatarUrl ? userDetail.avatarUrl : '../assets/img/avatar/default.png'}" alt="Avatar">
-                <h5 class="user-name">Chào, ${sessionScope.auth.fullName}</h5>
-                <p class="user-email">${sessionScope.auth.email}</p>
+                <img class="img-profile" src="${not empty userObj.avatarUrl ? (fn:startsWith(userObj.avatarUrl, 'http') ? userObj.avatarUrl : pageContext.request.contextPath.concat('/').concat(userObj.avatarUrl)) : pageContext.request.contextPath.concat('/assets/img/avatar/default.png')}" alt="Avatar">
+                <h5 class="user-name">Chào, ${userObj.fullName}</h5>
+                <p class="user-email">${userObj.email}</p>
             </div>
 
             <div class="side-menu mobile-hidden" id="sideMenuContent">
                 <ul class="nav-list">
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Thông
-                        tin tài khoản</a></li>
-                    <li><a class="nav-link active" href="${pageContext.request.contextPath}/address"><i class="fa-solid fa-map-location-dot icon"></i> Địa
-                        Chỉ</a></li>
-                    <li><a class="nav-link" href="favorites.jsp"><i class="fa-solid fa-heart icon"></i> Sản
-                        phẩm yêu thích</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-shipping"><i class="fa-solid fa-truck icon"></i> Đang
-                        vận chuyển</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-pending"><i class="fa-solid fa-clock icon"></i> Đang
-                        chờ duyệt</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-cancelled"><i class="fa-solid fa-ban icon"></i> Đã
-                        hủy</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-history"><i class="fa-solid fa-history icon"></i> Lịch
-                        sử mua hàng</a></li>
+                    <li><a class="nav-link ${activePage == 'profile' ? 'active' : ''}" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Thông tin tài khoản</a></li>
+                    <li><a class="nav-link ${activePage == 'address' ? 'active' : ''}" href="${pageContext.request.contextPath}/address"><i class="fa-solid fa-map-location-dot icon"></i> Địa Chỉ</a></li>
+                    <li><a class="nav-link ${activePage == 'favorites' ? 'active' : ''}" href="${pageContext.request.contextPath}/favorites"><i class="fa-solid fa-heart icon"></i> Sản phẩm yêu thích</a></li>
+                    <li><a class="nav-link ${activePage == 'order-shipping' ? 'active' : ''}" href="${pageContext.request.contextPath}/order-shipping"><i class="fa-solid fa-truck icon"></i> Đang vận chuyển</a></li>
+                    <li><a class="nav-link ${activePage == 'order-pending' ? 'active' : ''}" href="${pageContext.request.contextPath}/order-pending"><i class="fa-solid fa-clock icon"></i> Đang chờ duyệt</a></li>
+                    <li><a class="nav-link ${activePage == 'order-cancelled' ? 'active' : ''}" href="${pageContext.request.contextPath}/order-cancelled"><i class="fa-solid fa-ban icon"></i> Đã hủy</a></li>
+                    <li><a class="nav-link ${activePage == 'order-history' ? 'active' : ''}" href="${pageContext.request.contextPath}/order-history"><i class="fa-solid fa-history icon"></i> Lịch sử mua hàng</a></li>
                 </ul>
             </div>
         </div>
@@ -266,8 +260,7 @@
 
 <jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
 
-<script src="${AuraSound}/assets/js/script.js"></script>
-<script src="${AuraSound}/assets/js/scriptAddress.js"></script>
-<%--<script src="${AuraSound}/assets/js/scriptStore.js"></script>--%>
+<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/scriptAddress.js"></script>
 </body>
 </html>
