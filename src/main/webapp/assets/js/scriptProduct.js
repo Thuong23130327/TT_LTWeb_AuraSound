@@ -1,3 +1,39 @@
+document.querySelectorAll('.btn-wishlist').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const productId = this.getAttribute('data-id');
+        const icon = this.querySelector('i');
+
+        fetch('/wishlist-ajax', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'productId': productId
+            })
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    Swal.fire('Lỗi', 'Vui lòng đăng nhập để thêm vào danh sách yêu thích!', 'warning');
+                    throw new Error("Unauthorized");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.status === "success") {
+                    if (data.isWished) {
+                        icon.style.color = "red";
+                    } else {
+                        icon.style.color = "";
+                    }
+                }
+            })
+            .catch(error => console.error("Error wishlist:", error));
+    });
+});
+
 // active ảnh nhỏ của minh họa sp
 function activeSmall(targetSrc) {
     const thumbnails = document.querySelectorAll(".small-img")
