@@ -95,17 +95,39 @@ function selectVariant(oldVariantId, newVariantId, colorName, event) {
             const img = document.getElementById('img-' + oldVariantId);
             if (img) { img.src = data.img; img.id = 'img-' + data.newId; }
             const priceEl = document.getElementById('price-label-' + oldVariantId);
-            if (priceEl) { priceEl.innerText = formatVND(data.price); priceEl.id = 'price-label-' + data.newId; }
+            if (priceEl) {
+                priceEl.innerText = formatVND(data.price);
+                priceEl.id = 'price-label-' + data.newId;
+            }
             const colorLabel = document.getElementById('color-label-' + oldVariantId);
-            if (colorLabel) { colorLabel.innerText = colorName; colorLabel.id = 'color-label-' + data.newId; }
+            if (colorLabel) {
+                colorLabel.innerText = colorName;
+                colorLabel.id = 'color-label-' + data.newId;
+            }
             if (dropdown) {
                 dropdown.id = 'dropdown-' + data.newId;
                 dropdown.querySelectorAll('.variant-option').forEach(function(opt) {
-                    opt.classList.toggle('active-variant', parseInt(opt.getAttribute('data-id')) === data.newId);
+                    opt.classList.toggle('active-variant',
+                        parseInt(opt.getAttribute('data-id')) === data.newId);
+
+                    const optId = parseInt(opt.getAttribute('data-id'));
+                    opt.classList.toggle('active-variant', optId === data.newId);
+
+                    opt.setAttribute('onclick',
+                        'selectVariant(' + data.newId + ',' + optId + ',\'' +
+                        opt.getAttribute('data-color') + '\',event)');
                 });
             }
             const wrapper = document.getElementById('wrapper-' + oldVariantId);
             if (wrapper) wrapper.id = 'wrapper-' + data.newId;
+
+            const triggerBtn = document.querySelector(
+                '#wrapper-' + data.newId + ' .item-variant-btn');
+            if (triggerBtn) {
+                triggerBtn.setAttribute('onclick',
+                    'toggleVariantDropdown(' + data.newId + ',event)');
+            }
+
             const qtyInput = document.getElementById('qty-' + oldVariantId);
             if (qtyInput) qtyInput.id = 'qty-' + data.newId;
             const qtyMinus = document.getElementById('qty-minus-' + oldVariantId);
