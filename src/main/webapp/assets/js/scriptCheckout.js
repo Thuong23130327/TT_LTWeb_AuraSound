@@ -128,8 +128,8 @@ document.getElementById('btn-dat-hang').addEventListener('click', function () {
         .then(data => {
             if (data.status === 'success') {
                 const popup = document.getElementById('success-popup');
-                popup.style.opacity    = '1';
-                popup.style.visibility = 'visible';
+                popup.style.setProperty('display', 'flex', 'important');
+                popup.classList.add('show');
                 setTimeout(() => popup.classList.add('show'), 10);
                 setTimeout(() => {
                     window.location.href = 'order-detail-success?id=' + data.orderId;
