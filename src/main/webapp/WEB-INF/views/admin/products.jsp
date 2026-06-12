@@ -33,24 +33,6 @@
         <jsp:include page="/WEB-INF/tag/_adminMenu.jsp"/>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-3 px-md-4">
-
-            <nav>
-                <div class="nav-container content">
-                    <div class="nav-left">
-
-                        <a class="a-nodecor " href="${AuraSound}/admin/product-manager">
-                            <div class="contact active">Tât cả</div>
-                        </a>
-                        <c:forEach items="${categoryList}" var="cate">
-                            <a class="a-nodecor " href="${AuraSound}/admin/product-manager?categoryId=${cate.id}">
-                                <div class="contact ${activeId == cate.id ? 'active':''}">${cate.name}</div>
-                            </a>
-                        </c:forEach>
-                    </div>
-                    <div id="hamburger-icon"><i class="bi bi-list"></i></div>
-                </div>
-            </nav>
-
             <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-4 pb-2 border-bottom">
                 <h2 class="h2 section-title text-primary">

@@ -1,6 +1,7 @@
 package service;
 
 import dao.CartDAO;
+import model.dto.VariantOptionDTO;
 import model.entity.Cart;
 import model.entity.CartItem;
 import model.dto.CartItemDTO;
@@ -50,7 +51,16 @@ public class CartService {
     }
 
     public static List<CartItemDTO> getListItems(int cartId) {
-        return cartDAO.getListItems(cartId);
+        List<CartItemDTO> items = cartDAO.getListItems(cartId);
+        for (CartItemDTO item : items) {
+            System.out.println(">>> productId = " + item.getProductId()
+                    + " | colorName = " + item.getColorName());
+            List<VariantOptionDTO> options =
+                    cartDAO.getVariantOptionsByProductId(item.getProductId());
+            System.out.println(">>> variants loaded = " + options.size());
+            item.setVariantOptions(options);
+        }
+        return items;
     }
 
     public static int getTotalQuantity(int cartId) {

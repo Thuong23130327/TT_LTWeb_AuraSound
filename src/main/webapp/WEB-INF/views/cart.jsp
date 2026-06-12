@@ -25,10 +25,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="${AuraSound}/assets/css/styleCart.css">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">
     <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleProfile.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleCart.css">
 
 </head>
 
@@ -40,37 +39,97 @@
         <c:choose>
             <c:when test="${not empty cartItems}">
                 <c:forEach var="item" items="${cartItems}">
-                    <div class="cart-item" id="item-row-${item.productVariantId}" data-price="${item.price}" style="display: flex; align-items: center; gap: 15px;">
+                    <div class="cart-item"
+                         id="item-row-${item.productVariantId}"
+                         data-price="${item.price}"
+                         data-variant-id="${item.productVariantId}">
 
+                            <%-- Checkbox --%>
                         <div class="item-checkbox">
-                            <input type="checkbox" class="item-check" ${item.checked ? 'checked' : ''}
+                            <input type="checkbox" class="item-check"
+                                ${item.checked ? 'checked' : ''}
                                    onchange="recalculateCart()">
                         </div>
 
+                            <%-- Main: ảnh + tên + dropdown màu + giá --%>
                         <div class="item-main">
-                            <img class="item-img" src="${item.img}" alt="${item.name}">
+                            <img class="item-img"
+                                 id="img-${item.productVariantId}"
+                                 src="${item.img}"
+                                 alt="${item.name}">
+
                             <div class="item-details">
                                 <h4>${item.name}</h4>
+
+                                    <%-- Dropdown chọn màu --%>
+                                <c:if test="${not empty item.variantOptions}">
+                                    <div class="variant-selector-wrapper"
+                                         id="wrapper-${item.productVariantId}">
+
+                                            <%-- Nút trigger — tách riêng, không lồng dropdown bên trong --%>
+                                        <button type="button"
+                                                class="item-variant-btn"
+                                                onclick="toggleVariantDropdown(${item.productVariantId}, event)">
+                            <span id="color-label-${item.productVariantId}">
+                                    ${item.colorName}
+                            </span>
+                                            <i class='bx bx-chevron-down'></i>
+                                        </button>
+
+                                            <%-- Dropdown list — đứng ngoài nút --%>
+                                        <div class="variant-dropdown"
+                                             id="dropdown-${item.productVariantId}">
+                                            <c:forEach var="opt" items="${item.variantOptions}">
+                                                <div class="variant-option
+                                     ${opt.id == item.productVariantId ? 'active-variant' : ''}"
+                                                     data-id="${opt.id}"
+                                                     data-color="${opt.colorName}"
+                                                     data-img="${opt.img}"
+                                                     data-price="${opt.price}"
+                                                     onclick="selectVariant(
+                                                         ${item.productVariantId},
+                                                         ${opt.id},
+                                                             '${opt.colorName}',
+                                                             event)">
+                                                        ${opt.colorName}
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
+                                </c:if>
                             </div>
+
                             <div class="item-price-col">
-                                <span class="item-price"><fmt:formatNumber value="${item.price}" pattern="#,###"/> đ</span>
+                <span class="item-price"
+                      id="price-label-${item.productVariantId}">
+                    <fmt:formatNumber value="${item.price}" pattern="#,###"/> đ
+                </span>
                             </div>
                         </div>
 
+                            <%-- Actions: xóa + tăng giảm --%>
                         <div class="item-actions">
-                            <span class="item-delete" style="cursor: pointer; color: red;"
-                                  onclick="deleteItemAJAX(${item.productVariantId})">
-                                Xoá
-                            </span>
-
+            <span class="item-delete"
+                  id="delete-btn-${item.productVariantId}"
+                  onclick="deleteItemAJAX(${item.productVariantId})">
+                Xoá
+            </span>
                             <div class="quantity-control">
                                 <button type="button" class="quantity-btn"
-                                        onclick="updateQuantityAJAX(${item.productVariantId}, -1)">-</button>
-
-                                <input class="quantity-input" id="qty-${item.productVariantId}" type="text" value="${item.quantity}" readonly>
-
+                                        id="qty-minus-${item.productVariantId}"
+                                        onclick="updateQuantityAJAX(${item.productVariantId}, -1)">
+                                    -
+                                </button>
+                                <input class="quantity-input"
+                                       id="qty-${item.productVariantId}"
+                                       type="text"
+                                       value="${item.quantity}"
+                                       readonly>
                                 <button type="button" class="quantity-btn"
-                                        onclick="updateQuantityAJAX(${item.productVariantId}, 1)">+</button>
+                                        id="qty-plus-${item.productVariantId}"
+                                        onclick="updateQuantityAJAX(${item.productVariantId}, 1)">
+                                    +
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -104,33 +163,7 @@
 <script>
     const ctxPath = '${pageContext.request.contextPath}';
 </script>
-<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
-<script src="${pageContext.request.contextPath}/assets/js/scriptProfile.js"></script>
-<script src="${pageContext.request.contextPath}/assets/js/scriptStore.js"></script>
+<%--<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>--%>
 <script src="${pageContext.request.contextPath}/assets/js/scriptCart.js"></script>
-<script>
-    if (typeof goToCheckout === 'undefined') {
-        function goToCheckout() {
-            const checkedBoxes = document.querySelectorAll('.item-check:checked');
-            if (checkedBoxes.length === 0) {
-                alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
-                return;
-            }
-            const form = document.createElement('form');
-            form.method = 'GET';
-            form.action = ctxPath + '/checkout';
-            checkedBoxes.forEach(function(checkbox) {
-                const variantId = checkbox.closest('.cart-item').id.replace('item-row-', '');
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'selectedIds';
-                input.value = variantId;
-                form.appendChild(input);
-            });
-            document.body.appendChild(form);
-            form.submit();
-        }
-    }
-</script>
 </body>
 </html>

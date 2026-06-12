@@ -7,18 +7,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import jakarta.servlet.http.HttpSession;
 import model.entity.Category;
 import model.entity.Product;
+import model.entity.User;
 import service.ProductService;
+import service.ProfileService;
 import util.CharResponseWrapper;
 
 import java.io.IOException;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // sản phẩm all, theo phan loai cate, brand ban dau
 @WebServlet(name = "ProductServlet", value = "/product")
@@ -45,6 +45,18 @@ public class ProductServlet extends HttpServlet {
 
             totalPage = productService.getTotalPages(null, List.of(brandId), null, null);
         }
+
+        List<Integer> wishlistIds = new ArrayList<>();
+        HttpSession sessionG = request.getSession(false);
+        if (sessionG != null) {
+            model.entity.User currentUser = (model.entity.User) sessionG.getAttribute("auth");
+            if (currentUser != null) {
+                ProfileService profileService = new ProfileService();
+                wishlistIds = profileService.getWishlistProductIds(currentUser.getId());
+            }
+        }
+        request.setAttribute("wishlistIds", wishlistIds);
+
         System.out.println(totalPage);
         request.setAttribute("totalPage", totalPage);
         request.setAttribute("pageCurrent", 1);
@@ -77,9 +89,19 @@ public class ProductServlet extends HttpServlet {
         if (selectedSort == null || selectedSort.isEmpty()) {
             selectedSort = "default";
         }
-        System.out.println( " cate: "+cateIds+" brandIds: "+brandIds+" minPrice: "+minPrice+" maxPrice: "+maxPrice+" selectedSort: "+selectedSort+" page: "+page );
+        System.out.println(" cate: " + cateIds + " brandIds: " + brandIds + " minPrice: " + minPrice + " maxPrice: " + maxPrice + " selectedSort: " + selectedSort + " page: " + page);
         List<Product> productList = productService.getList(cateIds, brandIds, minPrice, maxPrice, selectedSort, page);
         int totalPage = productService.getTotalPages(cateIds, brandIds, minPrice, maxPrice);
+        List<Integer> wishlistIds = new ArrayList<>();
+        HttpSession sessionP = request.getSession(false);
+        if (sessionP != null) {
+            User currentUser = (User) sessionP.getAttribute("auth");
+            if (currentUser != null) {
+                ProfileService profileService = new ProfileService();
+                wishlistIds = profileService.getWishlistProductIds(currentUser.getId());
+            }
+        }
+        request.setAttribute("wishlistIds", wishlistIds);
 
         request.setAttribute("productList", productList);
         request.setAttribute("pageCurrent", page);

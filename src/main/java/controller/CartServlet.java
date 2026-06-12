@@ -37,7 +37,7 @@ public class CartServlet extends HttpServlet {
             return;
         }
 
-        boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) || "ajax".equals(request.getParameter("type")) || "ajax".equals(request.getParameter("newVariantId"));
+        boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) || "ajax".equals(request.getParameter("type"));
         try {
             if (action != null && idStr != null) {
                 int variantId = Integer.parseInt(idStr);
@@ -77,47 +77,48 @@ public class CartServlet extends HttpServlet {
                                 break;
                             }
                         }
+
                         if (oldQty > 0) {
                             CartService.deleteItem(cartId, variantId);
-                            CartService.addOrUpdateItem(cartId, variantId, oldQty);
+                            CartService.addOrUpdateItem(cartId, newVariantId, oldQty);
+                        }
 
                             //Ajax dùng cho đổi biến thể
-                            if (isAjax) {
-                                List<CartItemDTO> updatedItems = CartService.getListItems(cartId);
-                                CartItemDTO newItem = null;
-                                for (CartItemDTO item : updatedItems) {
-                                    if (item.getProductVariantId() == variantId) {
-                                        newItem = item;
-                                        break;
-                                    }
+                        if (isAjax) {
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            PrintWriter out = response.getWriter();
+
+                            // Tìm newVariantId trong danh sách MỚI sau khi đã swap
+                            List<CartItemDTO> updatedItems = CartService.getListItems(cartId);
+                            CartItemDTO newItem = null;
+                            for (CartItemDTO item : updatedItems) {
+                                if (item.getProductVariantId() == newVariantId) { // ← tìm newVariantId, không phải variantId cũ
+                                    newItem = item;
+                                    break;
                                 }
-                                response.setContentType("application/json");
-                                PrintWriter out = response.getWriter();
-
-                                if (newItem != null) {
-                                    double totalOrder = CartService.getTotalPrice(cartId);
-
-                                    StringBuilder json = new StringBuilder();
-                                    json.append("{");
-                                    json.append("\"status\": \"success\",");
-                                    json.append("\"newId\": ").append(newItem.getProductVariantId()).append(",");
-                                    json.append("\"img\": \"").append(newItem.getImg()).append("\",");
-                                    json.append("\"price\": ").append(newItem.getPrice()).append(",");
-                                    json.append("\"name\": \"").append(newItem.getName()).append("\",");
-                                    json.append("\"totalOrder\": ").append(totalOrder);
-                                    json.append("}");
-
-                                    out.print(json.toString());
-                                } else {
-                                    out.print("{\"status\": \"error\", \"message\": \"Không tìm thấy biến thể\"}");
-                                }
-                                out.flush();
-                                return;
                             }
+
+                            if (newItem != null) {
+                                double totalOrder = CartService.getTotalPrice(cartId);
+                                out.print("{" +
+                                        "\"status\":\"success\"," +
+                                        "\"newId\":" + newItem.getProductVariantId() + "," +
+                                        "\"img\":\"" + newItem.getImg() + "\"," +
+                                        "\"price\":" + newItem.getPrice() + "," +
+                                        "\"colorName\":\"" + newItem.getColorName() + "\"," +
+                                        "\"name\":\"" + newItem.getName() + "\"," +
+                                        "\"totalOrder\":" + totalOrder +
+                                        "}");
+                            } else {
+                                out.print("{\"status\":\"error\",\"message\":\"Không tìm thấy biến thể mới\"}");
+                            }
+                            out.flush();
+                            return;
+                        }
                         }
                     }
                 }
-            }
             //Luồng
             List<CartItemDTO> cartItems = CartService.getListItems(cartId);
             double totalPrice = CartService.getTotalPrice(cartId);

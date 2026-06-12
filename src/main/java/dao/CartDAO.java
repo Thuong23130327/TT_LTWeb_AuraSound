@@ -1,5 +1,6 @@
 package dao;
 
+import model.dto.VariantOptionDTO;
 import model.entity.Cart;
 import model.entity.CartItem;
 import model.dto.CartItemDTO;
@@ -95,16 +96,34 @@ public class CartDAO {
         return jdbi.withHandle(handle ->
                 handle.createQuery(
                                 "SELECT ci.productvariants_id AS productVariantId, " +
-                                        "ci.quantity AS quantity, " +
-                                        "p.name AS name, " +
-                                        "pv.sell_price AS price, " +
-                                        "pv.main_image_url AS img " +
-                                        "FROM cartitems ci " +
+                                        "       ci.quantity           AS quantity,          " +
+                                        "       p.name                AS name,              " +
+                                        "       pv.sell_price         AS price,             " +
+                                        "       pv.main_image_url     AS img,               " +
+                                        "       pv.color_name         AS colorName,         " +
+                                        "       pv.products_id        AS products_id        " +
+                                        "FROM cartitems ci                                   " +
                                         "JOIN productvariants pv ON ci.productvariants_id = pv.id " +
-                                        "JOIN products p ON pv.products_id = p.id " +
+                                        "JOIN products p         ON pv.products_id = p.id   " +
                                         "WHERE ci.carts_id = :cartId")
                         .bind("cartId", cartId)
                         .mapToBean(CartItemDTO.class)
+                        .list()
+        );
+    }
+
+    public List<VariantOptionDTO> getVariantOptionsByProductId(int productId) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery(
+                                "SELECT id,              " +
+                                        "       color_name,      " +
+                                        "       main_image_url,  " +
+                                        "       sell_price       " +
+                                        "FROM productvariants    " +
+                                        "WHERE products_id = :productId " +
+                                        "ORDER BY id ASC")
+                        .bind("productId", productId)
+                        .mapToBean(VariantOptionDTO.class)
                         .list()
         );
     }

@@ -128,6 +128,7 @@ document.getElementById('btn-dat-hang').addEventListener('click', function () {
         .then(data => {
             if (data.status === 'success') {
                 const popup = document.getElementById('success-popup');
+                popup.style.display    = 'flex';
                 popup.style.opacity    = '1';
                 popup.style.visibility = 'visible';
                 setTimeout(() => popup.classList.add('show'), 10);

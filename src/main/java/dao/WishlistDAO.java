@@ -73,12 +73,21 @@ public class WishlistDAO {
 
     public static void main(String[] args) {
         WishlistDAO dao = new WishlistDAO();
-
-        // Giả sử test với user_id = 1 và product_id = 5
          boolean isAdded = dao.addWishlist(1, 5);
          System.out.println("Thêm thành công: " + isAdded);
 
          boolean isWished = dao.checkWishlist(1, 5);
          System.out.println("Đã yêu thích chưa: " + isWished);
     }
+
+
+    public List<Integer> getWishlistProductIds(int userId) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT products_id FROM wishlists WHERE users_id = :userId")
+                        .bind("userId", userId)
+                        .mapTo(Integer.class)
+                        .list()
+        );
+    }
+
 }
