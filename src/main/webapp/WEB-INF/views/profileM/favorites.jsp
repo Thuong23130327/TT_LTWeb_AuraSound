@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 <%
     request.setAttribute("pageTitle", "Sản phẩm đã yêu thích - AuraSound");
-    request.setAttribute("activePage", "profile");
+    request.setAttribute("activePage", "favorites");
 %>
 <head>
     <meta charset="UTF-8">
@@ -19,9 +19,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleStore.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleHome.css">
-    <link rel="stylesheet" href="${AuraSound}/assets/css/styleProfile.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleStore.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleHome.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleProfile.css">
 
 </head>
 
@@ -32,33 +32,24 @@
 
 <main class="profile-page-main">
     <div class="profile-container">
-        <div class="profile-sidebar">
+        <c:set var="userObj" value="${not empty userDetail ? userDetail : sessionScope.auth}" />
+        <div class="profile-sidebar" id="profileSidebar">
             <div class="user-info">
-                <img class="img-profile"
-                     src="${not empty userDetail.avatarUrl ? userDetail.avatarUrl : '../assets/img/avatar/default.png'}"
-                     alt="Avatar">
-                <h5 class="user-name">Chào, ${userDetail.fullName}</h5>
-                <p class="user-email">${userDetail.email}</p>
+                <img class="img-profile" src="${not empty userObj.avatarUrl ? (fn:startsWith(userObj.avatarUrl, 'http') ? userObj.avatarUrl : pageContext.request.contextPath.concat('/').concat(userObj.avatarUrl)) : pageContext.request.contextPath.concat('/assets/img/avatar/default.png')}" alt="Avatar">
+                <h5 class="user-name">Chào, ${userObj.fullName}</h5>
+                <p class="user-email">${userObj.email}</p>
             </div>
+
             <div class="side-menu mobile-hidden" id="sideMenuContent">
                 <ul class="nav-list">
-                    <li><a class="nav-link " href="${pageContext.request.contextPath}/profile"><i
-                            class="fa-solid fa-user icon"></i> Thông
-                        tin tài khoản</a></li>
-                    <li><a class="nav-link active" href="favorites.jsp"><i class="fa-solid fa-heart icon"></i> Sản
-                        phẩm yêu thích</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-shipping"><i
-                            class="fa-solid fa-truck icon"></i> Đang
-                        vận chuyển</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-pending"><i
-                            class="fa-solid fa-clock icon"></i> Đang
-                        chờ duyệt</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-cancelled"><i
-                            class="fa-solid fa-ban icon"></i> Đã
-                        hủy</a></li>
-                    <li><a class="nav-link" href="${pageContext.request.contextPath}/order-history"><i
-                            class="fa-solid fa-history icon"></i> Lịch
-                        sử mua hàng</a></li>
+
+                    <li><a class="nav-link ${activePage == 'profile' ? 'active' : ''}" href="${pageContext.request.contextPath}/profile"><i class="fa-solid fa-user icon"></i> Thông tin tài khoản</a></li>
+                    <li><a class="nav-link ${activePage == 'address' ? 'active' : ''}" href="${pageContext.request.contextPath}/address"><i class="fa-solid fa-map-location-dot icon"></i> Địa Chỉ</a></li>
+                    <li><a class="nav-link ${activePage == 'favorites' ? 'active' : ''}" href="${pageContext.request.contextPath}/favorites"><i class="fa-solid fa-heart icon"></i> Sản phẩm yêu thích</a></li>
+                    <li><a class="nav-link ${activePage == 'order-shipping' ? 'active' : ''}" href="${pageContext.request.contextPath}/order-shipping"><i class="fa-solid fa-truck icon"></i> Đang vận chuyển</a></li>
+                    <li><a class="nav-link ${activePage == 'order-pending' ? 'active' : ''}" href="${pageContext.request.contextPath}/order-pending"><i class="fa-solid fa-clock icon"></i> Đang chờ duyệt</a></li>
+                    <li><a class="nav-link ${activePage == 'order-cancelled' ? 'active' : ''}" href="${pageContext.request.contextPath}/order-cancelled"><i class="fa-solid fa-ban icon"></i> Đã hủy</a></li>
+                    <li><a class="nav-link ${activePage == 'order-history' ? 'active' : ''}" href="${pageContext.request.contextPath}/order-history"><i class="fa-solid fa-history icon"></i> Lịch sử mua hàng</a></li>
                 </ul>
             </div>
         </div>
@@ -99,10 +90,10 @@
 </main>
 
 <jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
-<script src="${AuraSound}/assets/js/script.js"></script>
 
-<script src="${AuraSound}/assets/js/scriptProduct.js"></script>
-<script src="${AuraSound}/assets/js/scriptProfile.js"></script>
-<script src="${AuraSound}/assets/js/scriptStore.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/scriptProduct.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/scriptProfile.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/scriptStore.js"></script>
 </body>
 </html>

@@ -14,18 +14,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-
 @WebServlet(name = "AMVoucherServlet", urlPatterns = {"/admin/voucher"})
 public class AMVoucherServlet extends HttpServlet {
 
     private final VoucherService voucherService = new VoucherService();
-
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!hasAdminRole(req, resp)) return;
-
         HttpSession session = req.getSession(false);
         String flash = (session != null) ? (String) session.getAttribute("voucherFlash") : null;
         if (flash != null) {
@@ -40,32 +35,28 @@ public class AMVoucherServlet extends HttpServlet {
         req.setAttribute("pageTitle",  "Quản lý Voucher – AuraSound");
         req.setAttribute("activePage", "vou");
 
+        req.setAttribute("now", LocalDateTime.now());
+
         req.getRequestDispatcher("/WEB-INF/views/admin/voucher.jsp")
                 .forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         if (!hasAdminRole(req, resp)) return;
-
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
-
         if ("add".equals(action)) {
             handleAdd(req, resp);
         } else if ("delete".equals(action)) {
             handleDelete(req, resp);
         } else {
-            resp.sendRedirect(req.getContextPath() + "/admin/vouchers");
+            resp.sendRedirect(req.getContextPath() + "/admin/voucher");
         }
     }
 
-    private void handleAdd(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        // Đọc raw input
+    private void handleAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String rawCode       = req.getParameter("code");
         String discountStr   = req.getParameter("discountAmount");
         String minOrderStr   = req.getParameter("minimumOrderAmount");
@@ -119,7 +110,6 @@ public class AMVoucherServlet extends HttpServlet {
             error.append("Ngày hết hạn không đúng định dạng. ");
         }
 
-
         if (error.length() > 0) {
             List<Voucher> vouchers = voucherService.getAllVouchers();
             req.setAttribute("vouchers",       vouchers);
@@ -132,6 +122,7 @@ public class AMVoucherServlet extends HttpServlet {
             req.setAttribute("formEndDate",    endDateStr);
             req.setAttribute("pageTitle",      "Quản lý Voucher – AuraSound");
             req.setAttribute("activePage",     "vou");
+            req.setAttribute("now",            LocalDateTime.now());
             req.getRequestDispatcher("/WEB-INF/views/admin/voucher.jsp")
                     .forward(req, resp);
             return;
@@ -154,10 +145,7 @@ public class AMVoucherServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admin/voucher");
     }
 
-    // Xóa voucher
-    private void handleDelete(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
+    private void handleDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String idStr = req.getParameter("id");
         String flash;
         try {
@@ -174,9 +162,7 @@ public class AMVoucherServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admin/voucher");
     }
 
-    private boolean hasAdminRole(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
+    private boolean hasAdminRole(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
         User auth = (session != null) ? (User) session.getAttribute("auth") : null;
 
