@@ -30,9 +30,20 @@
                     <span>${p.avgRating}</span>
                 </div>
                 <div class="favorite">
-                    <i class="bi bi-heart"></i>
-                    <span>Yêu thích</span>
+    <span class="btn-wishlist" data-id="${p.id}" style="cursor:pointer; display:inline-flex; align-items:center; gap:4px;"
+          onclick="event.preventDefault();">
+        <c:choose>
+            <c:when test="${not empty wishlistIds and wishlistIds.contains(p.id)}">
+                <i class="bi bi-heart-fill" style="color:red;"></i>
+            </c:when>
+            <c:otherwise>
+                <i class="bi bi-heart"></i>
+            </c:otherwise>
+        </c:choose>
+        <span>Yêu thích</span>
+    </span>
                 </div>
+
             </div>
         </div>
     </a>

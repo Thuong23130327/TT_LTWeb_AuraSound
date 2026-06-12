@@ -186,6 +186,13 @@
     <div class="mobile-menu-item ${activePage =='contact'?'active':''}"><a href="${AuraSound}/contact">Liên hệ</a></div>
     <div class="mobile-menu-item ${activePage =='product'?'active':''}"><a href="${AuraSound}/product">Sản phẩm</a>
     </div>
+
+    <jsp:useBean id="profileService" class="service.ProfileService" />
+
+    <c:if test="${not empty sessionScope.auth}">
+        <c:set var="wishlistIds" value="${profileService.getWishlistProductIds(sessionScope.auth.id)}" scope="request" />
+    </c:if>
+
 </div>
 <div class="overlay" id="menu-overlay"></div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

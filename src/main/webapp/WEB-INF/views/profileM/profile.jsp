@@ -48,8 +48,8 @@
                         tin tài khoản</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/address"><i class="fa-solid fa-map-location-dot icon"></i> Địa
                         Chỉ</a></li>
-                    <li><a class="nav-link" href="favorites.jsp"><i class="fa-solid fa-heart icon"></i> Sản
-                        phẩm yêu thích</a></li>
+                    <li><a class="nav-link" href="${pageContext.request.contextPath}/favorite"><i class="fa-solid fa-heart icon"></i> Sản phẩm yêu thích</a></li>
+
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-shipping"><i class="fa-solid fa-truck icon"></i> Đang
                         vận chuyển</a></li>
                     <li><a class="nav-link" href="${pageContext.request.contextPath}/order-pending"><i class="fa-solid fa-clock icon"></i> Đang

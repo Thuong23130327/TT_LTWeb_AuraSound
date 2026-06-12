@@ -1,38 +1,44 @@
-document.querySelectorAll('.btn-wishlist').forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
+document.addEventListener('click', function(e) {
+    const button = e.target.closest('.btn-wishlist');
+    if (!button) return;
 
-        const productId = this.getAttribute('data-id');
-        const icon = this.querySelector('i');
+    e.preventDefault();
+    e.stopPropagation();
 
-        fetch('/wishlist-ajax', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                'productId': productId
-            })
+    const productId = button.getAttribute('data-id');
+    const icon = button.querySelector('i');
+    const isFavoritesPage = button.closest('[data-favorites-card]') !== null;
+
+    fetch(path + '/wishlist-ajax', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ 'productId': productId })
+    })
+        .then(response => {
+            if (response.status === 401) {
+                Swal.fire('Chưa đăng nhập', 'Vui lòng đăng nhập để sử dụng tính năng này!', 'warning');
+                throw new Error("Unauthorized");
+            }
+            return response.json();
         })
-            .then(response => {
-                if (response.status === 401) {
-                    Swal.fire('Lỗi', 'Vui lòng đăng nhập để thêm vào danh sách yêu thích!', 'warning');
-                    throw new Error("Unauthorized");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data && data.status === "success") {
-                    if (data.isWished) {
-                        icon.style.color = "red";
-                    } else {
-                        icon.style.color = "";
+        .then(data => {
+            if (data && data.status === "success") {
+                if (data.isWished) {
+                    icon.style.color = "red";
+                    icon.className = "bi bi-heart-fill";
+                } else {
+                    icon.style.color = "";
+                    icon.className = "bi bi-heart";
+                    if (isFavoritesPage) {
+                        const card = button.closest('.product-card-wrapper');
+                        if (card) card.remove();
                     }
                 }
-            })
-            .catch(error => console.error("Error wishlist:", error));
-    });
+            }
+        })
+        .catch(error => console.error("Error wishlist:", error));
 });
+
 
 // active ảnh nhỏ của minh họa sp
 function activeSmall(targetSrc) {

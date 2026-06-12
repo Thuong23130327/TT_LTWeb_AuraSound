@@ -5,12 +5,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.entity.*;
 import service.ProductDetailService;
 import service.ProductService;
+import service.ProfileService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ProductDetailServlet", value = "/detail")
@@ -36,7 +39,16 @@ public class ProductDetailServlet extends HttpServlet {
         List<Image> imgs = productService.getImageByProductId(pid);
         ProductVariant curVariant = productService.getVariantByImg(variants, product.getImg());
         List<Category> categories = productService.getCategory(product.getCategoriesId());
-
+        HttpSession session = request.getSession(false);
+        List<Integer> wishlistIds = new ArrayList<>();
+        if (session != null) {
+            User currentUser = (User) session.getAttribute("auth");
+            if (currentUser != null) {
+                ProfileService profileService = new ProfileService();
+                wishlistIds = profileService.getWishlistProductIds(currentUser.getId());
+            }
+        }
+        request.setAttribute("wishlistIds", wishlistIds);
         request.setAttribute("product", product);
         request.setAttribute("variants", variants);
         request.setAttribute("specs", specs);
