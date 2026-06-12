@@ -8,14 +8,17 @@ import model.entity.*;
 import java.sql.SQLException;
 import java.util.List;
 
+import dao.WishlistDAO;
+
 public class ProfileService {
     private ProfileDAO pDAO = new ProfileDAO();
     private OrderDAO oDAO = new OrderDAO();
     private OrderShippingDAO osDAO = new OrderShippingDAO();
-
+    private WishlistDAO wDAO = new WishlistDAO();
     public User getUserById(int userId) throws SQLException {
         return pDAO.getUserById(userId);
     }
+
 
     public String updateProfile(int userId, String fullName, String phone) throws SQLException {
         if (fullName == null || fullName.trim().isEmpty()) {
@@ -41,15 +44,15 @@ public class ProfileService {
         return isSuccess ? "success" : "Cập nhật avatar thất bại.";
     }
 
-    public Order getOrderById(String orderId){
+    public Order getOrderById(String orderId) {
         return oDAO.getOrderById(orderId);
     }
 
-    public List<Order> getHistoryOrders(int userId){
+    public List<Order> getHistoryOrders(int userId) {
         return oDAO.getAllOrderById(userId);
     }
 
-    public List<Order> getPendingOrders(int userId){
+    public List<Order> getPendingOrders(int userId) {
         return oDAO.getPendingOrders(userId);
     }
 
@@ -65,7 +68,7 @@ public class ProfileService {
         return oDAO.getCancelledOrders(userId);
     }
 
-    public List<OrderItem> getAllOrdersItem(String orderId){
+    public List<OrderItem> getAllOrdersItem(String orderId) {
         return oDAO.getAllOrdersItem(orderId);
     }
 
@@ -79,6 +82,24 @@ public class ProfileService {
         System.out.println(dao.getCompletedOrders(10).toString());
         System.out.println("-2-");
         System.out.println(dao.getAllOrdersItem("4").toString());
+    }
+
+    public boolean toggleWishlist(int userId, int productId) {
+        boolean isCurrentlyWished = wDAO.checkWishlist(userId, productId);
+        if (isCurrentlyWished) {
+            wDAO.removeWishlist(userId, productId);
+            return false;
+        } else {
+            wDAO.addWishlist(userId, productId);
+            return true;
+        }
+    }
+    public List<Product> getWishlistByUser(int userId) {
+        return wDAO.getWishlistByUser(userId);
+    }
+
+    public List<Integer> getWishlistProductIds(int userId) {
+        return wDAO.getWishlistProductIds(userId);
     }
 
     public OrderShipping getOrderShipping(int orderId) {

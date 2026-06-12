@@ -37,18 +37,10 @@ public class WishlistServlet extends HttpServlet {
         try {
             int productId = Integer.parseInt(productIdStr);
             int userId = currentUser.getId();
-            WishlistDAO dao = new WishlistDAO();
-            boolean isCurrentlyWished = dao.checkWishlist(userId, productId);
-            boolean finalWishedStatus = false;
-            if (isCurrentlyWished) {
-                dao.removeWishlist(userId, productId);
-                finalWishedStatus = false;
-            } else {
-                dao.addWishlist(userId, productId);
-                finalWishedStatus = true;
-            }
-            out.print("{\"status\":\"success\", \"isWished\":" + finalWishedStatus + "}");
+            service.ProfileService profileService = new service.ProfileService();
+            boolean finalWishedStatus = profileService.toggleWishlist(userId, productId);
 
+            out.print("{\"status\":\"success\", \"isWished\":" + finalWishedStatus + "}");
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print("{\"status\":\"error\", \"message\":\"productId không hợp lệ!\"}");

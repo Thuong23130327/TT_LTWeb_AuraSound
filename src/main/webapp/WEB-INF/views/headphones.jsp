@@ -46,45 +46,53 @@
                         </button>
 
                     </div>
-                    <div class="nav-group-center"><div class="filter-item">
-                        <button type="button" class="btn-filter">
-                            <i class="bi bi-funnel-fill"></i> Bộ lọc <i class="bi bi-chevron-down ms-2"></i>
-                        </button>
-                        <div class="filter-dropdown-content master-filter-container">
-                            <div class="row">
-                                <div class="col-md-4 mb-4">
-                                    <div class="filter-group-title">Hãng sản xuất</div>
-                                    <div class="filter-options d-flex flex-wrap" data-filter-group="brand">
-                                        <c:forEach items="${applicationScope.brandList}" var="brand">
-                                            <button onclick="filter(this)" type="button" class="filter-option" data-filter="${brand.id}">
-                                                    ${brand.name}
-                                            </button>
-                                        </c:forEach>
+                    <div class="nav-group-center">
+                        <div class="filter-item">
+                            <button type="button" class="btn-filter">
+                                <i class="bi bi-funnel-fill"></i> Bộ lọc <i class="bi bi-chevron-down ms-2"></i>
+                            </button>
+                            <div class="filter-dropdown-content master-filter-container">
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="filter-group-title">Hãng sản xuất</div>
+                                        <div class="filter-options d-flex flex-wrap" data-filter-group="brand">
+                                            <c:forEach items="${applicationScope.brandList}" var="brand">
+                                                <button onclick="filter(this)" type="button" class="filter-option"
+                                                        data-filter="${brand.id}">
+                                                        ${brand.name}
+                                                </button>
+                                            </c:forEach>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4 mb-4">
-                                    <div class="filter-group-title">Phân loại</div>
-                                    <div class="filter-options d-flex flex-wrap" data-filter-group="category">
-                                        <c:forEach items="${applicationScope.MENU_TREE}" var="cate">
-                                            <button onclick="filter(this)" type="button" class="filter-option" data-filter="${cate.id}">
-                                                    ${cate.name}
-                                            </button>
-                                        </c:forEach>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="filter-group-title">Phân loại</div>
+                                        <div class="filter-options d-flex flex-wrap" data-filter-group="category">
+                                            <c:forEach items="${applicationScope.MENU_TREE}" var="cate">
+                                                <button onclick="filter(this)" type="button" class="filter-option"
+                                                        data-filter="${cate.id}">
+                                                        ${cate.name}
+                                                </button>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
+                                        <div class="filter-group-title">Khoảng giá</div>
+                                        <p class="text-muted small">Điều chỉnh thanh trượt giá bên ngoài để lọc chính
+                                            xác hơn.</p>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                onclick="clearFilter()">Xóa tất cả bộ lọc
+                                        </button>
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 mb-4">
-                                    <div class="filter-group-title">Khoảng giá</div>
-                                    <p class="text-muted small">Điều chỉnh thanh trượt giá bên ngoài để lọc chính xác hơn.</p>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearFilter()">Xóa tất cả bộ lọc</button>
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                    <button type="button" class="btn btn-danger px-5" onclick="loadAjaxProducts()">Xem
+                                        kết quả
+                                    </button>
                                 </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                                <button type="button" class="btn btn-danger px-5" onclick="loadAjaxProducts()">Xem kết quả</button>
                             </div>
                         </div>
-                    </div>
                         <div class="filter-item">
                             <button type="button" class="btn-filter">
                                 Hãng <i class="bi bi-chevron-down ms-2"></i>
@@ -216,9 +224,21 @@
                                 <span>${p.avgRating}</span>
                             </div>
                             <div class="favorite">
-                                <i class="bi bi-heart"></i>
-                                <span>Yêu thích</span>
+    <span class="btn-wishlist" data-id="${p.id}"
+          style="cursor:pointer; display:inline-flex; align-items:center; gap:4px;"
+          onclick="event.preventDefault(); ">
+        <c:choose>
+            <c:when test="${not empty wishlistIds and wishlistIds.contains(p.id)}">
+                <i class="bi bi-heart-fill" style="color:red;"></i>
+            </c:when>
+            <c:otherwise>
+                <i class="bi bi-heart"></i>
+            </c:otherwise>
+        </c:choose>
+        <span>Yêu thích</span>
+    </span>
                             </div>
+
                         </div>
                     </div>
                 </a>
@@ -243,7 +263,7 @@
 <script>
     let cateId = "${cateId != null ? cateId : 0}";
 </script>
-
+<script src="${AuraSound}/assets/js/scriptProduct.js"></script>
 <script src="${AuraSound}/assets/js/script.js"></script>
 <script src="${AuraSound}/assets/js/scriptStore.js"></script>
 </body>
