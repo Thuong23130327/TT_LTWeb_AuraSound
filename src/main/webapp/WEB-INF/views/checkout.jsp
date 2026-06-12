@@ -177,7 +177,6 @@
 <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/scriptCheckout.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/scriptProfile.js"></script>
-<script src="${pageContext.request.contextPath}/assets/js/checkout.js"></script>
 
 </body>
 </html>

@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 
 public class ProductVariant {
     private int id;
-    @ColumnName("products_id")
     private int productId;
     private String variantSku;
     private String colorName;
@@ -30,6 +29,7 @@ public class ProductVariant {
         return productId;
     }
 
+    @ColumnName("products_id")
     public void setProductId(int productId) {
         this.productId = productId;
     }
