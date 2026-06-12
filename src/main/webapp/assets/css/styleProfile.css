@@ -274,7 +274,7 @@ main.profile-page-main {
 .profile-sidebar .user-info .user-email {
     margin: 0;
     font-size: 14px;
-    color: var(--gray-text);
+    color: var(--black);
 }
 
 /* Side Menu */
@@ -291,7 +291,7 @@ main.profile-page-main {
 .side-menu .nav-list li a {
     display: flex;
     align-items: center;
-    color: var(--gray-text);
+    color: var(--black);
     padding: 12px 20px;
     font-size: 15px;
     font-weight: 500;
