@@ -24,6 +24,9 @@ public class OrderService {
                                  String city,
                                  String ward,
                                  String address,
+                                 int provinceId,
+                                 int districtId,
+                                 String wardCode,
                                  String notes,
                                  String voucherCode,
                                  List<Integer> selectedVariantIds) {
@@ -82,7 +85,7 @@ public class OrderService {
             String fullAddress = address + ", " + ward + ", " + city;
 
             int userAddressId = orderShippingDAO.insertUserAddress(
-                    userId, recipientName, phone, city, fullAddress
+                    userId, recipientName, phone, city, fullAddress, provinceId, districtId, wardCode
             );
 
             orderShippingDAO.insertOrderShipping(orderId, userAddressId, notes);

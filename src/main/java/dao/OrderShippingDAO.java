@@ -15,9 +15,12 @@ public class OrderShippingDAO {
                 "ua.phone AS ua_phone, " +
                 "ua.address AS ua_address, " +
                 "ua.city AS ua_city, " +
+                "ua.province_id AS ua_province_id, " +
+                "ua.district_id AS ua_district_id, " +
+                "ua.ward_code AS ua_ward_code, " +
                 "ua.is_default AS ua_is_default " +
                 "FROM ordershippings os " +
-                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
+                "LEFT JOIN user_addresses ua ON os.useraddresses_id = ua.id " +
                 "WHERE os.orders_id = :orderId";
 
         return jdbi.withHandle(handle -> handle.createQuery(sql)
@@ -36,6 +39,9 @@ public class OrderShippingDAO {
                         ua.setPhone(rs.getString("ua_phone"));
                         ua.setAddress(rs.getString("ua_address"));
                         ua.setCity(rs.getString("ua_city"));
+                        ua.setProvinceId(rs.getInt("ua_province_id"));
+                        ua.setDistrictId(rs.getInt("ua_district_id"));
+                        ua.setWardCode(rs.getString("ua_ward_code"));
                         ua.setIsDefault(rs.getBoolean("ua_is_default"));
 
                         os.setUserAddress(ua);
@@ -54,19 +60,22 @@ public class OrderShippingDAO {
     //Tạo dchi giao hàng mới
     public int insertUserAddress(int userId, String recipientName,
                                  String phone, String city,
-                                 String address) {
+                                 String address, int provinceId, int districtId, String wardCode) {
         return jdbi.withHandle(handle -> {
             handle.createUpdate(
-                            "INSERT INTO useraddresses " +
-                                    "  (users_id, recipient_name, phone, city, address, is_default) " +
+                            "INSERT INTO user_addresses " +
+                                    "  (users_id, recipient_name, phone, city, address, province_id, district_id, ward_code, is_default) " +
                                     "VALUES " +
-                                    "  (:userId, :recipientName, :phone, :city, :address, 0)"
+                                    "  (:userId, :recipientName, :phone, :city, :address, :provinceId, :districtId, :wardCode, 0)"
                     )
                     .bind("userId",        userId)
                     .bind("recipientName", recipientName)
                     .bind("phone",         phone)
                     .bind("city",          city)
                     .bind("address",       address)
+                    .bind("provinceId",    provinceId)
+                    .bind("districtId",    districtId)
+                    .bind("wardCode",      wardCode)
                     .execute();
 
             return handle.createQuery("SELECT LAST_INSERT_ID()")

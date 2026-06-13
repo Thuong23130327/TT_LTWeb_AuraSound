@@ -49,6 +49,16 @@ public class OrderServlet extends HttpServlet {
         String notes       = request.getParameter("notes");
         String voucherCode = request.getParameter("voucherCode");
 
+        String provinceIdStr = request.getParameter("provinceId");
+        String districtIdStr = request.getParameter("districtId");
+        String wardCodeStr   = request.getParameter("wardCode");
+
+        int provinceId = 0, districtId = 0;
+        try {
+            if (provinceIdStr != null && !provinceIdStr.isEmpty()) provinceId = Integer.parseInt(provinceIdStr);
+            if (districtIdStr != null && !districtIdStr.isEmpty()) districtId = Integer.parseInt(districtIdStr);
+        } catch (Exception e) {}
+
         if (isBlank(fullName) || isBlank(phone) ||
                 isBlank(city)     || isBlank(ward)  || isBlank(address)) {
 
@@ -75,6 +85,9 @@ public class OrderServlet extends HttpServlet {
                     city.trim(),
                     ward.trim(),
                     address.trim(),
+                    provinceId,
+                    districtId,
+                    wardCodeStr != null ? wardCodeStr.trim() : "",
                     notes != null ? notes.trim() : "",
                     voucherCode,
                     selectedIds
