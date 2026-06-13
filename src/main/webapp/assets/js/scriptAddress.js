@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const addressId = document.getElementById('addressId');
 
     // --- CẤU HÌNH API GIAO HÀNG NHANH (GHN) ---
-    // Thay chuỗi token Sandbox hoặc Production của bạn vào đây
     const GHN_TOKEN = 'dffec2e1-6725-11f1-a973-aee5264794df';
     const BASE_URL = 'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/';
     const path = window.location.pathname.includes('/address') ? window.location.pathname.replace(/\/address.*$/, '') : '';
@@ -99,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // --- XỬ LÝ SỰ KIỆN CHỌN DROPDOWN HÀNH CHÍNH ---
 
     if (provinceSelect) {
         provinceSelect.addEventListener('change', async function () {
@@ -125,10 +123,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Tự động load Tỉnh/Thành phố ban đầu khi mở trang
     fetchProvinces();
 
-    // --- SỰ KIỆN CLICK BUTTON THÊM MỚI ---
     if (btnAddAddress) {
         btnAddAddress.addEventListener('click', function () {
             resetForm();
@@ -138,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // --- SỰ KIỆN CHỈNH SỬA ĐỊA CHỈ (EDIT) ---
+    // sửa địa chỉ
     window.editAddress = async function (addrId) {
         const addressItem = document.querySelector(`.address-item[data-id="${addrId}"]`);
         if (!addressItem) {
@@ -151,12 +147,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const addressValue = addressItem.querySelector('.address-info-value-address')?.textContent.trim() || '';
         const isDefaultBadge = addressItem.querySelector('.address-default');
 
-        // Đọc các ID hành chính GHN ẩn từ thẻ data attributes của JSP
         const pId = addressItem.getAttribute('data-province-id');
         const dId = addressItem.getAttribute('data-district-id');
         const wCode = addressItem.getAttribute('data-ward-code');
 
-        // Đổ dữ liệu text thông thường lên Form
         document.getElementById('recipientName').value = recipientName;
         document.getElementById('phone').value = phone;
         document.getElementById('address').value = addressValue;
@@ -168,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         openModal();
 
-        // Xử lý đồng bộ dữ liệu dropdown GHN theo thứ tự (Tỉnh -> Huyện -> Xã)
         if (pId) {
             await fetchProvinces(pId);
             if (dId) {
@@ -180,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // --- XỬ LÝ XÓA & ĐẶT MẶC ĐỊNH ---
+    // xóa / mặc định
     window.deleteAddress = function (addrId) {
         if (confirm('Bạn chắc chắn muốn xóa địa chỉ này?')) {
             const form = document.createElement('form');
@@ -211,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
         form.submit();
     };
 
-    // --- ĐÓNG / MỞ MODAL CONTAINER ---
+    //
     function openModal() {
         modal.classList.add('active');
         overlay.classList.add('active');
@@ -237,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btnCancelAddress) btnCancelAddress.addEventListener('click', closeModal);
     if (overlay) overlay.addEventListener('click', closeModal);
 
-    // --- VALIDATION FORM & ĐÓNG GÓI SUBMIT LÊN SERVLET ---
+    //
     if (btnSaveAddress) {
         btnSaveAddress.addEventListener('click', function () {
             const recipientName = document.getElementById('recipientName').value.trim();
@@ -259,7 +252,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // Kiểm tra tính đầy đủ của bộ 3 dropdown GHN
             if (!provinceSelect.value || !districtSelect.value || !wardSelect.value) {
                 alert('Vui lòng chọn đầy đủ Tỉnh/Thành, Quận/Huyện, Phường/Xã!');
                 return;
@@ -275,12 +267,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // Gán giá trị mã ID định danh vào các trường Input Hidden trước khi Submit form gửi lên Servlet
             provinceIdInput.value = provinceSelect.value;
             districtIdInput.value = districtSelect.value;
             wardCodeInput.value = wardSelect.value;
 
-            // Nối chuỗi text đầy đủ đại diện cho city cũ phục vụ hiển thị UI (Ví dụ: Phường 2, Quận 3, Thành phố Hồ Chí Minh)
             const pText = provinceSelect.options[provinceSelect.selectedIndex].text;
             const dText = districtSelect.options[districtSelect.selectedIndex].text;
             const wText = wardSelect.options[wardSelect.selectedIndex].text;
@@ -290,7 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // --- ĐÓNG ALERT ĐỒNG BỘ THÔNG BÁO ---
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {

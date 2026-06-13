@@ -1,35 +1,28 @@
 // profile.js
 
+// =============================================
+// CHUYỂN ĐỔI TAB (PROFILE PAGE)
+// =============================================
 function showTab(tabId) {
-    // 1. Ẩn tất cả nội dung tab
     const contents = document.querySelectorAll('.tab-content');
-    contents.forEach(content => {
-        content.classList.remove('active');
-    });
+    contents.forEach(content => content.classList.remove('active'));
 
-    // 2. Bỏ trạng thái 'active' khỏi tất cả menu links
     const navLinks = document.querySelectorAll('.side-menu .nav-list a');
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-    });
+    navLinks.forEach(link => link.classList.remove('active'));
 
-    // 3. Hiển thị tab nội dung được chọn
     const activeContent = document.getElementById(tabId);
-    if (activeContent) {
-        activeContent.classList.add('active');
-    }
+    if (activeContent) activeContent.classList.add('active');
 
-    // 4. Đặt trạng thái 'active' cho menu item được click
     const clickedLink = event.target.closest('.nav-link');
-    if (clickedLink) {
-        clickedLink.classList.add('active');
-    }
-
+    if (clickedLink) clickedLink.classList.add('active');
 }
 
-// HÀM MỚI ĐỂ CHUYỂN ĐỔI MENU MOBILE
+// =============================================
+// MOBILE MENU TOGGLE
+// =============================================
 function toggleMobileMenu() {
     const sideMenu = document.getElementById('sideMenuContent');
+    if (!sideMenu) return;
     if (sideMenu.classList.contains('mobile-hidden')) {
         sideMenu.classList.remove('mobile-hidden');
         sideMenu.classList.add('mobile-visible');
@@ -39,172 +32,268 @@ function toggleMobileMenu() {
     }
 }
 
+// =============================================
+// EDIT PROFILE MODAL
+// =============================================
 document.addEventListener("DOMContentLoaded", function () {
-    // --- KHAI BÁO BIẾN ---
     const btnOpenEdit = document.getElementById('btnOpenEdit');
-    const modal = document.getElementById('modal-edit-profile');
-    const overlay = document.getElementById('menu-overlay'); // Dùng lại overlay cũ
+    const modal       = document.getElementById('modal-edit-profile');
+    const overlay     = document.getElementById('menu-overlay');
     const btnCloseIcon = document.getElementById('closeIcon');
-    const btnCancel = document.getElementById('btnCancel');
-    const btnSave = document.getElementById('btnSave');
-
-    // Biến cho phần Upload ảnh
+    const btnCancel   = document.getElementById('btnCancel');
+    const btnSave     = document.getElementById('btnSave');
     const imageUpload = document.getElementById('imageUpload');
     const avatarPreview = document.getElementById('avatarPreview');
-    const mainAvatar = document.querySelector('.img-profile'); // Ảnh ở sidebar
 
-    // --- HÀM XỬ LÝ ---
+    function openModal()  { if (modal) modal.classList.add('active');    if (overlay) overlay.classList.add('active'); }
+    function closeModal() { if (modal) modal.classList.remove('active'); if (overlay) overlay.classList.remove('active'); }
 
-    // 1. Mở Modal
-    function openModal() {
-        modal.classList.add('active');
-        overlay.classList.add('active'); // Hiện overlay nền tối
-    }
-
-    // 2. Đóng Modal
-    function closeModal() {
-        modal.classList.remove('active');
-        overlay.classList.remove('active'); // Ẩn overlay
-    }
-
-    // --- GÁN SỰ KIỆN ---
-
-    if (btnOpenEdit) btnOpenEdit.addEventListener('click', openModal);
+    if (btnOpenEdit)  btnOpenEdit.addEventListener('click', openModal);
     if (btnCloseIcon) btnCloseIcon.addEventListener('click', closeModal);
-    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+    if (btnCancel)    btnCancel.addEventListener('click', closeModal);
+    if (overlay)      overlay.addEventListener('click', closeModal);
 
-    // Đóng khi click ra ngoài (click vào overlay)
-    if (overlay) overlay.addEventListener('click', closeModal);
-
-    // 3. Xử lý xem trước ảnh (Preview Image)
     if (imageUpload) {
         imageUpload.addEventListener('change', function (event) {
             const file = event.target.files[0];
-            if (file) {
+            if (file && avatarPreview) {
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    // Gán ảnh mới vào thẻ img trong modal
-                    avatarPreview.src = e.target.result;
-                }
+                reader.onload = function (e) { avatarPreview.src = e.target.result; };
                 reader.readAsDataURL(file);
             }
         });
     }
 
-    // 4. Xử lý nút Lưu (Giả lập)
     if (btnSave) {
         btnSave.addEventListener('click', function () {
-            // Lấy giá trị từ input
-            const newName = document.getElementById('editName').value;
-            const newPhone = document.getElementById('editPhone').value;
+            const newName  = document.getElementById('editName')  ? document.getElementById('editName').value  : '';
+            const newPhone = document.getElementById('editPhone') ? document.getElementById('editPhone').value : '';
 
-            // Validate input
             if (!newName || newName.trim().length < 2) {
-                alert("Họ tên phải có ít nhất 2 ký tự!");
-                return;
+                alert("Họ tên phải có ít nhất 2 ký tự!"); return;
             }
             if (!newPhone || newPhone.trim().length < 10) {
-                alert("Số điện thoại không hợp lệ!");
-                return;
+                alert("Số điện thoại không hợp lệ!"); return;
             }
 
-            // Submit the form
             const editForm = document.getElementById('editForm');
-            if (editForm) {
-                editForm.submit();
-            }
+            if (editForm) editForm.submit();
         });
     }
 });
 
+// =============================================
+// MOBILE NAV MENU + LOGOUT
+// =============================================
 document.addEventListener('DOMContentLoaded', () => {
-
-
     const hamburgerIcon = document.getElementById('hamburger-icon');
-    const closeButton = document.getElementById('mobile-menu-close');
-    const mobileMenu = document.getElementById('mobile-menu-container');
-    const overlay = document.getElementById('menu-overlay');
+    const closeButton   = document.getElementById('mobile-menu-close');
+    const mobileMenu    = document.getElementById('mobile-menu-container');
+    const overlay       = document.getElementById('menu-overlay');
 
-    // Hàm mở menu
     function openMenu() {
-        mobileMenu.classList.add('open');
-        overlay.classList.add('active');
+        if (mobileMenu) mobileMenu.classList.add('open');
+        if (overlay)    overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
-    // Hàm đóng menu
     function closeMenu() {
-        mobileMenu.classList.remove('open');
-        overlay.classList.remove('active');
+        if (mobileMenu) mobileMenu.classList.remove('open');
+        if (overlay)    overlay.classList.remove('active');
         document.body.style.overflow = '';
     }
 
-    // Gán sự kiện
-    if (hamburgerIcon) {
-        hamburgerIcon.addEventListener('click', openMenu);
-    }
-    if (closeButton) {
-        closeButton.addEventListener('click', closeMenu);
-    }
-    if (overlay) {
-        overlay.addEventListener('click', closeMenu);
-    }
+    if (hamburgerIcon) hamburgerIcon.addEventListener('click', openMenu);
+    if (closeButton)   closeButton.addEventListener('click', closeMenu);
+    if (overlay)       overlay.addEventListener('click', closeMenu);
 
-    // Tự động đóng menu khi resize lên desktop
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 991 && mobileMenu.classList.contains('open')) {
+        if (window.innerWidth > 991 && mobileMenu && mobileMenu.classList.contains('open')) {
             closeMenu();
         }
     });
-    // XỬ LÝ ĐĂNG XUẤT
+
     function performLogout() {
         try {
-
             localStorage.removeItem('authToken');
             sessionStorage.removeItem('authToken');
-        } catch (e) { }
-
+        } catch (e) {}
         window.location.href = '/login.jsp';
     }
 
     const logoutTop = document.getElementById('logoutTop');
     const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutTop) {
-        logoutTop.addEventListener('click', (e) => {
+    if (logoutTop) logoutTop.addEventListener('click', (e) => { e.preventDefault(); performLogout(); });
+    if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.preventDefault(); performLogout(); });
+
+    document.querySelectorAll('.nav-logout-link').forEach(link => {
+        link.addEventListener('click', (e) => { e.preventDefault(); performLogout(); });
+    });
+});
+
+// =============================================
+// XỬ LÝ NÚT HỦY ĐƠN, MUA LẠI, ĐÁNH GIÁ
+// =============================================
+document.addEventListener('DOMContentLoaded', function () {
+    const ctxPath = (typeof window.ctxPath !== 'undefined') ? window.ctxPath : '';
+
+    // --------------------------------------------------
+    // NÚT HỦY ĐƠN - chỉ áp dụng đơn chờ duyệt (status=0)
+    // --------------------------------------------------
+    let pendingCancelOrderId = null;
+
+    document.querySelectorAll('.btn-cancel-order').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
-            performLogout();
+            pendingCancelOrderId = this.getAttribute('data-id');
+
+            const cancelModal = document.getElementById('cancelOrderModal');
+            if (cancelModal && typeof bootstrap !== 'undefined') {
+                const bsModal = new bootstrap.Modal(cancelModal);
+                bsModal.show();
+            } else {
+                // Fallback
+                if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')) {
+                    doConfirmCancel(pendingCancelOrderId);
+                }
+            }
+        });
+    });
+
+    const btnConfirmCancel = document.getElementById('btnConfirmCancel');
+    if (btnConfirmCancel) {
+        btnConfirmCancel.addEventListener('click', function () {
+            if (pendingCancelOrderId) doConfirmCancel(pendingCancelOrderId);
         });
     }
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            performLogout();
+
+    function doConfirmCancel(orderId) {
+        fetch(ctxPath + '/api/cancel-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'orderId=' + orderId
+        })
+        .then(res => res.json())
+        .then(data => {
+            const cancelModal = document.getElementById('cancelOrderModal');
+            if (cancelModal && typeof bootstrap !== 'undefined') {
+                const bsModal = bootstrap.Modal.getInstance(cancelModal);
+                if (bsModal) bsModal.hide();
+            }
+            if (data.status === 'success') {
+                showToast('Đơn hàng đã được hủy thành công!', 'success');
+                setTimeout(() => window.location.reload(), 1200);
+            } else {
+                showToast(data.message || 'Hủy đơn hàng thất bại.', 'error');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showToast('Lỗi kết nối. Vui lòng thử lại.', 'error');
         });
     }
-    // top-nav logout links (multiple pages)
-    const navLogoutLinks = document.querySelectorAll('.nav-logout-link');
-    if (navLogoutLinks.length) {
-        navLogoutLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                performLogout();
+
+    // --------------------------------------------------
+    // NÚT MUA LẠI
+    // --------------------------------------------------
+    document.querySelectorAll('.btn-buy-again').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const orderId      = this.getAttribute('data-id');
+            const originalText = this.innerText;
+            const self         = this;
+            this.innerText  = 'Đang xử lý...';
+            this.disabled   = true;
+
+            fetch(ctxPath + '/api/buy-again', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'orderId=' + orderId
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Chuyển sang cart, param buyAgain=true sẽ tick tất cả checkbox
+                    window.location.href = ctxPath + '/cart?buyAgain=true';
+                } else {
+                    showToast(data.message || 'Thêm vào giỏ hàng thất bại.', 'error');
+                    self.innerText = originalText;
+                    self.disabled  = false;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showToast('Lỗi kết nối. Vui lòng thử lại.', 'error');
+                self.innerText = originalText;
+                self.disabled  = false;
             });
         });
-    }
-});
+    });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const btnSave = document.getElementById('btnSave');
-    const editForm = document.getElementById('editForm');
-
-    if (btnSave && editForm) {
-        btnSave.addEventListener('click', function(e) {
+    // --------------------------------------------------
+    // NÚT ĐÁNH GIÁ - mở Bootstrap modal giống productdetail
+    // --------------------------------------------------
+    document.querySelectorAll('.btn-open-review').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
-            console.log("Nút Lưu đã được nhấn, đang submit form...");
-            editForm.submit();
+            const productId   = this.getAttribute('data-product-id');
+            const productName = this.getAttribute('data-product-name');
+            const orderId     = this.getAttribute('data-order-id');
+
+            const reviewProductIdInput = document.getElementById('reviewProductId');
+            const reviewOrderIdInput   = document.getElementById('reviewOrderId');
+            const reviewProductTitle   = document.getElementById('reviewProductTitle');
+
+            if (reviewProductIdInput) reviewProductIdInput.value = productId || '';
+            if (reviewOrderIdInput)   reviewOrderIdInput.value   = orderId   || '';
+            if (reviewProductTitle)   reviewProductTitle.textContent = productName || 'Sản phẩm';
+
+            // Reset form đánh giá khi mở lại
+            const reviewForm = document.getElementById('reviewForm');
+            if (reviewForm) reviewForm.reset();
+
+            const reviewModal = document.getElementById('reviewModal');
+            if (reviewModal && typeof bootstrap !== 'undefined') {
+                const bsModal = new bootstrap.Modal(reviewModal);
+                bsModal.show();
+            }
         });
-    } else {
-        console.error("Không tìm thấy nút btnSave hoặc form editForm trong trang này!");
-    }
+    });
 });
 
+// =============================================
+// TOAST NOTIFICATION
+// =============================================
+function showToast(message, type) {
+    let container = document.getElementById('profileToastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'profileToastContainer';
+        container.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;';
+        document.body.appendChild(container);
+    }
+
+    const toast   = document.createElement('div');
+    const bgColor = type === 'success' ? '#28a745' : '#dc3545';
+    const icon    = type === 'success' ? '&#10003;' : '&#10007;';
+    toast.style.cssText = `background:${bgColor};color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:flex;align-items:center;gap:10px;min-width:260px;animation:slideInRight 0.3s ease;`;
+    toast.innerHTML = `<span style="font-size:18px;">${icon}</span><span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'fadeOutRight 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
+
+// Inject CSS animations cho toast
+(function () {
+    if (document.getElementById('profileToastCSS')) return;
+    const style = document.createElement('style');
+    style.id = 'profileToastCSS';
+    style.textContent = `
+        @keyframes slideInRight  { from { transform:translateX(110%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+        @keyframes fadeOutRight  { from { opacity:1; transform:translateX(0); }     to { opacity:0; transform:translateX(110%); } }
+    `;
+    document.head.appendChild(style);
+})();

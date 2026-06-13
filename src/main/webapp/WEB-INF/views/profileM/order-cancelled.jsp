@@ -76,15 +76,33 @@
                             <c:choose>
                                 <c:when test="${not empty cancelledOrders}">
                                     <c:forEach var="order" items="${cancelledOrders}">
-                                        <a class="a-nodecor"
-                                            href="${pageContext.request.contextPath}/order-detail?id=${order.id}">
-                                            <div class="list-item">
-                                                <div class="item-order cancelled">
-                                                    #${order.orderCode} - Đã hủy:
-                                                    <c:out value="${fn:replace(order.orderDate, 'T', ' ')}" />
+                                        <div class="modern-order-card">
+                                            <div class="modern-order-header">
+                                                <span class="modern-order-code">Mã đơn: ${order.orderCode} <span style="font-weight: normal; color: #888; font-size: 13px;">(${fn:replace(order.orderDate, 'T', ' ')})</span></span>
+                                                <span class="order-status cancelled">Đã hủy</span>
+                                            </div>
+                                            <div class="modern-order-body">
+                                                <c:forEach var="item" items="${order.items}">
+                                                    <div class="modern-order-item">
+                                                        <img src="${not empty item.productVariant.mainImageUrl ? item.productVariant.mainImageUrl : '../assets/img/default-product.png'}" alt="Product Image">
+                                                        <div class="modern-order-item-info">
+                                                            <h4 class="modern-order-item-name">${not empty item.productName ? item.productName : 'Sản phẩm'}</h4>
+                                                            <p class="modern-order-item-meta">Phân loại: ${not empty item.productVariant.colorName ? item.productVariant.colorName : ''} | Số lượng: x${item.quantity}</p>
+                                                        </div>
+                                                        <div class="modern-order-item-price"><fmt:formatNumber value="${item.price_at_purchase}" type="currency" pattern="#,###"/> đ</div>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
+                                            <div class="modern-order-footer">
+                                                <div class="modern-order-total">
+                                                    Tổng tiền: <strong><fmt:formatNumber value="${order.finalAmount}" type="currency" pattern="#,###"/> đ</strong>
+                                                </div>
+                                                <div class="modern-order-actions">
+                                                    <a href="${pageContext.request.contextPath}/order-detail?id=${order.id}" class="btn-outline">Xem chi tiết</a>
+                                                    <button class="btn-outline btn-buy-again" data-id="${order.id}">Mua lại</button>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
                                     </c:forEach>
                                 </c:when>
                                 <c:otherwise>
@@ -99,6 +117,9 @@
 
                 <jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
 
+                <script>
+                    window.ctxPath = '${pageContext.request.contextPath}';
+                </script>
                 <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
                 <script src="${pageContext.request.contextPath}/assets/js/scriptProfile.js"></script>
                 <script src="${pageContext.request.contextPath}/assets/js/scriptStore.js"></script>

@@ -165,5 +165,18 @@
 </script>
 <%--<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>--%>
 <script src="${pageContext.request.contextPath}/assets/js/scriptCart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('buyAgain') === 'true') {
+            document.querySelectorAll('.item-check').forEach(chk => {
+                chk.checked = true;
+            });
+            if (typeof recalculateCart === 'function') {
+                recalculateCart();
+            }
+        }
+    });
+</script>
 </body>
 </html>
