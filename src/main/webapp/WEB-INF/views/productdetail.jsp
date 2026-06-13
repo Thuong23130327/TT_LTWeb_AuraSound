@@ -29,6 +29,14 @@
 <jsp:include page="/WEB-INF/tag/_header.jsp"></jsp:include>
 <main>
     <section class="container sproduct my-5 pt-5">
+        <div class="row mb-3">
+            <div class="col-12">
+                <button type="button" class="btn-back-custom" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i> Quay lại
+                </button>
+            </div>
+        </div>
+
         <div class="row">
             <div class="gallery-container col-lg-5 col-md-12 col-12">
                 <div class="main-img-container">
