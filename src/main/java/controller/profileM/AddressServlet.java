@@ -127,6 +127,12 @@ public class AddressServlet extends HttpServlet {
             request.setAttribute("error", result);
         }
 
+        String redirect = request.getParameter("redirect");
+        if ("checkout".equals(redirect)) {
+            response.sendRedirect(request.getContextPath() + "/checkout");
+            return;
+        }
+
         doGet(request, response);
     }
 
@@ -168,6 +174,12 @@ public class AddressServlet extends HttpServlet {
             request.setAttribute("error", result);
         }
 
+        String redirect = request.getParameter("redirect");
+        if ("checkout".equals(redirect)) {
+            response.sendRedirect(request.getContextPath() + "/checkout");
+            return;
+        }
+
         doGet(request, response);
     }
 
@@ -191,6 +203,12 @@ public class AddressServlet extends HttpServlet {
             request.setAttribute("error", result);
         }
 
+        String redirect = request.getParameter("redirect");
+        if ("checkout".equals(redirect)) {
+            response.sendRedirect(request.getContextPath() + "/checkout");
+            return;
+        }
+
         doGet(request, response);
     }
 
@@ -212,6 +230,12 @@ public class AddressServlet extends HttpServlet {
             request.setAttribute("message", "Đặt địa chỉ mặc định thành công!");
         } else {
             request.setAttribute("error", result);
+        }
+
+        String redirect = request.getParameter("redirect");
+        if ("checkout".equals(redirect)) {
+            response.sendRedirect(request.getContextPath() + "/checkout");
+            return;
         }
 
         doGet(request, response);

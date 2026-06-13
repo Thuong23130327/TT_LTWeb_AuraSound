@@ -26,6 +26,7 @@ public class Order {
     private String recipientName;
     private List<OrderItem> items;
 
+    private String shippingOrderCode;
     //Get - set
 
     @Override
@@ -128,6 +129,8 @@ public class Order {
             case CANCELLED:
                 return "danger";
 
+            case RETURNED:
+                return "dark";
             default:
                 return "secondary";
         }
@@ -180,5 +183,14 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public String getShippingOrderCode() {
+        return shippingOrderCode;
+    }
+
+    @ColumnName("shipping_order_code")
+    public void setShippingOrderCode(String shippingOrderCode) {
+        this.shippingOrderCode = shippingOrderCode;
     }
 }

@@ -61,6 +61,7 @@ public class OrderServlet extends HttpServlet {
         String provinceIdStr = request.getParameter("provinceId");
         String districtIdStr = request.getParameter("districtId");
         String wardCodeStr   = request.getParameter("wardCode");
+        String addressIdStr  = request.getParameter("addressId");
 
         int provinceId = 0;
         if (provinceIdStr != null && !provinceIdStr.trim().isEmpty()) {
@@ -75,6 +76,15 @@ public class OrderServlet extends HttpServlet {
         if (districtIdStr != null && !districtIdStr.trim().isEmpty()) {
             try {
                 districtId = Integer.parseInt(districtIdStr.trim());
+            } catch (NumberFormatException e) {
+                // ignore
+            }
+        }
+
+        int addressId = 0;
+        if (addressIdStr != null && !addressIdStr.trim().isEmpty()) {
+            try {
+                addressId = Integer.parseInt(addressIdStr.trim());
             } catch (NumberFormatException e) {
                 // ignore
             }
@@ -95,6 +105,7 @@ public class OrderServlet extends HttpServlet {
         try {
             int orderId = OrderService.placeOrder(
                     auth.getId(),
+                    addressId,
                     fullName.trim(),
                     phone.trim(),
                     city.trim(),

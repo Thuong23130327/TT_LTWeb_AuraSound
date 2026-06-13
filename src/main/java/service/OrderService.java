@@ -19,6 +19,7 @@ public class OrderService {
 
 
     public static int placeOrder(int    userId,
+                                 int    addressId,
                                  String recipientName,
                                  String phone,
                                  String city,
@@ -82,11 +83,13 @@ public class OrderService {
             }
 
             // Lưu địa chỉ
-            String fullAddress = address + ", " + ward + ", " + city;
-
-            int userAddressId = orderShippingDAO.insertUserAddress(
-                    userId, recipientName, phone, city, fullAddress, provinceId, districtId, wardCode
-            );
+            int userAddressId = addressId;
+            if (userAddressId <= 0) {
+                String fullAddress = address + ", " + ward + ", " + city;
+                userAddressId = orderShippingDAO.insertUserAddress(
+                        userId, recipientName, phone, city, fullAddress, provinceId, districtId, wardCode
+                );
+            }
 
             orderShippingDAO.insertOrderShipping(orderId, userAddressId, notes);
 
