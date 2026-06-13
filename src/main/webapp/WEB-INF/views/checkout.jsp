@@ -116,6 +116,7 @@
             <div class="promo-code">
                 <input type="text" id="voucher-input" placeholder="Nhập mã giảm giá">
                 <button type="button" id="btn-apply-voucher">Áp dụng</button>
+                <button type="button" id="btn-open-wallet" class="btn-wallet" style="background: #4a6bff; margin-left: 5px;" title="Kho Voucher"><i class="bi bi-ticket-perforated"></i> Kho</button>
             </div>
 
             <span id="voucher-msg"></span>
@@ -183,7 +184,34 @@
         <p>Bạn đã hủy giao dịch hoặc có lỗi xảy ra. Vui lòng thử lại.</p>
     </div>
 </div>
+<%--Kho Voucher--%>
+<div id="wallet-popup" class="popup-content-wrap" style="display: none;">
+    <div class="popup-content" style="max-width: 500px; text-align: left; padding: 20px;">
+        <button class="popup-close-btn" id="wallet-close"><i class="bi bi-x-lg"></i></button>
+        <h3 style="margin-bottom: 20px; font-size: 20px; color: #333;"><i class="bi bi-wallet2"></i> Kho Voucher Của Bạn</h3>
 
+        <div class="voucher-list" style="max-height: 350px; overflow-y: auto;">
+            <c:choose>
+                <c:when test="${not empty walletVouchers}">
+                    <c:forEach items="${walletVouchers}" var="v">
+                        <div class="voucher-card" style="border: 1px dashed #4a6bff; border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: #f8faff;">
+                            <div>
+                                <strong style="color: #4a6bff; font-size: 18px;">${v.code}</strong>
+                                <p style="margin: 5px 0 0; font-size: 14px;">Giảm: <fmt:formatNumber value="${v.discountAmount}" pattern="#,###"/>đ</p>
+                                <p style="margin: 0; font-size: 12px; color: #666;">Đơn tối thiểu: <fmt:formatNumber value="${v.minimumOrderAmount}" pattern="#,###"/>đ</p>
+                                <p style="margin: 0; font-size: 12px; color: #e74c3c;">HSD: ${v.endDateFormatted}</p>
+                            </div>
+                            <button type="button" class="btn-select-voucher" data-code="${v.code}" style="padding: 8px 15px; background: var(--theme-gradient-button); color: white; border: none; border-radius: 5px; cursor: pointer;">Dùng ngay</button>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <p style="text-align: center; color: #888;">Hiện tại bạn chưa có voucher nào khả dụng.</p>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/scriptCheckout.js"></script>
 

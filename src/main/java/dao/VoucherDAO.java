@@ -51,4 +51,20 @@ public class VoucherDAO {
                 .bind("id", id)
                 .execute());
     }
+
+    public List<Voucher> getVouchersForUserWallet(int userId) {
+        String sql = "SELECT v.* FROM vouchers v " +
+                "WHERE (v.end_date IS NULL OR v.end_date >= NOW()) " +
+                "AND v.usage_limit > 0 " +
+                "AND v.id NOT IN (" +
+                "    SELECT vouchers_id FROM orders " +
+                "    WHERE users_id = :userId AND vouchers_id IS NOT NULL " +
+                "    AND status != 3" +
+                ") ORDER BY v.discount_amount DESC";
+
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("userId", userId)
+                .mapToBean(Voucher.class)
+                .list());
+    }
 }
