@@ -197,4 +197,21 @@ public class OrderDAO {
                     .orElse(0);
         });
     }
+    public void updatePaymentStatus(int orderId, int paymentStatus) {
+        jdbi.useHandle(handle -> handle.createUpdate(
+                        "UPDATE orders SET payment_status = :paymentStatus WHERE id = :id")
+                .bind("paymentStatus", paymentStatus)
+                .bind("id", orderId)
+                .execute()
+        );
+    }
+
+    public void updateOrderStatus(int orderId, int status) {
+        jdbi.useHandle(handle -> handle.createUpdate(
+                        "UPDATE orders SET status = :status WHERE id = :id")
+                .bind("status", status)
+                .bind("id", orderId)
+                .execute()
+        );
+    }
 }

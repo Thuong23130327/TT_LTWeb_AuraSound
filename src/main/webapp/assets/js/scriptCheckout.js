@@ -110,6 +110,9 @@ document.getElementById('btn-dat-hang').addEventListener('click', function () {
     btn.disabled  = true;
     btn.innerText = 'Đang xử lý...';
     btn.classList.add('loading');
+
+    const selectedPaymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
     const params = new URLSearchParams({
         fullName:    document.getElementById('fullname').value.trim(),
         phone:       document.getElementById('phone').value.trim(),
@@ -117,7 +120,8 @@ document.getElementById('btn-dat-hang').addEventListener('click', function () {
         ward:        document.getElementById('ward').value.trim(),
         address:     document.getElementById('address').value.trim(),
         notes:       document.getElementById('notes').value.trim(),
-        voucherCode: appliedVoucherCode
+        voucherCode: appliedVoucherCode,
+        paymentMethod: selectedPaymentMethod
     });
     fetch('order', {
         method:  'POST',
@@ -126,6 +130,10 @@ document.getElementById('btn-dat-hang').addEventListener('click', function () {
     })
         .then(res => res.json())
         .then(data => {
+            if (data.status === 'redirect') {
+                window.location.href = data.url;
+                return;
+            }
             if (data.status === 'success') {
                 const popup = document.getElementById('success-popup');
                 popup.style.display    = 'flex';
@@ -151,5 +159,35 @@ document.getElementById('btn-dat-hang').addEventListener('click', function () {
         });
 });
 document.getElementById('popup-close').addEventListener('click', function () {
+    window.location.href = 'home';
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const vnpayStatus = urlParams.get('vnpay');
+    const orderId = urlParams.get('orderId');
+
+    if (vnpayStatus === 'success') {
+        const popup = document.getElementById('success-popup');
+        if (popup) {
+            popup.style.display = 'flex';
+            setTimeout(() => popup.classList.add('show'), 10);
+            setTimeout(() => {
+                window.location.href = 'order-detail-success?id=' + orderId;
+            }, 2500);
+        }
+    } else if (vnpayStatus === 'cancel') {
+        const popup = document.getElementById('fail-popup');
+        if (popup) {
+            popup.style.display = 'flex';
+            setTimeout(() => popup.classList.add('show'), 10);
+            setTimeout(() => {
+                window.location.href = 'home';
+            }, 3500);
+        }
+    }
+});
+
+document.getElementById('popup-fail-close')?.addEventListener('click', function () {
     window.location.href = 'home';
 });

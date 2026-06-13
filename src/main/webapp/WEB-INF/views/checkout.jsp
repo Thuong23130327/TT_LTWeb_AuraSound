@@ -148,8 +148,8 @@
                     <label for="payment-cod"><i class="bi bi-truck"></i> Thanh toán khi nhận hàng (COD)</label>
                 </div>
                 <div class="payment-option">
-                    <input type="radio" id="payment-bank" name="payment" value="bank">
-                    <label for="payment-bank"><i class="bi bi-credit-card"></i> Chuyển khoản ngân hàng</label>
+                    <input type="radio" id="payment-vnpay" name="payment" value="vnpay">
+                    <label for="payment-vnpay"><i class="bi bi-credit-card"></i> Thanh toán qua VNPAY</label>
                 </div>
                 <div class="payment-option">
                     <input type="radio" id="payment-momo" name="payment" value="momo">
@@ -173,10 +173,19 @@
     </div>
 </div>
 
+<div id="fail-popup" class="popup-content-wrap" style="display: none;">
+    <div class="popup-content">
+        <button class="popup-close-btn" id="popup-fail-close"><i class="bi bi-x-lg"></i></button>
+        <div class="icon-box" style="background-color: #e74c3c; box-shadow: 0 0 0 8px rgba(231, 76, 60, 0.1);">
+            <i class="bi bi-x-lg"></i>
+        </div>
+        <h3 style="color: #e74c3c;">Thanh toán thất bại!</h3>
+        <p>Bạn đã hủy giao dịch hoặc có lỗi xảy ra. Vui lòng thử lại.</p>
+    </div>
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/scriptCheckout.js"></script>
-<script src="${pageContext.request.contextPath}/assets/js/scriptProfile.js"></script>
 
 </body>
 </html>

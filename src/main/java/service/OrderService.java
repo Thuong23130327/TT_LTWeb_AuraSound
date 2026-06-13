@@ -90,10 +90,10 @@ public class OrderService {
 
             orderShippingDAO.insertOrderShipping(orderId, userAddressId, notes);
 
-            // Xóa giỏ sau khi mua
-            for (CartItemDTO item : itemsToOrder) {
-                CartService.deleteItem(cartId, item.getProductVariantId());
-            }
+//            // Xóa giỏ sau khi mua
+//            for (CartItemDTO item : itemsToOrder) {
+//                CartService.deleteItem(cartId, item.getProductVariantId());
+//            }
 
             return orderId;
 
