@@ -148,6 +148,9 @@ public class OrderServlet extends HttpServlet {
                     service.CartService.deleteItem(cart.getId(), variantId);
                 }
 
+                int currentQty = service.CartService.getListItems(cart.getId()).size();
+                session.setAttribute("cartQty", currentQty);
+
                 response.setStatus(200);
                 response.getWriter().write(
                         "{\"status\":\"success\",\"orderId\":" + orderId + "}"

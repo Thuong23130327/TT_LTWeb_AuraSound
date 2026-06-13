@@ -62,6 +62,9 @@ public class VnPayReturnServlet extends HttpServlet {
                     CartService.deleteItem(cart.getId(), item.getProductVariant().getId());
                 }
 
+                int currentQty = CartService.getListItems(cart.getId()).size();
+                request.getSession().setAttribute("cartQty", currentQty);
+
                 response.sendRedirect(request.getContextPath() + "/checkout?vnpay=success&orderId=" + orderId);
             } else {
                 //hủy or ck thất bại
