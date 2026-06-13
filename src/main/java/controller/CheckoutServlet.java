@@ -48,10 +48,13 @@ public class CheckoutServlet extends HttpServlet {
         // Lấy ds sp
         List<CartItemDTO> allItems = CartService.getListItems(cartId);
 
-        // Giỏ trống về cart
+        String vnpayStatus = request.getParameter("vnpay");
+
         if (allItems == null || allItems.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/cart");
-            return;
+            if (!"success".equals(vnpayStatus)) {
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
+            }
         }
 
         List<CartItemDTO> cartItems;
@@ -65,8 +68,10 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         if (cartItems.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/cart");
-            return;
+            if (!"success".equals(vnpayStatus)) {
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
+            }
         }
 
         request.getSession().setAttribute("checkoutSelectedIds", selectedIds);
