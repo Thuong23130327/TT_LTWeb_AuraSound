@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById('modal-address');
     const overlay = document.getElementById('menu-overlay');
@@ -11,6 +10,125 @@ document.addEventListener("DOMContentLoaded", function () {
     const action = document.getElementById('action');
     const addressId = document.getElementById('addressId');
 
+    // --- CẤU HÌNH API GIAO HÀNG NHANH (GHN) ---
+    // Thay chuỗi token Sandbox hoặc Production của bạn vào đây
+    const GHN_TOKEN = 'dffec2e1-6725-11f1-a973-aee5264794df';
+    const BASE_URL = 'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/';
+    const path = window.location.pathname.includes('/address') ? window.location.pathname.replace(/\/address.*$/, '') : '';
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Token': GHN_TOKEN
+    };
+
+    // Khai báo các thành phần DOM địa chỉ mới
+    const provinceSelect = document.getElementById('province');
+    const districtSelect = document.getElementById('district');
+    const wardSelect = document.getElementById('ward');
+
+    const provinceIdInput = document.getElementById('provinceId');
+    const districtIdInput = document.getElementById('districtId');
+    const wardCodeInput = document.getElementById('wardCode');
+    const cityTextInput = document.getElementById('cityText');
+
+    // --- HÀM BỔ TRỢ GỌI API GHN (Hỗ trợ Async/Await) ---
+
+    // 1. Tải danh sách Tỉnh/Thành phố
+    async function fetchProvinces(selectedId = null) {
+        try {
+            const response = await fetch(`${BASE_URL}province`, { method: 'GET', headers: headers });
+            const resData = await response.json();
+            if (resData.code === 200) {
+                provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh / Thành Phố --</option>';
+                // Sắp xếp theo bảng chữ cái mới nhất
+                const provinces = resData.data.sort((a, b) => a.ProvinceName.localeCompare(b.ProvinceName));
+                provinces.forEach(p => {
+                    let opt = new Option(p.ProvinceName, p.ProvinceID);
+                    if (selectedId && p.ProvinceID == selectedId) opt.selected = true;
+                    provinceSelect.appendChild(opt);
+                });
+            }
+        } catch (err) {
+            console.error("Lỗi tải danh sách Tỉnh từ GHN:", err);
+        }
+    }
+
+    // 2. Tải danh sách Quận/Huyện dựa trên ProvinceID
+    async function fetchDistricts(provinceId, selectedId = null) {
+        if (!provinceId) return;
+        try {
+            const response = await fetch(`${BASE_URL}district`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({ province_id: parseInt(provinceId) })
+            });
+            const resData = await response.json();
+            if (resData.code === 200) {
+                districtSelect.innerHTML = '<option value="">-- Chọn Quận / Huyện --</option>';
+                // Lọc bỏ các dữ liệu thử nghiệm rác (nếu có) trên hệ thống dev
+                const districts = resData.data.filter(d => !d.DistrictName.includes("Thử nghiệm"));
+                districts.forEach(d => {
+                    let opt = new Option(d.DistrictName, d.DistrictID);
+                    if (selectedId && d.DistrictID == selectedId) opt.selected = true;
+                    districtSelect.appendChild(opt);
+                });
+                districtSelect.disabled = false;
+            }
+        } catch (err) {
+            console.error("Lỗi tải danh sách Quận Huyện từ GHN:", err);
+        }
+    }
+
+    // 3. Tải danh sách Phường/Xã dựa trên DistrictID (Luôn lấy địa giới cập nhật sau sáp nhập 2025)
+    async function fetchWards(districtId, selectedCode = null) {
+        if (!districtId) return;
+        try {
+            const response = await fetch(`${BASE_URL}ward?district_id=${districtId}`, { method: 'GET', headers: headers });
+            const resData = await response.json();
+            if (resData.code === 200) {
+                wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
+                resData.data.forEach(w => {
+                    let opt = new Option(w.WardName, w.WardCode);
+                    if (selectedCode && w.WardCode == selectedCode) opt.selected = true;
+                    wardSelect.appendChild(opt);
+                });
+                wardSelect.disabled = false;
+            }
+        } catch (err) {
+            console.error("Lỗi tải danh sách Phường Xã từ GHN:", err);
+        }
+    }
+
+    // --- XỬ LÝ SỰ KIỆN CHỌN DROPDOWN HÀNH CHÍNH ---
+
+    if (provinceSelect) {
+        provinceSelect.addEventListener('change', async function () {
+            districtSelect.innerHTML = '<option value="">-- Chọn Quận / Huyện --</option>';
+            districtSelect.disabled = true;
+            wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
+            wardSelect.disabled = true;
+
+            if (this.value) {
+                await fetchDistricts(this.value);
+            }
+        });
+    }
+
+    if (districtSelect) {
+        districtSelect.addEventListener('change', async function () {
+            wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
+            wardSelect.disabled = true;
+
+            if (this.value) {
+                await fetchWards(this.value);
+            }
+        });
+    }
+
+    // Tự động load Tỉnh/Thành phố ban đầu khi mở trang
+    fetchProvinces();
+
+    // --- SỰ KIỆN CLICK BUTTON THÊM MỚI ---
     if (btnAddAddress) {
         btnAddAddress.addEventListener('click', function () {
             resetForm();
@@ -20,25 +138,27 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    window.editAddress = function (addrId) {
+    // --- SỰ KIỆN CHỈNH SỬA ĐỊA CHỈ (EDIT) ---
+    window.editAddress = async function (addrId) {
         const addressItem = document.querySelector(`.address-item[data-id="${addrId}"]`);
-        console.log("test", addressItem);
         if (!addressItem) {
-
             window.location.href = `${path}/address?action=edit&id=${addrId}`;
-            console.warn(`Không tìm thấy phần tử địa chỉ với id ${addrId}, đang chuyển hướng để chỉnh sửa.`);
             return;
         }
-        console.log("Đã tìm thấy phần tử địa chỉ:", addressItem);
-        const recipientName = addressItem.querySelector('.address-info-value-name')?.textContent || '';
-        const phone = addressItem.querySelector('.address-info-value-phone')?.textContent || '';
-        const city = addressItem.querySelector('.address-info-value-city')?.textContent || '';
-        const addressValue = addressItem.querySelector('.address-info-value-addr')?.textContent || '';
+
+        const recipientName = addressItem.querySelector('.address-info-value-name')?.textContent.trim() || '';
+        const phone = addressItem.querySelector('.address-info-value-phone')?.textContent.trim() || '';
+        const addressValue = addressItem.querySelector('.address-info-value-address')?.textContent.trim() || '';
         const isDefaultBadge = addressItem.querySelector('.address-default');
 
+        // Đọc các ID hành chính GHN ẩn từ thẻ data attributes của JSP
+        const pId = addressItem.getAttribute('data-province-id');
+        const dId = addressItem.getAttribute('data-district-id');
+        const wCode = addressItem.getAttribute('data-ward-code');
+
+        // Đổ dữ liệu text thông thường lên Form
         document.getElementById('recipientName').value = recipientName;
         document.getElementById('phone').value = phone;
-        document.getElementById('city').value = city;
         document.getElementById('address').value = addressValue;
         document.getElementById('isDefault').checked = !!isDefaultBadge;
 
@@ -47,8 +167,20 @@ document.addEventListener("DOMContentLoaded", function () {
         modalTitle.textContent = 'Chỉnh Sửa Địa Chỉ';
 
         openModal();
+
+        // Xử lý đồng bộ dữ liệu dropdown GHN theo thứ tự (Tỉnh -> Huyện -> Xã)
+        if (pId) {
+            await fetchProvinces(pId);
+            if (dId) {
+                await fetchDistricts(pId, dId);
+                if (wCode) {
+                    await fetchWards(dId, wCode);
+                }
+            }
+        }
     };
 
+    // --- XỬ LÝ XÓA & ĐẶT MẶC ĐỊNH ---
     window.deleteAddress = function (addrId) {
         if (confirm('Bạn chắc chắn muốn xóa địa chỉ này?')) {
             const form = document.createElement('form');
@@ -79,6 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
         form.submit();
     };
 
+    // --- ĐÓNG / MỞ MODAL CONTAINER ---
     function openModal() {
         modal.classList.add('active');
         overlay.classList.add('active');
@@ -92,29 +225,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function resetForm() {
         addressForm.reset();
+        districtSelect.innerHTML = '<option value="">-- Chọn Quận / Huyện --</option>';
+        districtSelect.disabled = true;
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
+        wardSelect.disabled = true;
         action.value = 'create';
         addressId.value = '';
     }
 
-    if (closeAddressModal) {
-        closeAddressModal.addEventListener('click', closeModal);
-    }
+    if (closeAddressModal) closeAddressModal.addEventListener('click', closeModal);
+    if (btnCancelAddress) btnCancelAddress.addEventListener('click', closeModal);
+    if (overlay) overlay.addEventListener('click', closeModal);
 
-    if (btnCancelAddress) {
-        btnCancelAddress.addEventListener('click', closeModal);
-    }
-
-    if (overlay) {
-        overlay.addEventListener('click', closeModal);
-    }
-
+    // --- VALIDATION FORM & ĐÓNG GÓI SUBMIT LÊN SERVLET ---
     if (btnSaveAddress) {
         btnSaveAddress.addEventListener('click', function () {
-
             const recipientName = document.getElementById('recipientName').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
-            const city = document.getElementById('city').value.trim();
 
             if (!recipientName) {
                 alert('Vui lòng nhập tên người nhận!');
@@ -131,26 +259,38 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            if (!city) {
-                alert('Vui lòng chọn tỉnh/thành phố!');
+            // Kiểm tra tính đầy đủ của bộ 3 dropdown GHN
+            if (!provinceSelect.value || !districtSelect.value || !wardSelect.value) {
+                alert('Vui lòng chọn đầy đủ Tỉnh/Thành, Quận/Huyện, Phường/Xã!');
                 return;
             }
 
             if (!address) {
-                alert('Vui lòng nhập địa chỉ chi tiết!');
+                alert('Vui lòng nhập địa chỉ chi tiết (Số nhà, tên đường)!');
                 return;
             }
 
             if (address.length < 5) {
-                alert('Địa chỉ phải có ít nhất 5 ký tự!');
+                alert('Địa chỉ chi tiết phải có ít nhất 5 ký tự!');
                 return;
             }
 
+            // Gán giá trị mã ID định danh vào các trường Input Hidden trước khi Submit form gửi lên Servlet
+            provinceIdInput.value = provinceSelect.value;
+            districtIdInput.value = districtSelect.value;
+            wardCodeInput.value = wardSelect.value;
+
+            // Nối chuỗi text đầy đủ đại diện cho city cũ phục vụ hiển thị UI (Ví dụ: Phường 2, Quận 3, Thành phố Hồ Chí Minh)
+            const pText = provinceSelect.options[provinceSelect.selectedIndex].text;
+            const dText = districtSelect.options[districtSelect.selectedIndex].text;
+            const wText = wardSelect.options[wardSelect.selectedIndex].text;
+            cityTextInput.value = `${wText}, ${dText}, ${pText}`;
 
             addressForm.submit();
         });
     }
 
+    // --- ĐÓNG ALERT ĐỒNG BỘ THÔNG BÁO ---
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
