@@ -577,4 +577,33 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 3500);
         }
     }
+
+//Xử lí kho Voucher
+    const walletPopup = document.getElementById('wallet-popup');
+    const btnOpenWallet = document.getElementById('btn-open-wallet');
+    const btnCloseWallet = document.getElementById('wallet-close');
+
+    if(btnOpenWallet) {
+        btnOpenWallet.addEventListener('click', () => {
+            walletPopup.style.display = 'flex';
+            setTimeout(() => walletPopup.classList.add('show'), 10);
+        });
+    }
+
+    if(btnCloseWallet) {
+        btnCloseWallet.addEventListener('click', () => {
+            walletPopup.classList.remove('show');
+            setTimeout(() => walletPopup.style.display = 'none', 300);
+        });
+    }
+    const btnSelectVouchers = document.querySelectorAll('.btn-select-voucher');
+    btnSelectVouchers.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const code = this.getAttribute('data-code');
+            document.getElementById('voucher-input').value = code;
+            walletPopup.classList.remove('show');
+            setTimeout(() => walletPopup.style.display = 'none', 300);
+            document.getElementById('btn-apply-voucher').click();
+        });
+    });
 });
