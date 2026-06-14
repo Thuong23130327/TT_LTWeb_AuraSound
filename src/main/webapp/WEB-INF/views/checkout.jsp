@@ -192,6 +192,7 @@
             <div class="promo-code">
                 <input type="text" id="voucher-input" placeholder="Nhập mã giảm giá">
                 <button type="button" id="btn-apply-voucher">Áp dụng</button>
+                <button type="button" id="btn-open-wallet" class="btn-wallet" style="background: #4a6bff; margin-left: 5px;" title="Kho Voucher"><i class="bi bi-ticket-perforated"></i> Kho</button>
             </div>
 
             <span id="voucher-msg"></span>

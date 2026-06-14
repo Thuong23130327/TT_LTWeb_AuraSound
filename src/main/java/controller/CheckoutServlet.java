@@ -102,6 +102,10 @@ public class CheckoutServlet extends HttpServlet {
         request.setAttribute("shippingFee", shippingFee);
         request.setAttribute("finalTotal", finalTotal);
 
+        service.VoucherService voucherService = new service.VoucherService();
+        List<model.entity.Voucher> walletVouchers = voucherService.getVouchersForUserWallet(auth.getId());
+        request.setAttribute("walletVouchers", walletVouchers);
+
         request.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(request, response);
     }
 

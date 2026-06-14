@@ -6,6 +6,7 @@ import org.jdbi.v3.core.mapper.reflect.ColumnName;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class Order {
 
@@ -50,6 +51,7 @@ public class Order {
         return orderCode;
     }
 
+    @ColumnName("order_code")
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
     }
@@ -58,6 +60,7 @@ public class Order {
         return orderDate;
     }
 
+    @ColumnName("order_date")
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
@@ -81,7 +84,8 @@ public class Order {
     public String getRecipientName() {
         return recipientName;
     }
-@ColumnName("recipient_name")
+
+    @ColumnName("recipient_name")
     public void setRecipientName(String recipientName) {
         this.recipientName = recipientName;
     }
@@ -90,6 +94,7 @@ public class Order {
         return vouchersId;
     }
 
+    @ColumnName("vouchers_id")
     public void setVouchersId(int vouchersId) {
         this.vouchersId = vouchersId;
     }
@@ -149,6 +154,7 @@ public class Order {
         return totalProductsPrice;
     }
 
+    @ColumnName("total_products_price")
     public void setTotalProductsPrice(BigDecimal totalProductsPrice) {
         this.totalProductsPrice = totalProductsPrice;
     }
@@ -157,6 +163,7 @@ public class Order {
         return shippingFee;
     }
 
+    @ColumnName("shipping_fee")
     public void setShippingFee(BigDecimal shippingFee) {
         this.shippingFee = shippingFee;
     }
@@ -165,6 +172,7 @@ public class Order {
         return discountAmount;
     }
 
+    @ColumnName("discount_amount")
     public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
@@ -173,6 +181,7 @@ public class Order {
         return finalAmount;
     }
 
+    @ColumnName("final_amount")
     public void setFinalAmount(BigDecimal finalAmount) {
         this.finalAmount = finalAmount;
     }

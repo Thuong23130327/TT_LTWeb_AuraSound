@@ -161,4 +161,12 @@ public class OrderService {
             return -1;
         }
     }
+
+    public Order getAdminOrderDetailById(String id) {
+        return orderDAO.getAdminOrderDetailById(id);
+    }
+
+    public List<OrderItem> getAdminOrderItemsByOrderId(String orderId) {
+        return orderDAO.getAdminOrderItemsByOrderId(orderId);
+    }
 }
