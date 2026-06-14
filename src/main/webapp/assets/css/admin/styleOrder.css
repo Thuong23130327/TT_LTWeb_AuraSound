@@ -92,3 +92,10 @@
         opacity: 1;
     }
 }
+.logo-text {
+    font-size: 24px;
+    font-weight: 600;
+    background: var(--theme-gradient-button);
+    background-clip: text;
+    color: transparent;
+}

@@ -6,7 +6,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${pageTitle}</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleAdmin.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleHome.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,7 +28,7 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-3">
       <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-        <h2 class="section-title text-primary" style="font-weight: 500; margin: 0;">Quản lý Đơn hàng</h2>
+        <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">Quản lý Đơn hàng</h2>
       </div>
 
       <c:set var="totalOrders" value="0"/>
@@ -139,7 +142,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
+<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/scriptAdmin.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/admin/scriptOrder.js"></script>
 </body>
 </html>

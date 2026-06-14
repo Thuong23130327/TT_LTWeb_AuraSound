@@ -7,6 +7,8 @@ import dao.OrderItemDAO;
 import dao.OrderShippingDAO;
 import model.dto.CartItemDTO;
 import model.entity.Cart;
+import model.entity.Order;
+import model.entity.OrderItem;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,10 +57,23 @@ public class OrderService {
             double discountAmount     = 0;
             Integer vouchersId        = null;
 
-            //Nào có vouchers thì dùng
-            // if (voucherCode != null && !voucherCode.isBlank()) { ... }
-
+            if (voucherCode != null && !voucherCode.trim().isEmpty()) {
+                service.VoucherService voucherService = new service.VoucherService();
+                try {
+                    model.entity.Voucher voucher = voucherService.validateVoucher(voucherCode, totalProductsPrice);
+                    if (voucher != null) {
+                        vouchersId = voucher.getId();
+                        discountAmount = voucher.getDiscountAmount();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Voucher không hợp lệ lúc tạo đơn: " + e.getMessage());
+                }
+            }
             double finalAmount = totalProductsPrice + shippingFee - discountAmount;
+
+            if (finalAmount < 0) {
+                finalAmount = 0;
+            }
 
             //Tạo đơn mới
             int orderId = orderDAO.createOrder(
@@ -98,5 +113,13 @@ public class OrderService {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public Order getAdminOrderDetailById(String id) {
+        return orderDAO.getAdminOrderDetailById(id);
+    }
+
+    public List<OrderItem> getAdminOrderItemsByOrderId(String orderId) {
+        return orderDAO.getAdminOrderItemsByOrderId(orderId);
     }
 }
