@@ -60,6 +60,11 @@ public class User {
     }
 
     public boolean hasPermission(String featureCode) {
+
+        if (this.isAdminOrStaff()) {
+            return true;
+        }
+
         return mergedPermissions.contains(featureCode);
     }
 
