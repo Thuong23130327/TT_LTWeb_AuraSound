@@ -274,10 +274,18 @@ Sửa Biến thể </span>
                                                 data-bs-target="#addVariantModal">
                                             <i class="bi bi-plus-circle"></i> Thêm biến thể mới
                                         </button>
-                                        <button onclick="confirmDelete('v', document.getElementById('current-variant-id').value)"
-                                                type="button" class="btn btn-outline-danger btn-accent">
+                                        <a id="btn-delete-variant"
+                                           href="#"
+                                           onclick="
+                                                   var vid = document.getElementById('current-variant-id').value;
+                                                   if (!vid) { alert('Chưa chọn biến thể!'); return false; }
+                                                   if (!confirm('Xóa biến thể này?')) return false;
+                                                   window.location.href = '${AuraSound}/admin/upd-product?action=deleteVariant&vid=' + vid + '&inputPid=${p.id}';
+                                                   return false;
+                                                   "
+                                           class="btn btn-outline-danger btn-accent">
                                             Xóa Biến thể
-                                        </button>
+                                        </a>
                                         <button type="submit" class="btn btn-primary btn-gradient">
                                             Lưu Thay Đổi
                                         </button>
@@ -356,10 +364,27 @@ Sửa Biến thể </span>
                                                 data-bs-target="#addSpecModal">
                                             <i class="bi bi-plus-circle"></i> Thêm Thông số
                                         </button>
-                                        <button onclick="confirmDelete('v', document.getElementById('current-variant-id').value)"
-                                                type="button" class="btn btn-outline-danger btn-accent">
-                                            Xóa Thông số
-                                        </button>
+
+                                        <c:forEach items="${specs}" var="s">
+                                            <div class="col-lg-3">
+                                                <input type="hidden" name="inputSpecIds" value="${s.id}">
+
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <label class="form-label mb-0">${s.specName}</label>
+                                                    <a href="${AuraSound}/admin/upd-product?action=deleteSpec&sid=${s.id}&inputPid=${p.id}"
+                                                       onclick="return confirm('Xóa thông số \'${s.specName}\'?')"
+                                                       class="btn btn-sm btn-outline-danger py-0">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+
+                                                <textarea name="inputSpecValue"
+                                                          class="form-control"
+                                                          rows="3"
+                                                          placeholder="Nhập nội dung chi tiết:">${s.specValue}</textarea>
+                                            </div>
+                                        </c:forEach>
+
                                         <button type="submit" class="btn btn-primary btn-gradient">
                                             Lưu Thay Đổi
                                         </button>
@@ -438,18 +463,14 @@ Sửa Biến thể </span>
                 <%
                     String msg = (String) session.getAttribute("msg");
                     if (msg != null) {
-                        if (msg.equals("success")) {
+                        if ("success".equals(msg)) {
                 %>
-                <script>
-                    alert("Cập nhật THÀNH CÔNG!!");
-                </script>
+                <script>alert("Cập nhật THÀNH CÔNG!!");</script>
                 <%
                     }
-                    if (msg.equals("fail")) {
+                    if ("fail".equals(msg)) {
                 %>
-                <script>
-                    alert("Cập nhật THẤT BẠI!!");
-                </script>
+                <script>alert("Cập nhật THẤT BẠI!!");</script>
                 <%
                         }
                         session.removeAttribute("msg");

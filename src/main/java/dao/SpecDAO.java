@@ -25,5 +25,34 @@ public class SpecDAO {
         SpecDAO specDAO = new SpecDAO();
         System.out.println(specDAO.getSpecsByProductId("2"));
     }
-
+    public boolean insertSpec(int productId, String specName, String specValue) {
+        try {
+            jdbi.useHandle(handle ->
+                    handle.createUpdate(
+                                    "INSERT INTO productspecs (Products_id, spec_name, spec_value) " +
+                                            "VALUES (:pid, :name, :value)")
+                            .bind("pid",   productId)
+                            .bind("name",  specName)
+                            .bind("value", specValue)
+                            .execute()
+            );
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean deleteSpec(int specId) {
+        try {
+            jdbi.useHandle(handle ->
+                    handle.createUpdate("DELETE FROM productspecs WHERE id = :id")
+                            .bind("id", specId)
+                            .execute()
+            );
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
