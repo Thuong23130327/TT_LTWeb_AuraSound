@@ -57,10 +57,23 @@ public class OrderService {
             double discountAmount     = 0;
             Integer vouchersId        = null;
 
-            //Nào có vouchers thì dùng
-            // if (voucherCode != null && !voucherCode.isBlank()) { ... }
-
+            if (voucherCode != null && !voucherCode.trim().isEmpty()) {
+                service.VoucherService voucherService = new service.VoucherService();
+                try {
+                    model.entity.Voucher voucher = voucherService.validateVoucher(voucherCode, totalProductsPrice);
+                    if (voucher != null) {
+                        vouchersId = voucher.getId();
+                        discountAmount = voucher.getDiscountAmount();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Voucher không hợp lệ lúc tạo đơn: " + e.getMessage());
+                }
+            }
             double finalAmount = totalProductsPrice + shippingFee - discountAmount;
+
+            if (finalAmount < 0) {
+                finalAmount = 0;
+            }
 
             //Tạo đơn mới
             int orderId = orderDAO.createOrder(
