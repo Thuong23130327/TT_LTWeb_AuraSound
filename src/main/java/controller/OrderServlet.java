@@ -58,6 +58,38 @@ public class OrderServlet extends HttpServlet {
         String voucherCode = request.getParameter("voucherCode");
         String paymentMethod = request.getParameter("paymentMethod");
 
+        String provinceIdStr = request.getParameter("provinceId");
+        String districtIdStr = request.getParameter("districtId");
+        String wardCodeStr   = request.getParameter("wardCode");
+        String addressIdStr  = request.getParameter("addressId");
+
+        int provinceId = 0;
+        if (provinceIdStr != null && !provinceIdStr.trim().isEmpty()) {
+            try {
+                provinceId = Integer.parseInt(provinceIdStr.trim());
+            } catch (NumberFormatException e) {
+                // ignore
+            }
+        }
+        
+        int districtId = 0;
+        if (districtIdStr != null && !districtIdStr.trim().isEmpty()) {
+            try {
+                districtId = Integer.parseInt(districtIdStr.trim());
+            } catch (NumberFormatException e) {
+                // ignore
+            }
+        }
+
+        int addressId = 0;
+        if (addressIdStr != null && !addressIdStr.trim().isEmpty()) {
+            try {
+                addressId = Integer.parseInt(addressIdStr.trim());
+            } catch (NumberFormatException e) {
+                // ignore
+            }
+        }
+
         if (isBlank(fullName) || isBlank(phone) || isBlank(city) || isBlank(ward) || isBlank(address)) {
             response.setStatus(400);
             response.getWriter().write("{\"status\":\"error\",\"message\":\"Vui lòng điền đầy đủ thông tin bắt buộc\"}");
@@ -73,11 +105,15 @@ public class OrderServlet extends HttpServlet {
         try {
             int orderId = OrderService.placeOrder(
                     auth.getId(),
+                    addressId,
                     fullName.trim(),
                     phone.trim(),
                     city.trim(),
                     ward.trim(),
                     address.trim(),
+                    provinceId,
+                    districtId,
+                    wardCodeStr != null ? wardCodeStr.trim() : "",
                     notes != null ? notes.trim() : "",
                     voucherCode,
                     selectedIds

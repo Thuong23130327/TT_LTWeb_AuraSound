@@ -24,7 +24,7 @@ public class AddressService {
     }
 
 
-    public String createAddress(int userId, String recipientName, String phone, String address, String city, boolean isDefault) throws SQLException {
+    public String createAddress(int userId, String recipientName, String phone, String address, String city, int provinceId, int districtId, String wardCode, boolean isDefault) throws SQLException {
         if (recipientName == null || recipientName.trim().isEmpty()) {
             return "Tên người nhận không được để trống.";
         }
@@ -63,13 +63,16 @@ public class AddressService {
         newAddress.setPhone(phone.trim());
         newAddress.setAddress(address.trim());
         newAddress.setCity(city.trim());
+        newAddress.setProvinceId(provinceId);
+        newAddress.setDistrictId(districtId);
+        newAddress.setWardCode(wardCode);
         newAddress.setIsDefault(isDefault);
 
         boolean success = addressDAO.createAddress(newAddress);
         return success ? "success" : "Thêm địa chỉ thất bại.";
     }
 
-    public String updateAddress(int addressId, int userId, String recipientName, String phone, String address, String city, boolean isDefault) throws SQLException {
+    public String updateAddress(int addressId, int userId, String recipientName, String phone, String address, String city, int provinceId, int districtId, String wardCode, boolean isDefault) throws SQLException {
 
         if (!addressDAO.addressBelongsToUser(addressId, userId)) {
             return "Địa chỉ không tồn tại.";
@@ -109,6 +112,9 @@ public class AddressService {
         updatingAddress.setPhone(phone.trim());
         updatingAddress.setAddress(address.trim());
         updatingAddress.setCity(city.trim());
+        updatingAddress.setProvinceId(provinceId);
+        updatingAddress.setDistrictId(districtId);
+        updatingAddress.setWardCode(wardCode);
         updatingAddress.setIsDefault(isDefault);
 
         boolean success = addressDAO.updateAddress(updatingAddress);

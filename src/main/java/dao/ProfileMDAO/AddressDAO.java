@@ -49,14 +49,17 @@ public class AddressDAO {
     public boolean createAddress(UserAddress address) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate(
-                        "INSERT INTO user_addresses (users_id, recipient_name, phone, address, city, is_default) " +
-                        "VALUES (:userId, :recipientName, :phone, :address, :city, :isDefault)"
+                        "INSERT INTO user_addresses (users_id, recipient_name, phone, address, city, province_id, district_id, ward_code, is_default) " +
+                        "VALUES (:userId, :recipientName, :phone, :address, :city, :provinceId, :districtId, :wardCode, :isDefault)"
                 )
                         .bind("userId", address.getUserId())
                         .bind("recipientName", address.getRecipientName())
                         .bind("phone", address.getPhone())
                         .bind("address", address.getAddress())
                         .bind("city", address.getCity())
+                        .bind("provinceId", address.getProvinceId())
+                        .bind("districtId", address.getDistrictId())
+                        .bind("wardCode", address.getWardCode())
                         .bind("isDefault", address.getIsDefault())
                         .execute() > 0
         );
@@ -66,21 +69,21 @@ public class AddressDAO {
         return jdbi.withHandle(handle ->
                 handle.createUpdate(
                         "UPDATE user_addresses SET recipient_name = :recipientName, phone = :phone, " +
-                        "address = :address, city = :city, is_default = :isDefault WHERE id = :id"
+                        "address = :address, city = :city, province_id = :provinceId, district_id = :districtId, ward_code = :wardCode, is_default = :isDefault WHERE id = :id"
                 )
                         .bind("id", address.getId())
                         .bind("recipientName", address.getRecipientName())
                         .bind("phone", address.getPhone())
                         .bind("address", address.getAddress())
                         .bind("city", address.getCity())
+                        .bind("provinceId", address.getProvinceId())
+                        .bind("districtId", address.getDistrictId())
+                        .bind("wardCode", address.getWardCode())
                         .bind("isDefault", address.getIsDefault())
                         .execute() > 0
         );
     }
 
-    /**
-     * Delete an address
-     */
     public boolean deleteAddress(int addressId) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate("DELETE FROM user_addresses WHERE id = :id")
@@ -89,9 +92,6 @@ public class AddressDAO {
         );
     }
 
-    /**
-     * Set an address as default (and unset other defaults for the user)
-     */
     public boolean setDefaultAddress(int addressId, int userId) {
         return jdbi.withHandle(handle -> {
             // First, unset all other defaults for this user
@@ -107,9 +107,7 @@ public class AddressDAO {
         });
     }
 
-    /**
-     * Get the default address for a user
-     */
+
     public UserAddress getDefaultAddress(int userId) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM user_addresses WHERE users_id = :userId AND is_default = true LIMIT 1")

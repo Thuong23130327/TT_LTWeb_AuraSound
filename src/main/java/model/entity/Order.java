@@ -27,13 +27,7 @@ public class Order {
     private String recipientName;
     private List<OrderItem> items;
 
-    //Thông tin cho admin
-    private String shippingPhone;
-    private String shippingAddress;
-    private String shippingCity;
-    private String customerEmail;
-    private String shippingNote;
-
+    private String shippingOrderCode;
     //Get - set
 
     @Override
@@ -140,6 +134,8 @@ public class Order {
             case CANCELLED:
                 return "danger";
 
+            case RETURNED:
+                return "dark";
             default:
                 return "secondary";
         }
@@ -198,36 +194,12 @@ public class Order {
         this.items = items;
     }
 
-    //Nhóm Admin
-    @ColumnName("shipping_phone")
-    public String getShippingPhone() { return shippingPhone; }
-    public void setShippingPhone(String shippingPhone) { this.shippingPhone = shippingPhone; }
+    public String getShippingOrderCode() {
+        return shippingOrderCode;
+    }
 
-    @ColumnName("shipping_address")
-    public String getShippingAddress() { return shippingAddress; }
-    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
-
-    @ColumnName("shipping_city")
-    public String getShippingCity() { return shippingCity; }
-    public void setShippingCity(String shippingCity) { this.shippingCity = shippingCity; }
-
-    @ColumnName("customer_email")
-    public String getCustomerEmail() { return customerEmail; }
-    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
-
-    @ColumnName("shipping_note")
-    public String getShippingNote() { return shippingNote; }
-    public void setShippingNote(String shippingNote) { this.shippingNote = shippingNote; }
-
-
-    //Định dạng ngày/h vn cho chi tiết đơn ở trong qly đơn
-    public String getFormattedOrderDate() {
-        if (this.orderDate == null) return "";
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            return this.orderDate.format(formatter);
-        } catch (Exception e) {
-            return this.orderDate.toString().replace("T", " ");
-        }
-        }
+    @ColumnName("shipping_order_code")
+    public void setShippingOrderCode(String shippingOrderCode) {
+        this.shippingOrderCode = shippingOrderCode;
+    }
 }

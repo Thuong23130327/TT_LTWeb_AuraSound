@@ -103,16 +103,34 @@ public class AddressServlet extends HttpServlet {
         String recipientName = request.getParameter("recipientName");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        String city = request.getParameter("city");
+        String city = request.getParameter("cityText");
+        String provinceIdStr = request.getParameter("provinceId");
+        String districtIdStr = request.getParameter("districtId");
+        String wardCode = request.getParameter("wardCode");
         String isDefaultStr = request.getParameter("isDefault");
         boolean isDefault = "on".equals(isDefaultStr) || "true".equals(isDefaultStr);
 
-        String result = addressService.createAddress(user.getId(), recipientName, phone, address, city, isDefault);
+        int provinceId = 0;
+        int districtId = 0;
+        try {
+            if (provinceIdStr != null && !provinceIdStr.isEmpty()) provinceId = Integer.parseInt(provinceIdStr);
+            if (districtIdStr != null && !districtIdStr.isEmpty()) districtId = Integer.parseInt(districtIdStr);
+        } catch (NumberFormatException e) {
+            // Log or ignore
+        }
+
+        String result = addressService.createAddress(user.getId(), recipientName, phone, address, city, provinceId, districtId, wardCode, isDefault);
 
         if ("success".equals(result)) {
             request.setAttribute("message", "Thêm địa chỉ thành công!");
         } else {
             request.setAttribute("error", result);
+        }
+
+        String redirect = request.getParameter("redirect");
+        if ("checkout".equals(redirect)) {
+            response.sendRedirect(request.getContextPath() + "/checkout");
+            return;
         }
 
         doGet(request, response);
@@ -125,7 +143,10 @@ public class AddressServlet extends HttpServlet {
         String recipientName = request.getParameter("recipientName");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        String city = request.getParameter("city");
+        String city = request.getParameter("cityText");
+        String provinceIdStr = request.getParameter("provinceId");
+        String districtIdStr = request.getParameter("districtId");
+        String wardCode = request.getParameter("wardCode");
         String isDefaultStr = request.getParameter("isDefault");
         boolean isDefault = "on".equals(isDefaultStr) || "true".equals(isDefaultStr);
 
@@ -136,12 +157,27 @@ public class AddressServlet extends HttpServlet {
         }
 
         int addressId = Integer.parseInt(addressIdStr);
-        String result = addressService.updateAddress(addressId, user.getId(), recipientName, phone, address, city, isDefault);
+        int provinceId = 0;
+        int districtId = 0;
+        try {
+            if (provinceIdStr != null && !provinceIdStr.isEmpty()) provinceId = Integer.parseInt(provinceIdStr);
+            if (districtIdStr != null && !districtIdStr.isEmpty()) districtId = Integer.parseInt(districtIdStr);
+        } catch (NumberFormatException e) {
+            // Log or ignore
+        }
+
+        String result = addressService.updateAddress(addressId, user.getId(), recipientName, phone, address, city, provinceId, districtId, wardCode, isDefault);
 
         if ("success".equals(result)) {
             request.setAttribute("message", "Cập nhật địa chỉ thành công!");
         } else {
             request.setAttribute("error", result);
+        }
+
+        String redirect = request.getParameter("redirect");
+        if ("checkout".equals(redirect)) {
+            response.sendRedirect(request.getContextPath() + "/checkout");
+            return;
         }
 
         doGet(request, response);
@@ -167,6 +203,12 @@ public class AddressServlet extends HttpServlet {
             request.setAttribute("error", result);
         }
 
+        String redirect = request.getParameter("redirect");
+        if ("checkout".equals(redirect)) {
+            response.sendRedirect(request.getContextPath() + "/checkout");
+            return;
+        }
+
         doGet(request, response);
     }
 
@@ -188,6 +230,12 @@ public class AddressServlet extends HttpServlet {
             request.setAttribute("message", "Đặt địa chỉ mặc định thành công!");
         } else {
             request.setAttribute("error", result);
+        }
+
+        String redirect = request.getParameter("redirect");
+        if ("checkout".equals(redirect)) {
+            response.sendRedirect(request.getContextPath() + "/checkout");
+            return;
         }
 
         doGet(request, response);
