@@ -521,4 +521,67 @@ input[type="radio"]:checked + label {
         width: 95% !important;
         padding: 20px;
     }
+
+    .error-msg {
+        color: red;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .success-msg {
+        color: green;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    #discount-row {
+        display: none;
+        color: #28a745;
+    }
+
+    .loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    .input-disabled {
+        background-color: #f5f5f5;
+        cursor: not-allowed;
+    }
+
+    .btn-address-disabled {
+        background-color: #ccc !important;
+        border-color: #ccc !important;
+        cursor: not-allowed;
+    }
+
+    .address-item-card {
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .radio-pointer {
+        margin-top: 5px;
+        cursor: pointer;
+    }
+
+    .label-margin-reset {
+        margin: 0 !important;
+    }
+
+    .popup-hidden {
+        display: none;
+    }
+
+    .icon-box-fail {
+        background-color: #e74c3c !important;
+        box-shadow: 0 0 0 8px rgba(231, 76, 60, 0.1) !important;
+    }
+
+    .text-fail {
+        color: #e74c3c !important;
+    }
+
 }
