@@ -60,4 +60,7 @@ public class VoucherService {
             return voucherDAO.getVoucherByCode(code.trim().toUpperCase());
         }
 
+    public List<Voucher> getVouchersForUserWallet(int userId) {
+        return voucherDAO.getVouchersForUserWallet(userId);
+    }
     }

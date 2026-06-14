@@ -214,4 +214,11 @@ public class OrderDAO {
                 .execute()
         );
     }
+
+    public int getTotalOrderCount() {
+        String sql = "SELECT COUNT(*) FROM orders";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql).mapTo(Integer.class).one()
+        );
+    }
 }
