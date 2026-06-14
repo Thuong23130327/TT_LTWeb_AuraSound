@@ -26,7 +26,7 @@
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-3">
 
-            <h2 class="section-title text-primary" style="font-weight: 500; margin-top: 10px;">Quản lý Tài khoản</h2>
+            <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">Quản lý Tài khoản</h2>
 
             <c:set var="totalUsers" value="0"/>
             <c:set var="activeUsers" value="0"/>

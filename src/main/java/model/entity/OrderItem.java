@@ -2,6 +2,7 @@ package model.entity;
 
 import java.math.BigDecimal;
 import org.jdbi.v3.core.mapper.Nested;
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 public class OrderItem {
 	private int id;
@@ -46,8 +47,9 @@ public class OrderItem {
 		this.quantity = quantity;
 	}
 
+	@ColumnName("price_at_purchase")
 	public BigDecimal getPrice_at_purchase() {
-		return price_at_purchase;
+		return this.price_at_purchase;
 	}
 
 	public void setPrice_at_purchase(BigDecimal price_at_purchase) {

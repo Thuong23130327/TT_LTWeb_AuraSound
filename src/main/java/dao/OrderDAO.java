@@ -221,4 +221,49 @@ public class OrderDAO {
                 handle.createQuery(sql).mapTo(Integer.class).one()
         );
     }
+
+    //Dùng cho qly đơn admin
+    public Order getAdminOrderDetailById(String id) {
+        String sql = "SELECT o.*, " +
+                "ua.recipient_name AS recipient_name, " +
+                "ua.phone AS shipping_phone, " +
+                "ua.address AS shipping_address, " +
+                "ua.city AS shipping_city, " +
+                "u.email AS customer_email, " +
+                "os.note AS shipping_note " +
+                "FROM orders o " +
+                "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
+                "LEFT JOIN users u ON o.users_id = u.id " +
+                "WHERE o.id = :id";
+
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("id", id)
+                .mapToBean(Order.class)
+                .findOne()
+                .orElse(null));
+    }
+
+    public List<OrderItem> getAdminOrderItemsByOrderId(String orderId) {
+        String sql = "SELECT oi.*, " +
+                "pv.id AS pv_id, " +
+                "pv.products_id AS pv_products_id, " +
+                "pv.variant_sku AS pv_variant_sku, " +
+                "pv.color_name AS pv_color_name, " +
+                "pv.main_image_url AS pv_main_image_url, " +
+                "pv.market_price AS pv_market_price, " +
+                "pv.sell_price AS pv_sell_price, " +
+                "pv.stock_quantity AS pv_stock_quantity, " +
+                "pv.sold_quantity AS pv_sold_quantity, " +
+                "pv.is_default AS pv_is_default " +
+                "FROM orderitems oi " +
+                "LEFT JOIN productvariants pv ON oi.productvariants_id = pv.id " +
+                "WHERE oi.orders_id = :orderId";
+
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("orderId", orderId)
+                .mapToBean(OrderItem.class)
+                .list());
+    }
+
 }

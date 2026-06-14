@@ -7,6 +7,8 @@ import dao.OrderItemDAO;
 import dao.OrderShippingDAO;
 import model.dto.CartItemDTO;
 import model.entity.Cart;
+import model.entity.Order;
+import model.entity.OrderItem;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,5 +100,13 @@ public class OrderService {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public Order getAdminOrderDetailById(String id) {
+        return orderDAO.getAdminOrderDetailById(id);
+    }
+
+    public List<OrderItem> getAdminOrderItemsByOrderId(String orderId) {
+        return orderDAO.getAdminOrderItemsByOrderId(orderId);
     }
 }
