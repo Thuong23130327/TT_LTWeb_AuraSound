@@ -2662,27 +2662,30 @@ INSERT INTO `user_roles` VALUES (14, 2);
 INSERT INTO `user_roles` VALUES (16, 2);
 
 -- ----------------------------
--- Table structure for useraddresses
+-- Table structure for user_addresses
 -- ----------------------------
-DROP TABLE IF EXISTS `useraddresses`;
-CREATE TABLE `useraddresses`  (
+DROP TABLE IF EXISTS `user_addresses`;
+CREATE TABLE `user_addresses`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `users_id` int NOT NULL,
   `recipient_name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `city` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `province_id` int NULL DEFAULT NULL,
+  `district_id` int NULL DEFAULT NULL,
+  `ward_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `is_default` tinyint(1) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `users_id`(`users_id` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of useraddresses
+-- Records of user_addresses
 -- ----------------------------
-INSERT INTO `useraddresses` VALUES (1, 13, 'Demo Google User', '0328005624', '', '', 1);
-INSERT INTO `useraddresses` VALUES (2, 1, 'Nguyễn Hoài Thương', '0708870329', 'q, q, HCM', 'HCM', 0);
-INSERT INTO `useraddresses` VALUES (3, 1, 'Nguyễn Hoài Thương', '0708870329', 'q, q, HCM', 'HCM', 0);
+INSERT INTO `user_addresses` VALUES (1, 13, 'Demo Google User', '0328005624', '', '', NULL, NULL, NULL, 1);
+INSERT INTO `user_addresses` VALUES (2, 1, 'Nguyễn Hoài Thương', '0708870329', 'q, q, HCM', 'HCM', NULL, NULL, NULL, 0);
+INSERT INTO `user_addresses` VALUES (3, 1, 'Nguyễn Hoài Thương', '0708870329', 'q, q, HCM', 'HCM', NULL, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for users
