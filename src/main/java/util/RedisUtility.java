@@ -1,9 +1,10 @@
 package util;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 public class RedisUtility {
-    private static final JedisPool pool = new JedisPool("localhost", 6379);
+    private static final JedisPool pool = new JedisPool("172.17.0.1", 6379);
 
     public static Jedis getJedis() {
         return pool.getResource();
