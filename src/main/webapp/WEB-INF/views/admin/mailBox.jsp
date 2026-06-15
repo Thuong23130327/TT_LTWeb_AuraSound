@@ -29,14 +29,10 @@
     <div class="row">
         <jsp:include page="/WEB-INF/tag/_adminMenu.jsp"/>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-3">
             <div class="mail-content-center-wrapper mx-auto">
-
-                <div
-                        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-4 pb-2 border-bottom">
-                    <h2 class="h2 section-title text-primary">
-                        Quản lý Liên hệ, Thư
-                    </h2>
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                    <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">  Quản lý Liên hệ, Thư</h2>
                 </div>
 
                 <div class="card shadow-sm">

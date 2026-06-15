@@ -13,6 +13,7 @@ target/
 *.jard
 *.war
 *.ear
+src/main/resources/env.properties
 
 ### Eclipse ###
 .apt_generated
