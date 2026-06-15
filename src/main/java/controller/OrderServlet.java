@@ -9,7 +9,6 @@ import model.entity.Order;
 import model.entity.User;
 import model.entity.Cart;
 import service.OrderService;
-import model.IconLogin.VnPayConfig;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -33,7 +32,6 @@ public class OrderServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Ktra đăng nhập
         HttpSession session = request.getSession(false);
         User auth = (session != null) ? (User) session.getAttribute("auth") : null;
 
@@ -45,23 +43,22 @@ public class OrderServlet extends HttpServlet {
             return;
         }
 
-        @SuppressWarnings("unchecked")
-        List<Integer> selectedIds =
-                (List<Integer>) session.getAttribute("checkoutSelectedIds");
+        List<Integer> selectedIds = (List<Integer>) session.getAttribute("checkoutSelectedIds");
 
-        String fullName    = request.getParameter("fullName");
-        String phone       = request.getParameter("phone");
-        String city        = request.getParameter("city");
-        String ward        = request.getParameter("ward");
-        String address     = request.getParameter("address");
-        String notes       = request.getParameter("notes");
-        String voucherCode = request.getParameter("voucherCode");
+        String fullName      = request.getParameter("fullName");
+        String phone         = request.getParameter("phone");
+        String city          = request.getParameter("city");
+        String ward          = request.getParameter("ward");
+        String address       = request.getParameter("address");
+        String notes         = request.getParameter("notes");
+        String voucherCode   = request.getParameter("voucherCode");
         String paymentMethod = request.getParameter("paymentMethod");
 
         String provinceIdStr = request.getParameter("provinceId");
         String districtIdStr = request.getParameter("districtId");
         String wardCodeStr   = request.getParameter("wardCode");
         String addressIdStr  = request.getParameter("addressId");
+        String shippingFeeStr = request.getParameter("shippingFee");
 
         int provinceId = 0;
         if (provinceIdStr != null && !provinceIdStr.trim().isEmpty()) {
@@ -71,7 +68,7 @@ public class OrderServlet extends HttpServlet {
                 // ignore
             }
         }
-        
+
         int districtId = 0;
         if (districtIdStr != null && !districtIdStr.trim().isEmpty()) {
             try {
@@ -85,6 +82,16 @@ public class OrderServlet extends HttpServlet {
         if (addressIdStr != null && !addressIdStr.trim().isEmpty()) {
             try {
                 addressId = Integer.parseInt(addressIdStr.trim());
+            } catch (NumberFormatException e) {
+                // ignore
+            }
+        }
+
+        // Nhận phí ship tự động
+        double shippingFee = 30000;
+        if (shippingFeeStr != null && !shippingFeeStr.trim().isEmpty()) {
+            try {
+                shippingFee = Double.parseDouble(shippingFeeStr.trim());
             } catch (NumberFormatException e) {
                 // ignore
             }
@@ -116,12 +123,14 @@ public class OrderServlet extends HttpServlet {
                     wardCodeStr != null ? wardCodeStr.trim() : "",
                     notes != null ? notes.trim() : "",
                     voucherCode,
-                    selectedIds
+                    selectedIds,
+                    shippingFee
             );
 
             if (orderId > 0) {
                 session.removeAttribute("checkoutSelectedIds");
 
+                // XỬ LÝ THANH TOÁN VNPAY
                 if ("vnpay".equals(paymentMethod)) {
                     OrderDAO orderDAO = new OrderDAO();
                     Order order = orderDAO.getOrderById(String.valueOf(orderId));
@@ -138,7 +147,7 @@ public class OrderServlet extends HttpServlet {
                     vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + order.getOrderCode());
                     vnp_Params.put("vnp_OrderType", "other");
                     vnp_Params.put("vnp_Locale", "vn");
-                    vnp_Params.put("vnp_ReturnUrl", VnPayConfig.vnp_ReturnUrl);
+                    vnp_Params.put("vnp_ReturnUrl", VnPayConfig.vnp_ReturnUrl + "?orderId=" + orderId);
                     vnp_Params.put("vnp_IpAddr", request.getRemoteAddr());
 
                     Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -179,31 +188,28 @@ public class OrderServlet extends HttpServlet {
                     return;
                 }
 
+                // XỬ LÝ ĐẶT HÀNG COD THƯỜNG
                 Cart cart = service.CartService.getOrCreateCartByUserId(auth.getId());
-                for (Integer variantId : selectedIds) {
-                    service.CartService.deleteItem(cart.getId(), variantId);
+                if (selectedIds != null) {
+                    for (Integer variantId : selectedIds) {
+                        service.CartService.deleteItem(cart.getId(), variantId);
+                    }
                 }
 
                 int currentQty = service.CartService.getListItems(cart.getId()).size();
                 session.setAttribute("cartQty", currentQty);
 
                 response.setStatus(200);
-                response.getWriter().write(
-                        "{\"status\":\"success\",\"orderId\":" + orderId + "}"
-                );
+                response.getWriter().write("{\"status\":\"success\",\"orderId\":" + orderId + "}");
             } else {
                 response.setStatus(500);
-                response.getWriter().write(
-                        "{\"status\":\"error\",\"message\":\"Đặt hàng thất bại, vui lòng thử lại\"}"
-                );
+                response.getWriter().write("{\"status\":\"error\",\"message\":\"Đặt hàng thất bại, vui lòng thử lại\"}");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(500);
-            response.getWriter().write(
-                    "{\"status\":\"error\",\"message\":\"Lỗi hệ thống\"}"
-            );
+            response.getWriter().write("{\"status\":\"error\",\"message\":\"Lỗi hệ thống trong quá trình tạo đơn\"}");
         }
     }
 

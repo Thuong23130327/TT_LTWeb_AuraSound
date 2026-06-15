@@ -37,7 +37,8 @@ public class OrderService {
                                  String wardCode,
                                  String notes,
                                  String voucherCode,
-                                 List<Integer> selectedVariantIds) {
+                                 List<Integer> selectedVariantIds,
+                                 double shippingFee) {
         try {
             Cart cart = CartService.getOrCreateCartByUserId(userId);
             int cartId = cart.getId();
@@ -63,7 +64,7 @@ public class OrderService {
             double totalProductsPrice = itemsToOrder.stream()
                     .mapToDouble(CartItemDTO::getTotalItemPrice)
                     .sum();
-            double shippingFee        = 30000;
+
             double discountAmount     = 0;
             Integer vouchersId        = null;
 

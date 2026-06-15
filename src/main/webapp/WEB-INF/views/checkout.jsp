@@ -25,13 +25,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleProfile.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleCheckout.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styleAddress.css">
-
-    <style>
-        .error-msg { color: red; font-size: 0.85rem; margin-top: 5px; display: block; }
-        .success-msg { color: green; font-size: 0.85rem; margin-top: 5px; display: block; }
-        #discount-row { display: none; color: #28a745; }
-        .loading { opacity: 0.6; pointer-events: none; }
-    </style>
 </head>
 
 <body>
@@ -48,17 +41,17 @@
 
             <div class="form-group">
                 <label for="fullname">Họ và tên *</label>
-                <input type="text" id="fullname" value="${sessionScope.auth.fullName}" placeholder="Nhập họ và tên của bạn" required disabled style="background-color: #f5f5f5; cursor: not-allowed;">
+                <input type="text" id="fullname" value="${sessionScope.auth.fullName}" placeholder="Nhập họ và tên của bạn" required disabled class="input-disabled">
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" value="${sessionScope.auth.email}" placeholder="Nhập địa chỉ email" disabled style="background-color: #f5f5f5; cursor: not-allowed;">
+                    <input type="email" id="email" value="${sessionScope.auth.email}" placeholder="Nhập địa chỉ email" disabled class="input-disabled">
                 </div>
                 <div class="form-group">
                     <label for="phone">Số điện thoại *</label>
-                    <input type="tel" id="phone" value="${sessionScope.auth.phone}" placeholder="Nhập số điện thoại" required disabled style="background-color: #f5f5f5; cursor: not-allowed;">
+                    <input type="tel" id="phone" value="${sessionScope.auth.phone}" placeholder="Nhập số điện thoại" required disabled class="input-disabled">
                 </div>
             </div>
 
@@ -66,22 +59,22 @@
 
             <div class="form-group">
                 <label for="city">Tỉnh / Thành phố *</label>
-                <input type="text" id="city" placeholder="Tỉnh / Thành phố" disabled style="background-color: #f5f5f5; cursor: not-allowed;">
+                <input type="text" id="city" placeholder="Tỉnh / Thành phố" disabled class="input-disabled">
             </div>
 
             <div class="form-group">
                 <label for="district_main">Quận / Huyện *</label>
-                <input type="text" id="district_main" placeholder="Quận / Huyện" disabled style="background-color: #f5f5f5; cursor: not-allowed;">
+                <input type="text" id="district_main" placeholder="Quận / Huyện" disabled class="input-disabled">
             </div>
 
             <div class="form-group">
                 <label for="ward">Phường / Xã *</label>
-                <input type="text" id="ward" placeholder="Phường / Xã" disabled style="background-color: #f5f5f5; cursor: not-allowed;">
+                <input type="text" id="ward" placeholder="Phường / Xã" disabled class="input-disabled">
             </div>
 
             <div class="form-group">
                 <label for="address">Địa chỉ cụ thể *</label>
-                <input type="text" id="address" placeholder="Số nhà, tên đường..." disabled style="background-color: #f5f5f5; cursor: not-allowed;">
+                <input type="text" id="address" placeholder="Số nhà, tên đường..." disabled class="input-disabled">
             </div>
 
             <input type="hidden" id="mainProvinceId" value="">
@@ -94,11 +87,10 @@
                 <textarea id="notes" rows="3" placeholder="Ghi chú về đơn hàng..."></textarea>
             </div>
 
-            <!-- Sổ địa chỉ người dùng -->
             <div class="address-book-section mt-4 pt-3 border-top">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0"><i class="bi bi-journal-bookmark"></i> Sổ địa chỉ của bạn</h4>
-                    <button type="button" id="btnAddAddress" class="btn btn-sm btn-warning fw-semibold" ${addressCount >= 5 ? 'disabled style="background-color: #ccc; border-color: #ccc; cursor: not-allowed;"' : ''}>
+                    <button type="button" id="btnAddAddress" class="btn btn-sm btn-warning fw-semibold ${addressCount >= 5 ? 'btn-address-disabled' : ''}" ${addressCount >= 5 ? 'disabled' : ''}>
                         <i class="bi bi-plus-circle"></i> Thêm mới (${addressCount}/5)
                     </button>
                 </div>
@@ -114,7 +106,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:forEach items="${addresses}" var="addr">
-                                <div class="address-item-card border rounded p-3 mb-2 position-relative ${addr.isDefault ? 'border-warning bg-light-subtle' : ''}" 
+                                <div class="address-item-card border rounded p-3 mb-2 position-relative ${addr.isDefault ? 'border-warning bg-light-subtle default-card' : ''}"
                                      data-id="${addr.id}"
                                      data-recipient-name="${addr.recipientName}"
                                      data-phone="${addr.phone}"
@@ -122,20 +114,19 @@
                                      data-address="${addr.address}"
                                      data-province-id="${addr.provinceId}"
                                      data-district-id="${addr.districtId}"
-                                     data-ward-code="${addr.wardCode}"
-                                     style="cursor: pointer; transition: all 0.2s;">
-                                    
+                                     data-ward-code="${addr.wardCode}">
+
                                     <div class="d-flex align-items-start gap-2">
-                                        <input type="radio" name="selectedShippingAddress" value="${addr.id}" ${addr.isDefault ? 'checked' : ''} style="margin-top: 5px; cursor: pointer;">
+                                        <input type="radio" name="selectedShippingAddress" value="${addr.id}" ${addr.isDefault ? 'checked' : ''} class="radio-pointer">
                                         <div class="flex-grow-1 select-address-trigger">
                                             <div class="fw-bold fs-6">
-                                                ${addr.recipientName} | ${addr.phone}
+                                                    ${addr.recipientName} | ${addr.phone}
                                                 <c:if test="${addr.isDefault}">
                                                     <span class="badge bg-warning text-dark ms-2 fw-semibold">Mặc định</span>
                                                 </c:if>
                                             </div>
                                             <div class="text-muted small mt-1">
-                                                ${addr.address}, ${addr.city}
+                                                    ${addr.address}, ${addr.city}
                                             </div>
                                         </div>
                                     </div>
@@ -200,11 +191,11 @@
             <div class="totals">
                 <div class="totals-item">
                     <p>Tạm tính:</p>
-                    <p><fmt:formatNumber value="${totalPrice}" pattern="#,###"/>đ</p>
+                    <p id="subtotal-amount" data-value="${totalPrice}"><fmt:formatNumber value="${totalPrice}" pattern="#,###"/>đ</p>
                 </div>
                 <div class="totals-item">
                     <p>Phí vận chuyển:</p>
-                    <p><fmt:formatNumber value="${shippingFee}" pattern="#,###"/>đ</p>
+                    <p id="shipping-fee-display"><fmt:formatNumber value="${shippingFee}" pattern="#,###"/>đ</p>
                 </div>
                 <div class="totals-item" id="discount-row">
                     <p>Giảm giá:</p>
@@ -241,7 +232,7 @@
 
 <jsp:include page="/WEB-INF/tag/_footer.jsp"></jsp:include>
 
-<div id="success-popup" class="popup-content-wrap" style="display: none;">
+<div id="success-popup" class="popup-content-wrap popup-hidden">
     <div class="popup-content">
         <button class="popup-close-btn" id="popup-close"><i class="bi bi-x-lg"></i></button>
         <div class="icon-box"><i class="bi bi-check-lg"></i></div>
@@ -250,18 +241,17 @@
     </div>
 </div>
 
-<div id="fail-popup" class="popup-content-wrap" style="display: none;">
+<div id="fail-popup" class="popup-content-wrap popup-hidden">
     <div class="popup-content">
         <button class="popup-close-btn" id="popup-fail-close"><i class="bi bi-x-lg"></i></button>
-        <div class="icon-box" style="background-color: #e74c3c; box-shadow: 0 0 0 8px rgba(231, 76, 60, 0.1);">
+        <div class="icon-box icon-box-fail">
             <i class="bi bi-x-lg"></i>
         </div>
-        <h3 style="color: #e74c3c;">Thanh toán thất bại!</h3>
+        <h3 class="text-fail">Thanh toán thất bại!</h3>
         <p>Bạn đã hủy giao dịch hoặc có lỗi xảy ra. Vui lòng thử lại.</p>
     </div>
 </div>
 
-<!-- Modal Address -->
 <div id="modal-address" class="modal-container">
     <div class="modal-header">
         <h3 id="modalTitle">Thêm Địa Chỉ</h3>
@@ -317,7 +307,7 @@
 
             <div class="checkbox-group">
                 <input type="checkbox" id="isDefault" name="isDefault" value="true">
-                <label for="isDefault" style="margin: 0;">Đặt làm địa chỉ mặc định</label>
+                <label for="isDefault" class="label-margin-reset">Đặt làm địa chỉ mặc định</label>
             </div>
         </form>
     </div>

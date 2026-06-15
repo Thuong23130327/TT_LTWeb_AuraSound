@@ -41,7 +41,7 @@ public class GHNService {
         int cleanDistrictId = (districtId <= 0) ? 1444 : districtId;
 
         String jsonPayload = "{"
-                + "\"payment_type_id\": 2,"
+                + "\"payment_type_id\": 1,"
                 + "\"required_note\": \"KHONGCHOXEMHANG\","
                 + "\"to_name\": \"" + recipientName.replace("\"", "\\\"") + "\","
                 + "\"to_phone\": \"" + phone + "\","
@@ -70,7 +70,7 @@ public class GHNService {
         return response.body();
     }
 
-   // cập nhật trạng thái
+    // cập nhật trạng thái
     public static String getOrderLogProgress(String shippingOrderCode) throws Exception {
         String endpoint = BASE_URL + "/shipping-order/detail";
         String jsonPayload = "{\"order_code\": \"" + shippingOrderCode + "\"}";
@@ -86,5 +86,34 @@ public class GHNService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
+    }
+
+    //tính phí ship
+    public static int calculateShippingFee(int toDistrictId, String toWardCode, int weightInGrams) throws Exception {
+        String endpoint = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+
+        String json = "{"
+                + "\"from_district_id\": 1442,"
+                + "\"to_district_id\": " + toDistrictId + ","
+                + "\"to_ward_code\": \"" + toWardCode + "\","
+                + "\"weight\": " + weightInGrams + ","
+                + "\"service_type_id\": 2"
+                + "}";
+
+        java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
+        java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+                .uri(java.net.URI.create(endpoint))
+                .header("Content-Type", "application/json")
+                .header("Token", "dffec2e1-6725-11f1-a973-aee5264794df") // Token của bạn
+                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+
+        com.google.gson.JsonObject jsonObject = com.google.gson.JsonParser.parseString(response.body()).getAsJsonObject();
+        if (jsonObject.get("code").getAsInt() == 200) {
+            return jsonObject.getAsJsonObject("data").get("total").getAsInt();
+        }
+        return 30000;
     }
 }
