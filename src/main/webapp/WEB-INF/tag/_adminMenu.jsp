@@ -48,7 +48,8 @@
 
         <c:if test="${sessionScope.author.hasPermission('USER_VIEW')}">
             <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/admin/user-manager" class="nav-link ${activePage == 'acc' ? 'active' : ''}">
+                <a href="${pageContext.request.contextPath}/admin/user-manager"
+                   class="nav-link ${activePage == 'acc' ? 'active' : ''}">
                     <i class="fas fa-users me-2"></i>
                     Quản lý Tài Khoản
                 </a>
@@ -63,9 +64,8 @@
         </li>
 
         <li class="nav-item">
-            <a href="${AuraSound}/admin/my-web" class="nav-link ${activePage == "custom"? "active" : ""}">
-                <i class="fa-solid fa-list me-2"></i>
-                Quản lý Giao diện
+            <a href="${AuraSound}/admin/interface-manager" class="nav-link ${activePage == "ui"? "active" : ""}">
+                <i class="bi bi-display"></i> Quản lý Giao diện
             </a>
         </li>
 
