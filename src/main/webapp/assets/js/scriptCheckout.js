@@ -280,7 +280,10 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     if (btnSaveAddress) {
-        btnSaveAddress.addEventListener('click', function () {
+        btnSaveAddress.addEventListener('click', function (e) {
+
+            e.preventDefault();
+
             const recipientName = document.getElementById('recipientName').value.trim();
             const phone = document.getElementById('phoneInput').value.trim();
             const address = document.getElementById('addressInput').value.trim();
@@ -295,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            if (phone.length < 10 || phone.length > 20) {
+            if (!phone || phone.length < 10 || phone.length > 20) {
                 alert('Số điện thoại phải từ 10 đến 20 ký tự!');
                 return;
             }
@@ -324,7 +327,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const wText = wardSelect.options[wardSelect.selectedIndex].text;
             cityTextInput.value = `${wText}, ${dText}, ${pText}`;
 
-            addressForm.submit();
+            console.log("Dữ liệu hợp lệ, đang gửi form...");
+
+            HTMLFormElement.prototype.submit.call(addressForm);
         });
     }
 

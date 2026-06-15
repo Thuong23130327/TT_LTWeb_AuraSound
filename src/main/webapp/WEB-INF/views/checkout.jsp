@@ -114,7 +114,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:forEach items="${addresses}" var="addr">
-                                <div class="address-item-card border rounded p-3 mb-2 position-relative ${addr.isDefault ? 'border-warning bg-light-subtle' : ''}" 
+                                <div class="address-item-card border rounded p-3 mb-2 position-relative ${addr.isDefault ? 'border-warning bg-light-subtle' : ''}"
                                      data-id="${addr.id}"
                                      data-recipient-name="${addr.recipientName}"
                                      data-phone="${addr.phone}"
@@ -124,7 +124,7 @@
                                      data-district-id="${addr.districtId}"
                                      data-ward-code="${addr.wardCode}"
                                      style="cursor: pointer; transition: all 0.2s;">
-                                    
+
                                     <div class="d-flex align-items-start gap-2">
                                         <input type="radio" name="selectedShippingAddress" value="${addr.id}" ${addr.isDefault ? 'checked' : ''} style="margin-top: 5px; cursor: pointer;">
                                         <div class="flex-grow-1 select-address-trigger">
@@ -322,10 +322,12 @@
         </form>
     </div>
 
-    <div class="modal-footer">
-        <button id="btnCancelAddress" class="btn-secondary">Hủy</button>
-        <button id="btnSaveAddress" class="btn-primary">Lưu Địa Chỉ</button>
+    <div class="modal-footer" style="margin-top: 20px;">
+        <button type="button" id="btnCancelAddress" class="btn-secondary">Hủy</button>
+        <button type="submit" id="btnSaveAddress" class="btn-primary">Lưu Địa Chỉ</button>
     </div>
+
+    </form> </div>
 </div>
     <div id="wallet-popup" class="popup-content-wrap" style="display: none;">
         <div class="popup-content" style="max-width: 500px; text-align: left; padding: 20px;">

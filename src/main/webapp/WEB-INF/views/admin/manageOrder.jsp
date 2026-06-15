@@ -80,9 +80,9 @@
                   <fmt:formatNumber value="${o.finalAmount}" pattern="#,###"/> đ
                 </td>
                 <td>
-                                        <span class="badge bg-${o.statusClass}">
-                                            ${o.EOrderStatus != null ? o.EOrderStatus.name() : "PENDING"}
-                                        </span>
+                    <span class="badge bg-${o.statusClass}">
+                        ${o.EOrderStatus != null ? o.EOrderStatus.name() : "PENDING"}
+                    </span>
                 </td>
                 <td>
                   <div class="d-flex gap-2">

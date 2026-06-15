@@ -25,6 +25,10 @@ public class CheckoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
         HttpSession session = request.getSession(false);
         User auth = (session != null) ? (User) session.getAttribute("auth") : null;
 
@@ -56,6 +60,12 @@ public class CheckoutServlet extends HttpServlet {
                     selectedIds.add(Integer.parseInt(idStr.trim()));
                 } catch (NumberFormatException ignored) {
                 }
+            }
+            request.getSession().setAttribute("checkoutSelectedIds", selectedIds);
+        } else {
+            Object sessionIds = request.getSession().getAttribute("checkoutSelectedIds");
+            if (sessionIds != null) {
+                selectedIds = (List<Integer>) sessionIds;
             }
         }
 
