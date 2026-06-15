@@ -49,23 +49,53 @@ public class ProfileService {
     }
 
     public List<Order> getHistoryOrders(int userId) {
-        return oDAO.getAllOrderById(userId);
+        List<Order> orders = oDAO.getAllOrderById(userId);
+        if (orders != null) {
+            for (Order o : orders) {
+                o.setItems(oDAO.getAllOrdersItem(String.valueOf(o.getId())));
+            }
+        }
+        return orders;
     }
 
     public List<Order> getPendingOrders(int userId) {
-        return oDAO.getPendingOrders(userId);
+        List<Order> orders = oDAO.getPendingOrders(userId);
+        if (orders != null) {
+            for (Order o : orders) {
+                o.setItems(oDAO.getAllOrdersItem(String.valueOf(o.getId())));
+            }
+        }
+        return orders;
     }
 
     public List<Order> getShippingOrders(int userId) {
-        return oDAO.getShippingOrders(userId);
+        List<Order> orders = oDAO.getShippingOrders(userId);
+        if (orders != null) {
+            for (Order o : orders) {
+                o.setItems(oDAO.getAllOrdersItem(String.valueOf(o.getId())));
+            }
+        }
+        return orders;
     }
 
     public List<Order> getCompletedOrders(int userId) {
-        return oDAO.getCompletedOrders(userId);
+        List<Order> orders = oDAO.getCompletedOrders(userId);
+        if (orders != null) {
+            for (Order o : orders) {
+                o.setItems(oDAO.getAllOrdersItem(String.valueOf(o.getId())));
+            }
+        }
+        return orders;
     }
 
     public List<Order> getCancelledOrders(int userId) {
-        return oDAO.getCancelledOrders(userId);
+        List<Order> orders = oDAO.getCancelledOrders(userId);
+        if (orders != null) {
+            for (Order o : orders) {
+                o.setItems(oDAO.getAllOrdersItem(String.valueOf(o.getId())));
+            }
+        }
+        return orders;
     }
 
     public List<OrderItem> getAllOrdersItem(String orderId) {

@@ -6,6 +6,7 @@ import org.jdbi.v3.core.mapper.reflect.ColumnName;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class Order {
 
@@ -25,6 +26,15 @@ public class Order {
 
     private String recipientName;
     private List<OrderItem> items;
+
+    private String shippingOrderCode;
+
+    //Thông tin cho admin
+    private String shippingPhone;
+    private String shippingAddress;
+    private String shippingCity;
+    private String customerEmail;
+    private String shippingNote;
 
     //Get - set
 
@@ -49,6 +59,7 @@ public class Order {
         return orderCode;
     }
 
+    @ColumnName("order_code")
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
     }
@@ -57,6 +68,7 @@ public class Order {
         return orderDate;
     }
 
+    @ColumnName("order_date")
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
@@ -80,7 +92,8 @@ public class Order {
     public String getRecipientName() {
         return recipientName;
     }
-@ColumnName("recipient_name")
+
+    @ColumnName("recipient_name")
     public void setRecipientName(String recipientName) {
         this.recipientName = recipientName;
     }
@@ -89,6 +102,7 @@ public class Order {
         return vouchersId;
     }
 
+    @ColumnName("vouchers_id")
     public void setVouchersId(int vouchersId) {
         this.vouchersId = vouchersId;
     }
@@ -128,6 +142,8 @@ public class Order {
             case CANCELLED:
                 return "danger";
 
+            case RETURNED:
+                return "dark";
             default:
                 return "secondary";
         }
@@ -146,6 +162,7 @@ public class Order {
         return totalProductsPrice;
     }
 
+    @ColumnName("total_products_price")
     public void setTotalProductsPrice(BigDecimal totalProductsPrice) {
         this.totalProductsPrice = totalProductsPrice;
     }
@@ -154,6 +171,7 @@ public class Order {
         return shippingFee;
     }
 
+    @ColumnName("shipping_fee")
     public void setShippingFee(BigDecimal shippingFee) {
         this.shippingFee = shippingFee;
     }
@@ -162,6 +180,7 @@ public class Order {
         return discountAmount;
     }
 
+    @ColumnName("discount_amount")
     public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
@@ -170,6 +189,7 @@ public class Order {
         return finalAmount;
     }
 
+    @ColumnName("final_amount")
     public void setFinalAmount(BigDecimal finalAmount) {
         this.finalAmount = finalAmount;
     }
@@ -180,5 +200,46 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public String getShippingOrderCode() {
+        return shippingOrderCode;
+    }
+
+    @ColumnName("shipping_order_code")
+    public void setShippingOrderCode(String shippingOrderCode) {
+        this.shippingOrderCode = shippingOrderCode;
+    }
+
+    //Nhóm Admin
+    @ColumnName("shipping_phone")
+    public String getShippingPhone() { return shippingPhone; }
+    public void setShippingPhone(String shippingPhone) { this.shippingPhone = shippingPhone; }
+
+    @ColumnName("shipping_address")
+    public String getShippingAddress() { return shippingAddress; }
+    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
+
+    @ColumnName("shipping_city")
+    public String getShippingCity() { return shippingCity; }
+    public void setShippingCity(String shippingCity) { this.shippingCity = shippingCity; }
+
+    @ColumnName("customer_email")
+    public String getCustomerEmail() { return customerEmail; }
+    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+
+    @ColumnName("shipping_note")
+    public String getShippingNote() { return shippingNote; }
+    public void setShippingNote(String shippingNote) { this.shippingNote = shippingNote; }
+
+    //Định dạng ngày/h vn cho chi tiết đơn ở trong qly đơn
+    public String getFormattedOrderDate() {
+        if (this.orderDate == null) return "";
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            return this.orderDate.format(formatter);
+        } catch (Exception e) {
+            return this.orderDate.toString().replace("T", " ");
+        }
     }
 }

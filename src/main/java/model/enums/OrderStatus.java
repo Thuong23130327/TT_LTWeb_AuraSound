@@ -3,7 +3,9 @@ public enum OrderStatus {
     PENDING(0, "Chờ duyệt"),
     SHIPPING(1, "Đang giao"),
     COMPLETED(2, "Hoàn thành"),
-    CANCELLED(3, "Đã hủy");
+    CANCELLED(3, "Đã hủy"),
+    RETURNED(4, "Hoàn hàng");
+
 
     private final int value;
     private final String description;

@@ -12,7 +12,7 @@ public class CartItemDTO {
     private int quantity;
     private double price;   //bảng productvariants
     private String img;     //bảng productvariants
-    private boolean isChecked = true;
+    private boolean isChecked = false;
     private String colorName;
     private List<VariantOptionDTO> variantOptions = new ArrayList<>();
 

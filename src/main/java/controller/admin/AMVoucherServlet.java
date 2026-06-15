@@ -105,6 +105,8 @@ public class AMVoucherServlet extends HttpServlet {
                 if (endDate.isBefore(LocalDateTime.now())) {
                     error.append("Ngày hết hạn phải ở tương lai. ");
                 }
+            }else{
+                endDate = LocalDateTime.of(2099, 12, 31, 23, 59, 59);
             }
         } catch (DateTimeParseException e) {
             error.append("Ngày hết hạn không đúng định dạng. ");

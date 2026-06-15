@@ -155,6 +155,14 @@ public class UserDAO {
                         .execute()
         );
     }
+    //Mở khóa
+    public boolean unlockAccount(String email) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE users SET is_locked = 0, failed_attempts = 0 WHERE email = :email")
+                        .bind("email", email)
+                        .execute() > 0
+        );
+    }
 
     //reset failed_attempts về 0 - ok
     public void resetFailedAttempts(String email) {
@@ -173,5 +181,17 @@ public class UserDAO {
                         .execute() > 0
         );
     }
+    //Cập nhật Role
+    public boolean updateUserRole(int userId, int newRoleId) {
+        return jdbi.withHandle(handle -> {
+            handle.createUpdate("DELETE FROM user_roles WHERE user_id = :userId")
+                    .bind("userId", userId)
+                    .execute();
+            return handle.createUpdate("INSERT INTO user_roles (user_id, role_id) VALUES (:userId, :roleId)")
+                    .bind("userId", userId)
+                    .bind("roleId", newRoleId)
+                    .execute() > 0;
+        });
+        }
 }
 

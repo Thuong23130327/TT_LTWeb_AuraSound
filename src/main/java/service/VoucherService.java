@@ -40,10 +40,10 @@ public class VoucherService {
             throw new Exception("Mã giảm giá này đã hết hạn sử dụng!");
         }
 
-//        //Ktra số lần nhập còn lại
-//        if (voucher.getUsageLimit() <= 0) {
-//            throw new Exception("Mã giảm giá này đã hết lượt sử dụng!");
-//        }
+        //Ktra số lần nhập còn lại
+        if (voucher.getUsageLimit() <= 0) {
+            throw new Exception("Mã giảm giá này đã hết lượt sử dụng!");
+        }
 
         //Ktra gtri tối thiểu
         if (currentOrderTotal < voucher.getMinimumOrderAmount()) {
@@ -60,4 +60,7 @@ public class VoucherService {
             return voucherDAO.getVoucherByCode(code.trim().toUpperCase());
         }
 
+    public List<Voucher> getVouchersForUserWallet(int userId) {
+        return voucherDAO.getVouchersForUserWallet(userId);
+    }
     }

@@ -1,74 +1,105 @@
-// service/OrderService.java
 package service;
 
-import dao.CartDAO;
 import dao.OrderDAO;
 import dao.OrderItemDAO;
 import dao.OrderShippingDAO;
 import model.dto.CartItemDTO;
 import model.entity.Cart;
+import model.entity.Order;
+import model.entity.OrderItem;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class OrderService {
+
+    private static final Logger LOGGER = Logger.getLogger(OrderService.class.getName());
 
     private static final OrderDAO         orderDAO         = new OrderDAO();
     private static final OrderItemDAO     orderItemDAO     = new OrderItemDAO();
     private static final OrderShippingDAO orderShippingDAO = new OrderShippingDAO();
 
-
     public static int placeOrder(int    userId,
+                                 int    addressId,
                                  String recipientName,
                                  String phone,
                                  String city,
                                  String ward,
                                  String address,
+                                 int provinceId,
+                                 int districtId,
+                                 String wardCode,
                                  String notes,
                                  String voucherCode,
                                  List<Integer> selectedVariantIds) {
         try {
-            //Lấy ttin cart
             Cart cart = CartService.getOrCreateCartByUserId(userId);
-            int  cartId = cart.getId();
+            int cartId = cart.getId();
 
             List<CartItemDTO> allItems = CartService.getListItems(cartId);
-            if (allItems == null || allItems.isEmpty()) return -1;
+            if (allItems == null || allItems.isEmpty()) {
+                return -1;
+            }
 
-            //Lọc sp theo id đc chọn
             List<CartItemDTO> itemsToOrder;
             if (selectedVariantIds != null && !selectedVariantIds.isEmpty()) {
                 itemsToOrder = allItems.stream()
                         .filter(item -> selectedVariantIds.contains(item.getProductVariantId()))
                         .collect(Collectors.toList());
             } else {
-                itemsToOrder = allItems; // fallback
+                itemsToOrder = allItems;
             }
 
-            if (itemsToOrder.isEmpty()) return -1;
+            if (itemsToOrder.isEmpty()) {
+                return -1;
+            }
 
-            //Tính tiền
             double totalProductsPrice = itemsToOrder.stream()
                     .mapToDouble(CartItemDTO::getTotalItemPrice)
                     .sum();
-            double shippingFee        = 30_000;
+            double shippingFee        = 30000;
             double discountAmount     = 0;
             Integer vouchersId        = null;
 
-            //Nào có vouchers thì dùng
-            // if (voucherCode != null && !voucherCode.isBlank()) { ... }
+            if (voucherCode != null && !voucherCode.isBlank()) {
+                LOGGER.log(Level.INFO, "Using voucher code: {0}", voucherCode);
+                try {
+                    service.VoucherService voucherService = new service.VoucherService();
+                    model.entity.Voucher voucher = voucherService.validateVoucher(voucherCode, totalProductsPrice);
+                    if (voucher != null) {
+                        vouchersId = voucher.getId();
+                        discountAmount = voucher.getDiscountAmount();
+                    }
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "Voucher không đủ điều kiện: {0}", e.getMessage());
+                }
+            }
 
             double finalAmount = totalProductsPrice + shippingFee - discountAmount;
+            if (finalAmount < 0) {
+                finalAmount = 0;
+            }
 
-            //Tạo đơn mới
             int orderId = orderDAO.createOrder(
                     userId, vouchersId,
                     totalProductsPrice, shippingFee,
                     discountAmount, finalAmount
             );
-            if (orderId <= 0) return -1;
+            if (orderId <= 0) {
+                return -1;
+            }
 
-            //Lưu sp
+            if (vouchersId != null) {
+                new service.VoucherService().decreaseUsageLimit(vouchersId);
+                LOGGER.log(Level.INFO, "Đã trừ 1 lượt sử dụng cho voucher ID: {0}", vouchersId);
+            }
+
             for (CartItemDTO item : itemsToOrder) {
                 orderItemDAO.insertOrderItem(
                         orderId,
@@ -78,25 +109,82 @@ public class OrderService {
                 );
             }
 
-            // Lưu địa chỉ
+            int userAddressId = addressId;
             String fullAddress = address + ", " + ward + ", " + city;
+            if (userAddressId <= 0) {
+                userAddressId = orderShippingDAO.insertUserAddress(
+                        userId, recipientName, phone, city, fullAddress, provinceId, districtId, wardCode
+                );
+            }
 
-            int userAddressId = orderShippingDAO.insertUserAddress(
-                    userId, recipientName, phone, city, fullAddress
-            );
+            String shippingOrderCode = "";
+            try {
+                Order mockOrder = new Order();
+                mockOrder.setFinalAmount(java.math.BigDecimal.valueOf(finalAmount));
+
+                List<OrderItem> mockItems = new ArrayList<>();
+                for (CartItemDTO item : itemsToOrder) {
+                    OrderItem oi = new OrderItem();
+
+                    String productNameTmp = "AuraSound Equipment";
+                    if (item.getName() != null && !item.getName().trim().isEmpty()) {
+                        productNameTmp = item.getName();
+                    }
+
+                    oi.setProductName(productNameTmp);
+                    oi.setQuantity(item.getQuantity());
+                    mockItems.add(oi);
+                }
+                mockOrder.setItems(mockItems);
+
+                String ghnResponse = GHNService.createShippingOrder(
+                        mockOrder, recipientName, phone, fullAddress, city, wardCode, districtId
+                );
+
+                if (ghnResponse != null && ghnResponse.trim().startsWith("{")) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObj = gson.fromJson(ghnResponse, JsonObject.class);
+
+                    int ghnCode = jsonObj.has("code") ? jsonObj.get("code").getAsInt() : 0;
+
+                    if (ghnCode == 200 && jsonObj.has("data") && !jsonObj.get("data").isJsonNull()) {
+                        JsonObject dataObj = jsonObj.getAsJsonObject("data");
+                        if (dataObj.has("order_code") && !dataObj.get("order_code").isJsonNull()) {
+                            shippingOrderCode = dataObj.get("order_code").getAsString();
+                        }
+                    } else {
+                        String errorMsg = jsonObj.has("message") ? jsonObj.get("message").getAsString() : "Unknown business error";
+                        LOGGER.log(Level.WARNING, "GHN API Business Refusal (Code {0}): {1}", new Object[]{ghnCode, errorMsg});
+                    }
+                } else {
+                    LOGGER.log(Level.SEVERE, "GHN API Endpoint error or invalid response format. Raw Response: {0}", ghnResponse);
+                }
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Exception occurred during GHNService communication layer", e);
+            }
 
             orderShippingDAO.insertOrderShipping(orderId, userAddressId, notes);
 
-            // Xóa giỏ sau khi mua
-            for (CartItemDTO item : itemsToOrder) {
-                CartService.deleteItem(cartId, item.getProductVariantId());
+            if (shippingOrderCode != null && !shippingOrderCode.trim().isEmpty()) {
+                orderDAO.updateShippingOrderCode(orderId, shippingOrderCode);
+                LOGGER.info("GHN integration completed successfully. Order code: " + shippingOrderCode);
+            } else {
+                LOGGER.warning("Internal order created successfully, but syncing with GHN failed.");
             }
 
             return orderId;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Critical exception caught in placeOrder logic flow", e);
             return -1;
         }
+    }
+
+    public Order getAdminOrderDetailById(String id) {
+        return orderDAO.getAdminOrderDetailById(id);
+    }
+
+    public List<OrderItem> getAdminOrderItemsByOrderId(String orderId) {
+        return orderDAO.getAdminOrderItemsByOrderId(orderId);
     }
 }

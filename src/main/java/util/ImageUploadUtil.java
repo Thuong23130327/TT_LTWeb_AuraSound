@@ -13,11 +13,9 @@ public class ImageUploadUtil {
 
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
     
-
     private static final String[] ALLOWED_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"};
     
-
-    private static final String AVATAR_UPLOAD_DIR = "img/avatars";
+    private static final String AVATAR_UPLOAD_DIR = "assets/img/avatar";
 
     public static String uploadAvatar(Part part, String uploadBasePath) {
         if (part == null) {

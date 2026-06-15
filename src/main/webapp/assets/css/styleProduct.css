@@ -947,3 +947,29 @@ textarea {
 #rate-1:checked + .btn-very-bad {
     background-color: rgb(54, 86, 209);
 }
+/* Trạng thái mặc định: Trắng đen */
+.btn-back-custom {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 16px;
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #333333;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-back-custom i {
+    margin-right: 6px;
+    font-size: 16px;
+}
+
+/* Trạng thái khi di chuột (hover) */
+.btn-back-custom:hover {
+    background: var(--theme-gradient-button);
+    color: #ffffff;
+    border-color: transparent;
+}

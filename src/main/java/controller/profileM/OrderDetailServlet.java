@@ -11,6 +11,7 @@ import model.entity.OrderItem;
 import model.entity.OrderShipping;
 import model.entity.User;
 import service.ProfileService;
+import service.GHNService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -71,10 +72,20 @@ public class OrderDetailServlet extends HttpServlet {
 
             User userDetail = profileService.getUserById(user.getId());
 
+            String shippingLogJson = null;
+            if (order.getShippingOrderCode() != null && !order.getShippingOrderCode().isEmpty()) {
+                try {
+                    shippingLogJson = GHNService.getOrderLogProgress(order.getShippingOrderCode());
+                } catch (Exception e) {
+                    System.out.println("Error fetching GHN logs: " + e.getMessage());
+                }
+            }
+
             request.setAttribute("userDetail", userDetail);
             request.setAttribute("order", order);
             request.setAttribute("orderItems", orderItems);
             request.setAttribute("orderShipping", orderShipping);
+            request.setAttribute("shippingLogJson", shippingLogJson);
 
             request.getRequestDispatcher("/WEB-INF/views/profileM/order-detail.jsp")
                     .forward(request, response);

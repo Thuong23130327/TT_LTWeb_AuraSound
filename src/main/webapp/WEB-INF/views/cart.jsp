@@ -53,14 +53,16 @@
 
                             <%-- Main: ảnh + tên + dropdown màu + giá --%>
                         <div class="item-main">
+                            <a href="${pageContext.request.contextPath}/detail?pid=${item.productId}" title="Xem chi tiết ${item.name}">
                             <img class="item-img"
                                  id="img-${item.productVariantId}"
                                  src="${item.img}"
                                  alt="${item.name}">
-
+                            </a>
                             <div class="item-details">
+                                <a href="${pageContext.request.contextPath}/detail?pid=${item.productId}" style="text-decoration: none; color: inherit;">
                                 <h4>${item.name}</h4>
-
+                                </a>
                                     <%-- Dropdown chọn màu --%>
                                 <c:if test="${not empty item.variantOptions}">
                                     <div class="variant-selector-wrapper"
@@ -165,5 +167,18 @@
 </script>
 <%--<script src="${pageContext.request.contextPath}/assets/js/script.js"></script>--%>
 <script src="${pageContext.request.contextPath}/assets/js/scriptCart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('buyAgain') === 'true') {
+            document.querySelectorAll('.item-check').forEach(chk => {
+                chk.checked = true;
+            });
+            if (typeof recalculateCart === 'function') {
+                recalculateCart();
+            }
+        }
+    });
+</script>
 </body>
 </html>
