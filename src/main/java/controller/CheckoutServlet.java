@@ -57,6 +57,12 @@ public class CheckoutServlet extends HttpServlet {
                 } catch (NumberFormatException ignored) {
                 }
             }
+            request.getSession().setAttribute("checkoutSelectedIds", selectedIds);
+        } else {
+            Object sessionIds = request.getSession().getAttribute("checkoutSelectedIds");
+            if (sessionIds instanceof List) {
+                selectedIds = (List<Integer>) sessionIds;
+            }
         }
 
         // Lấy ds sp
