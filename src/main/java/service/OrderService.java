@@ -70,9 +70,22 @@ public class OrderService {
 
             if (voucherCode != null && !voucherCode.isBlank()) {
                 LOGGER.log(Level.INFO, "Using voucher code: {0}", voucherCode);
+                try {
+                    service.VoucherService voucherService = new service.VoucherService();
+                    model.entity.Voucher voucher = voucherService.validateVoucher(voucherCode, totalProductsPrice);
+                    if (voucher != null) {
+                        vouchersId = voucher.getId();
+                        discountAmount = voucher.getDiscountAmount();
+                    }
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "Voucher không đủ điều kiện: {0}", e.getMessage());
+                }
             }
 
             double finalAmount = totalProductsPrice + shippingFee - discountAmount;
+            if (finalAmount < 0) {
+                finalAmount = 0;
+            }
 
             int orderId = orderDAO.createOrder(
                     userId, vouchersId,
@@ -81,6 +94,11 @@ public class OrderService {
             );
             if (orderId <= 0) {
                 return -1;
+            }
+
+            if (vouchersId != null) {
+                new service.VoucherService().decreaseUsageLimit(vouchersId);
+                LOGGER.log(Level.INFO, "Đã trừ 1 lượt sử dụng cho voucher ID: {0}", vouchersId);
             }
 
             for (CartItemDTO item : itemsToOrder) {
