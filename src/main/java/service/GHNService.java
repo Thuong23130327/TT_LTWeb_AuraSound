@@ -2,6 +2,8 @@ package service;
 
 import model.entity.Order;
 import model.entity.OrderItem;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,6 +14,7 @@ public class GHNService {
     private static final String TOKEN = "dffec2e1-6725-11f1-a973-aee5264794df";
     private static final String SHOP_ID = "200679";
     private static final String BASE_URL = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2";
+    private static final int FROM_DISTRICT_ID = 1442; // Đồng bộ quận gửi từ hàm tính phí ship của bạn
 
     // đồng bộ thông tin đơn hàng sang GHN
     public static String createShippingOrder(Order order, String recipientName, String phone, String address, String city, String wardCode, int districtId) throws Exception {
@@ -88,32 +91,67 @@ public class GHNService {
         return response.body();
     }
 
-    //tính phí ship
+    // tính phí ship
     public static int calculateShippingFee(int toDistrictId, String toWardCode, int weightInGrams) throws Exception {
-        String endpoint = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+        String endpoint = BASE_URL + "/shipping-order/fee";
 
         String json = "{"
-                + "\"from_district_id\": 1442,"
+                + "\"from_district_id\": " + FROM_DISTRICT_ID + ","
                 + "\"to_district_id\": " + toDistrictId + ","
                 + "\"to_ward_code\": \"" + toWardCode + "\","
                 + "\"weight\": " + weightInGrams + ","
                 + "\"service_type_id\": 2"
                 + "}";
 
-        java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
-        java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
-                .uri(java.net.URI.create(endpoint))
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(endpoint))
                 .header("Content-Type", "application/json")
-                .header("Token", "dffec2e1-6725-11f1-a973-aee5264794df") // Token của bạn
-                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(json))
+                .header("Token", TOKEN)
+                .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
-        java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        com.google.gson.JsonObject jsonObject = com.google.gson.JsonParser.parseString(response.body()).getAsJsonObject();
+        JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
         if (jsonObject.get("code").getAsInt() == 200) {
             return jsonObject.getAsJsonObject("data").get("total").getAsInt();
         }
         return 30000;
+    }
+
+    // dự đoán thời gian nhận hàng
+    public static long getExpectedDeliveryDate(int toDistrictId, String toWardCode) throws Exception {
+        String endpoint = BASE_URL + "/shipping-order/leadtime";
+
+        String json = "{"
+                + "\"from_district_id\": " + FROM_DISTRICT_ID + ","
+                + "\"from_ward_code\": \"20101\","
+                + "\"to_district_id\": " + toDistrictId + ","
+                + "\"to_ward_code\": \"" + toWardCode + "\","
+                + "\"service_id\": 53320"
+                + "}";
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(endpoint))
+                .header("Content-Type", "application/json")
+                .header("Token", TOKEN)
+                .header("ShopId", SHOP_ID)
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+        if (jsonObject.get("code").getAsInt() == 200) {
+            long leadtime = jsonObject.getAsJsonObject("data").get("leadtime").getAsLong();
+            if (leadtime > 0) {
+                return leadtime;
+            }
+        }
+        
+        // Nếu API trả về 0 hoặc lỗi, giả định thời gian giao hàng là 3 ngày sau
+        return (System.currentTimeMillis() / 1000) + (3 * 24 * 60 * 60);
     }
 }

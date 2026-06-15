@@ -28,6 +28,7 @@ public class Order {
     private List<OrderItem> items;
 
     private String shippingOrderCode;
+    private java.time.LocalDateTime expectedDeliveryDate;
 
     //Thông tin cho admin
     private String shippingPhone;
@@ -232,6 +233,14 @@ public class Order {
     public String getShippingNote() { return shippingNote; }
     public void setShippingNote(String shippingNote) { this.shippingNote = shippingNote; }
 
+    @ColumnName("expected_delivery_date")
+    public java.time.LocalDateTime getExpectedDeliveryDate() {
+        return expectedDeliveryDate;
+    }
+
+    public void setExpectedDeliveryDate(java.time.LocalDateTime expectedDeliveryDate) {
+        this.expectedDeliveryDate = expectedDeliveryDate;
+    }
     //Định dạng ngày/h vn cho chi tiết đơn ở trong qly đơn
     public String getFormattedOrderDate() {
         if (this.orderDate == null) return "";

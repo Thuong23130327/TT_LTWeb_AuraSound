@@ -159,30 +159,35 @@ public class OrderDAO {
 
     // Tạo đơn mới
     public int createOrder(int userId, Integer vouchersId,
-            double totalProductsPrice, double shippingFee,
-            double discountAmount, double finalAmount) {
+                           double totalProductsPrice, double shippingFee,
+                           double discountAmount, double finalAmount,
+                           java.time.LocalDateTime expectedDeliveryDate) { // Thêm tham số này
 
         String orderCode = "ORD-" + java.util.UUID.randomUUID()
                 .toString()
                 .substring(0, 8)
                 .toUpperCase();
+
         return jdbi.withHandle(handle -> {
             handle.createUpdate(
-                    "INSERT INTO orders " +
-                            "  (users_id, vouchers_id, order_code, order_date, " +
-                            "   status, payment_status, " +
-                            "   total_products_price, shipping_fee, discount_amount, final_amount) " +
-                            "VALUES " +
-                            "  (:userId, :vouchersId, :orderCode, NOW(), " +
-                            "   0, 0, " + // 0 = PENDING
-                            "   :totalProductsPrice, :shippingFee, :discountAmount, :finalAmount)")
+                            "INSERT INTO orders " +
+                                    "  (users_id, vouchers_id, order_code, order_date, " +
+                                    "   status, payment_status, " +
+                                    "   total_products_price, shipping_fee, discount_amount, final_amount, " +
+                                    "   expected_delivery_date) " +
+                                    "VALUES " +
+                                    "  (:userId, :vouchersId, :orderCode, NOW(), " +
+                                    "   0, 0, " +
+                                    "   :totalProductsPrice, :shippingFee, :discountAmount, :finalAmount, " +
+                                    "   :expectedDeliveryDate)")
                     .bind("userId", userId)
-                    .bind("vouchersId", vouchersId) // null nếu ko sài voucher
+                    .bind("vouchersId", vouchersId)
                     .bind("orderCode", orderCode)
                     .bind("totalProductsPrice", totalProductsPrice)
                     .bind("shippingFee", shippingFee)
                     .bind("discountAmount", discountAmount)
                     .bind("finalAmount", finalAmount)
+                    .bind("expectedDeliveryDate", expectedDeliveryDate) // Thực hiện bind dữ liệu
                     .execute();
 
             return handle.createQuery("SELECT LAST_INSERT_ID()")

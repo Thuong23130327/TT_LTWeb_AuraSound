@@ -135,6 +135,19 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.status === 'success') {
                 currentShippingFee = parseFloat(data.fee);
                 updateTotalDisplay(appliedDiscountAmount);
+                
+                const expectedDateEl = document.getElementById('expected-delivery-date');
+                if (expectedDateEl) {
+                    if (data.leadtime && data.leadtime > 0) {
+                        const date = new Date(data.leadtime * 1000);
+                        const day = ("0" + date.getDate()).slice(-2);
+                        const month = ("0" + (date.getMonth() + 1)).slice(-2);
+                        const year = date.getFullYear();
+                        expectedDateEl.innerText = `${day}/${month}/${year}`;
+                    } else {
+                        expectedDateEl.innerText = 'Không xác định';
+                    }
+                }
             }
         } catch (e) {
             console.error('Lỗi tính phí ship:', e);
