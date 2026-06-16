@@ -47,6 +47,13 @@ public class ContextLoaderListener implements ServletContextListener {
         context.setAttribute("MENU_TREE", rootCategories);
         context.setAttribute("AuraSound", context.getContextPath());
 
+        try {
+            dao.FooterLinkDAO footerDao = new dao.FooterLinkDAO();
+            context.setAttribute("footerLinks", footerDao.getAll());
+        } catch (Exception e) {
+            System.err.println("Chưa tạo FooterLinkDAO hoặc lỗi nạp Footer: " + e.getMessage());
+        }
+
     }
 
     @Override

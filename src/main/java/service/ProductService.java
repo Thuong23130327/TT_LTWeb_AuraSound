@@ -43,10 +43,8 @@ public class ProductService {
 
 
     public List<Banner> getListBanner() {
-        return bannerDAO.getAll();
-
+        return bannerDAO.getActiveBanners();
     }
-
     public List<Brand> getListBrands() {
         return brandDAO.getAll();
 

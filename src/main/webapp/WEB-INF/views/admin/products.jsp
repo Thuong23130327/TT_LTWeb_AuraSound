@@ -32,13 +32,11 @@
     <div class="row">
         <jsp:include page="/WEB-INF/tag/_adminMenu.jsp"/>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-3 px-md-4">
-            <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-4 pb-2 border-bottom">
-                <h2 class="h2 section-title text-primary">
-                    Quản lý Sản phẩm
-                </h2>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-3">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">Quản lý Sản phẩm</h2>
             </div>
+
 
             <p class="text-muted">Sửa, xóa sản phẩm và quản lý xuất nhập hàng.</p>
             <div class="card shadow-sm">
@@ -109,7 +107,6 @@
 
 <script>
     $(document).ready(function () {
-        // 1. Khởi tạo DataTables
         var table = $('#productTable').DataTable({
             "paging": true,
             "lengthChange": true,
@@ -125,7 +122,7 @@
         $('#productTable thead tr').clone(true).appendTo('#productTable thead');
         $('#productTable thead tr:eq(1) th').each(function (i) {
             var title = $(this).text();
-            if (title !== 'Thao tác' && title !== 'Stt') { // Không thêm lọc cho cột thao tác/stt
+            if (title !== 'Thao tác' && title !== 'Stt') {
                 $(this).html('<input type="text" class="form-control form-control-sm" placeholder="Lọc ' + title + '" />');
 
                 $('input', this).on('keyup change', function () {
