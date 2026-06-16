@@ -22,7 +22,14 @@ public class CategoryDAO {
         return jdbi.withHandle(handle ->
                 handle.createUpdate("DELETE FROM categories WHERE id = :id").bind("id", id).execute() > 0);
     }
-    
+    public boolean update(int id, String name, Integer parentId) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE categories SET name = :name, parent_id = :parentId WHERE id = :id")
+                        .bind("id", id)
+                        .bind("name", name)
+                        .bind("parentId", parentId)
+                        .execute() > 0);
+    }
     public Category getCategoryById(int id) {
         String sql = "SELECT id, name, parents_id FROM Categories WHERE id = :id";
             return jdbi.withHandle(handle ->

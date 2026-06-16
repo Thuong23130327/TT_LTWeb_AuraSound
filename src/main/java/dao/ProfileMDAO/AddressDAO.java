@@ -11,7 +11,7 @@ public class AddressDAO {
 
     public List<UserAddress> getUserAddresses(int userId) {
         return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM user_addresses WHERE users_id = :userId ORDER BY is_default DESC, id DESC")
+                handle.createQuery("SELECT * FROM useraddresses WHERE users_id = :userId ORDER BY is_default DESC, id DESC")
                         .bind("userId", userId)
                         .mapToBean(UserAddress.class)
                         .list()
@@ -20,7 +20,7 @@ public class AddressDAO {
 
     public UserAddress getAddressById(int addressId) {
         return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM user_addresses WHERE id = :id")
+                handle.createQuery("SELECT * FROM useraddresses WHERE id = :id")
                         .bind("id", addressId)
                         .mapToBean(UserAddress.class)
                         .findFirst()
@@ -37,7 +37,7 @@ public class AddressDAO {
 
     public int getAddressCount(int userId) {
         return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT COUNT(*) FROM user_addresses WHERE users_id = :userId")
+                handle.createQuery("SELECT COUNT(*) FROM useraddresses WHERE users_id = :userId")
                         .bind("userId", userId)
                         .mapTo(Integer.class)
                         .findFirst()
@@ -49,7 +49,7 @@ public class AddressDAO {
     public boolean createAddress(UserAddress address) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate(
-                        "INSERT INTO user_addresses (users_id, recipient_name, phone, address, city, province_id, district_id, ward_code, is_default) " +
+                        "INSERT INTO useraddresses (users_id, recipient_name, phone, address, city, province_id, district_id, ward_code, is_default) " +
                         "VALUES (:userId, :recipientName, :phone, :address, :city, :provinceId, :districtId, :wardCode, :isDefault)"
                 )
                         .bind("userId", address.getUserId())
@@ -68,7 +68,7 @@ public class AddressDAO {
     public boolean updateAddress(UserAddress address) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate(
-                        "UPDATE user_addresses SET recipient_name = :recipientName, phone = :phone, " +
+                        "UPDATE useraddresses SET recipient_name = :recipientName, phone = :phone, " +
                         "address = :address, city = :city, province_id = :provinceId, district_id = :districtId, ward_code = :wardCode, is_default = :isDefault WHERE id = :id"
                 )
                         .bind("id", address.getId())
@@ -86,7 +86,7 @@ public class AddressDAO {
 
     public boolean deleteAddress(int addressId) {
         return jdbi.withHandle(handle ->
-                handle.createUpdate("DELETE FROM user_addresses WHERE id = :id")
+                handle.createUpdate("DELETE FROM useraddresses WHERE id = :id")
                         .bind("id", addressId)
                         .execute() > 0
         );
@@ -95,12 +95,12 @@ public class AddressDAO {
     public boolean setDefaultAddress(int addressId, int userId) {
         return jdbi.withHandle(handle -> {
             // First, unset all other defaults for this user
-            handle.createUpdate("UPDATE user_addresses SET is_default = false WHERE users_id = :userId")
+            handle.createUpdate("UPDATE useraddresses SET is_default = false WHERE users_id = :userId")
                     .bind("userId", userId)
                     .execute();
 
             // Then, set the new default
-            return handle.createUpdate("UPDATE user_addresses SET is_default = true WHERE id = :id AND users_id = :userId")
+            return handle.createUpdate("UPDATE useraddresses SET is_default = true WHERE id = :id AND users_id = :userId")
                     .bind("id", addressId)
                     .bind("userId", userId)
                     .execute() > 0;
@@ -110,7 +110,7 @@ public class AddressDAO {
 
     public UserAddress getDefaultAddress(int userId) {
         return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM user_addresses WHERE users_id = :userId AND is_default = true LIMIT 1")
+                handle.createQuery("SELECT * FROM useraddresses WHERE users_id = :userId AND is_default = true LIMIT 1")
                         .bind("userId", userId)
                         .mapToBean(UserAddress.class)
                         .findFirst()

@@ -25,4 +25,14 @@ public class FooterLinkDAO {
         String sql = "SELECT * FROM footer_links ORDER BY sort_order ASC";
         return jdbi.withHandle(handle -> handle.createQuery(sql).mapToBean(FooterLink.class).list());
     }
+
+    public boolean update(int id, String title, String targetUrl, int sortOrder) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE footer_links SET title = :title, target_url = :targetUrl, sort_order = :sortOrder WHERE id = :id")
+                        .bind("id", id)
+                        .bind("title", title)
+                        .bind("targetUrl", targetUrl)
+                        .bind("sortOrder", sortOrder)
+                        .execute() > 0);
+    }
 }

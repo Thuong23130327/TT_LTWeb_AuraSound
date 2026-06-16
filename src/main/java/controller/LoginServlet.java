@@ -36,6 +36,7 @@ public class LoginServlet extends HttpServlet {
                 String access = gg.getToken(code);
                 GoogleAccount acc = gg.getUserInfo(access);
                 UserService userService = new UserService();
+
                 User user = userService.getUserByEmail(acc.getEmail());
 
                 //Kiểm tra giỏ hàng
@@ -43,6 +44,7 @@ public class LoginServlet extends HttpServlet {
                     String randomPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
                     String fullName = acc.getName() != null ? acc.getName() : acc.getEmail().split("@")[0];
                     int registerStatus = userService.register(acc.getEmail(), randomPassword, fullName);
+
                     if (registerStatus == 1) {
                         user = userService.getUserByEmail(acc.getEmail());
                     } else {
@@ -81,6 +83,18 @@ public class LoginServlet extends HttpServlet {
 //                    response.sendRedirect("home");
 //                    return;
 //                }
+
+                Cart userCart = CartService.getOrCreateCartByUserId(user.getId());
+                int currentCartQty = CartService.getTotalQuantity(userCart.getId());
+                session.setAttribute("cartQty", currentCartQty);
+
+                if (user.isAdminOrStaff()) {
+                    session.setAttribute("author", user);
+                    response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/home");
+                }
+                return;
 
             } catch (Exception e) {
                 e.printStackTrace();

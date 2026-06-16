@@ -19,45 +19,66 @@ import java.util.*;
 public class VnPayReturnServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, String> fields = new HashMap<>();
+        String vnp_SecureHash = request.getParameter("vnp_SecureHash");
+
+        Map<String, String> fields = new TreeMap<>();
         for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements(); ) {
-            String fieldName = URLEncoder.encode(params.nextElement(), StandardCharsets.US_ASCII.toString());
-            String fieldValue = URLEncoder.encode(request.getParameter(fieldName), StandardCharsets.US_ASCII.toString());
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                fields.put(fieldName, fieldValue);
+            String paramName = params.nextElement();
+            if (paramName.startsWith("vnp_")
+                    && !paramName.equals("vnp_SecureHash")
+                    && !paramName.equals("vnp_SecureHashType")) {
+                fields.put(paramName, request.getParameter(paramName));
             }
         }
 
-        String vnp_SecureHash = request.getParameter("vnp_SecureHash");
-        if (fields.containsKey("vnp_SecureHashType")) fields.remove("vnp_SecureHashType");
-        if (fields.containsKey("vnp_SecureHash")) fields.remove("vnp_SecureHash");
-
-        List<String> fieldNames = new ArrayList<>(fields.keySet());
-        Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
-        Iterator<String> itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = itr.next();
-            String fieldValue = fields.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                hashData.append(fieldName).append("=").append(fieldValue);
-                if (itr.hasNext()) hashData.append("&");
+        boolean first = true;
+        for (Map.Entry<String, String> entry : fields.entrySet()) {
+            if (entry.getValue() != null && !entry.getValue().isEmpty()) {
+                if (!first) hashData.append('&');
+                hashData.append(entry.getKey())
+                        .append('=')
+                        .append(URLEncoder.encode(entry.getValue(),
+                                StandardCharsets.UTF_8.toString()));
+                first = false;
             }
         }
 
         String signValue = VnPayConfig.hmacSHA512(VnPayConfig.vnp_HashSecret, hashData.toString());
 
-        String orderIdStr = request.getParameter("vnp_TxnRef");
+        String txnRef = request.getParameter("vnp_TxnRef");
+        String orderIdStr = (txnRef != null && txnRef.contains("_")) ? txnRef.split("_")[0] : txnRef;
         int orderId = Integer.parseInt(orderIdStr);
         OrderDAO orderDAO = new OrderDAO();
 
-        if (signValue.equals(vnp_SecureHash)) {
+        if (signValue.equalsIgnoreCase(vnp_SecureHash)) {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
                 orderDAO.updatePaymentStatus(orderId, 1);
 
                 Order order = orderDAO.getOrderById(orderIdStr);
                 List<OrderItem> orderItems = orderDAO.getAllOrdersItem(orderIdStr);
+
+                HttpSession session = request.getSession(false);
+                model.entity.User auth = (session != null)
+                        ? (model.entity.User) session.getAttribute("auth")
+                        : null;
+
+                if (auth == null) {
+                    response.sendRedirect(request.getContextPath() + "/login");
+                    return;
+                }
+
+                int userId = auth.getId();
                 Cart cart = CartService.getOrCreateCartByUserId(order.getUserId());
+
+                System.out.println("=== VNPAY CART CLEAR DEBUG ===");
+                System.out.println("OrderId: " + orderId);
+                System.out.println("UserId: " + order.getUserId());
+                System.out.println("CartId: " + cart.getId());
+                System.out.println("OrderItems count: " + orderItems.size());
+                for (OrderItem item : orderItems) {
+                    System.out.println("  Item productVariant: " + (item.getProductVariant() != null ? item.getProductVariant().getId() : "NULL!"));
+                }
                 for (OrderItem item : orderItems) {
                     CartService.deleteItem(cart.getId(), item.getProductVariant().getId());
                 }
@@ -66,13 +87,20 @@ public class VnPayReturnServlet extends HttpServlet {
                 request.getSession().setAttribute("cartQty", currentQty);
 
                 response.sendRedirect(request.getContextPath() + "/checkout?vnpay=success&orderId=" + orderId);
+                //Hủy or ck thất bại
             } else {
-                //hủy or ck thất bại
-                orderDAO.updateOrderStatus(orderId, 3); // 3: CANCELLED
+                orderDAO.updateOrderStatus(orderId, 3);
                 response.sendRedirect(request.getContextPath() + "/checkout?vnpay=cancel");
             }
+        } else {
+            System.out.println("=== VNPAY HASH MISMATCH ===");
+            System.out.println("Expected: " + signValue);
+            System.out.println("Received: " + vnp_SecureHash);
+            System.out.println("HashData: " + hashData);
+            response.sendRedirect(request.getContextPath() + "/checkout?vnpay=invalid_hash");
         }
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

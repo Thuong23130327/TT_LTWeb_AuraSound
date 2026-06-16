@@ -15,7 +15,7 @@ public class OrderDAO {
         String sql = "SELECT o.*, ua.recipient_name AS recipient_name " +
                 "FROM orders o " +
                 "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
-                "LEFT JOIN user_addresses ua ON os.useraddresses_id = ua.id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
                 "ORDER BY o.order_date DESC;";
 
         return jdbi.withHandle(handle -> handle.createQuery(sql)
@@ -28,7 +28,7 @@ public class OrderDAO {
         String sql = "SELECT o.*, ua.recipient_name AS recipient_name " +
                 "FROM orders o " +
                 "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
-                "LEFT JOIN user_addresses ua ON os.useraddresses_id = ua.id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
                 "WHERE o.id = :id";
 
         return jdbi.withHandle(handle -> handle.createQuery(sql)
@@ -66,7 +66,7 @@ public class OrderDAO {
         String sql = "SELECT o.*, ua.recipient_name AS recipient_name " +
                 "FROM orders o " +
                 "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
-                "LEFT JOIN user_addresses ua ON os.useraddresses_id = ua.id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
                 "WHERE o.users_id = :uid " +
                 "ORDER BY o.order_date DESC";
 
@@ -90,7 +90,7 @@ public class OrderDAO {
         String sql = "SELECT o.*, ua.recipient_name AS recipient_name " +
                 "FROM orders o " +
                 "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
-                "LEFT JOIN user_addresses ua ON os.useraddresses_id = ua.id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
                 "WHERE o.users_id = :uid AND o.status = :status " +
                 "ORDER BY o.order_date DESC";
 
@@ -240,7 +240,7 @@ public class OrderDAO {
                 "os.note AS shipping_note " +
                 "FROM orders o " +
                 "LEFT JOIN ordershippings os ON o.id = os.orders_id " +
-                "LEFT JOIN user_addresses ua ON os.useraddresses_id = ua.id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
                 "LEFT JOIN users u ON o.users_id = u.id " +
                 "WHERE o.id = :id";
 

@@ -149,7 +149,7 @@
                         Tổng tiền: <strong><%= amountStr %></strong>
                     </div>
                     <div class="modern-order-actions">
-                        <a href="${pageContext.request.contextPath}/order-detail?id=<%= order.getId() %>" class="btn-outline">Xem chi tiết</a>
+                        <a href="${pageContext.request.contextPath}/order-detail-success?id=<%= order.getOrderCode() %>" class="btn">Xem chi tiết</a>
                         <% if (statusValue == 0) { %>
                             <button class="btn-outline btn-danger btn-cancel-order" data-id="<%= order.getId() %>">Hủy đơn</button>
                         <% } %>
@@ -173,7 +173,7 @@
     </div>
 </main>
 
-<!-- ===== MODAL XÁC NHẬN HỦY ĐƠN ===== -->
+<!--MODAL XÁC NHẬN HỦY ĐƠN-->
 <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -193,7 +193,7 @@
     </div>
 </div>
 
-<!-- ===== MODAL ĐÁNH GIÁ SẢN PHẨM ===== -->
+<!--MODAL ĐÁNH GIÁ SẢN PHẨM-->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

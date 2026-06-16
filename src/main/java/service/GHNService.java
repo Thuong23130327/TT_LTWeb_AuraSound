@@ -4,17 +4,36 @@ import model.entity.Order;
 import model.entity.OrderItem;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Properties;
 
 public class GHNService {
 
-    private static final String TOKEN = "dffec2e1-6725-11f1-a973-aee5264794df";
-    private static final String SHOP_ID = "200679";
+    private static String TOKEN;
+    private static String SHOP_ID;
     private static final String BASE_URL = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2";
     private static final int FROM_DISTRICT_ID = 1442; // Đồng bộ quận gửi từ hàm tính phí ship của bạn
+
+
+    static {
+        try (InputStream input = GHNService.class.getClassLoader().getResourceAsStream("ghn.properties")) {
+            Properties prop = new Properties();
+            if (input == null) {
+                System.err.println("Cảnh báo: Không tìm thấy file ghn.properties trong thư mục resources!");
+            } else {
+                prop.load(input);
+                TOKEN = prop.getProperty("ghn.api.token");
+                SHOP_ID = prop.getProperty("ghn.shop.id");
+            }
+        } catch (Exception ex) {
+            System.err.println("Lỗi khi đọc file ghn.properties: " + ex.getMessage());
+        }
+    }
 
     // đồng bộ thông tin đơn hàng sang GHN
     public static String createShippingOrder(Order order, String recipientName, String phone, String address, String city, String wardCode, int districtId) throws Exception {

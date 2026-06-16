@@ -157,5 +157,13 @@ public class User {
         }
         return false;
     }
-
+    public String getFormattedCreatedAt() {
+        if (this.createdAt == null) return "";
+        try {
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            return this.createdAt.format(formatter);
+        } catch (Exception e) {
+            return this.createdAt.toString().replace("T", " ");
+        }
+    }
 }

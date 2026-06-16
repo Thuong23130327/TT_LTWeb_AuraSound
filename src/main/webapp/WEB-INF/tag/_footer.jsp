@@ -17,16 +17,14 @@
       <p class="pt-3">Với Aura Sound, âm nhạc không chỉ để nghe – mà là để cảm nhận. Mỗi nhịp điệu, mỗi giai
         điệu đều được tái hiện chân thực, giúp bạn thể hiện phong cách và cá tính qua từng thanh âm.</p>
     </div>
-    <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
-      <h5 class="pb-2">Featured</h5>
-      <ul class="text-uppercase list-unstyled">
-        <li><a href="${AuraSound}/">Tai nghe thể thao</a></li>
-        <li><a href="#">Tai nghe cao cấp</a></li>
-        <li><a href="#">Loa cao cấp</a></li>
-        <li><a href="#">Tai nghe SONY</a></li>
-        <li><a href="#">Loa JBL</a></li>
-      </ul>
-    </div>
+      <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
+          <h5 class="pb-2">Featured</h5>
+          <ul class="text-uppercase list-unstyled">
+              <c:forEach items="${footerLinks}" var="fl">
+                  <li><a href="${pageContext.request.contextPath}${fl.targetUrl}">${fl.title}</a></li>
+              </c:forEach>
+          </ul>
+      </div>
     <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
       <h5 class="pb-2">Liên Hệ</h5>
       <div>

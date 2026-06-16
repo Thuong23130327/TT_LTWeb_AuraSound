@@ -18,7 +18,16 @@ public class BrandDAO {
         BrandDAO dao = new BrandDAO();
         System.out.println(dao.getAll());
     }
-
+    public boolean update(int id, String name, String logoUrl) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE brands SET name = :name" +
+                                (logoUrl != null ? ", logo_url = :logoUrl" : "") +
+                                " WHERE id = :id")
+                        .bind("id", id)
+                        .bind("name", name)
+                        .bind("logoUrl", logoUrl)
+                        .execute() > 0);
+    }
     public boolean insert(String imageUrl, String targetUrl) {
         return jdbi.withHandle(handle ->
                 handle.createUpdate("INSERT INTO banners (image_url, target_url, is_active) VALUES (:img, :url, 1)")
