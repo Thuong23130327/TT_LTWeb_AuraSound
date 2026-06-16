@@ -75,7 +75,7 @@
               <tr>
                 <td><span class="code-badge">${o.orderCode}</span></td>
                 <td><strong>${o.recipientName}</strong></td>
-                <td class="text-muted" style="font-size: .85rem;">${o.orderDate}</td>
+                <td class="text-muted" style="font-size: .85rem; font-weight: 500;">${o.formattedOrderDate}</td>
                 <td class="text-danger fw-bold">
                   <fmt:formatNumber value="${o.finalAmount}" pattern="#,###"/> đ
                 </td>

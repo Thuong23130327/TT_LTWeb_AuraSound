@@ -37,7 +37,7 @@ public class AddressDAO {
 
     public int getAddressCount(int userId) {
         return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT COUNT(*) FROM user_addresses WHERE users_id = :userId")
+                handle.createQuery("SELECT COUNT(*) FROM useraddresses WHERE users_id = :userId")
                         .bind("userId", userId)
                         .mapTo(Integer.class)
                         .findFirst()
