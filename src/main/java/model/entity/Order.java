@@ -39,15 +39,15 @@ public class Order {
     //Get - set
 
     @Override
-	public String toString() {
-		return "Order [id=" + id + ", userId=" + userId + ", vouchersId=" + vouchersId + ", orderCode=" + orderCode
-				+ ", orderDate=" + orderDate + ", status=" + status + ", paymentStatus=" + paymentStatus
-				+ ", totalProductsPrice=" + totalProductsPrice + ", shippingFee=" + shippingFee + ", discountAmount="
-				+ discountAmount + ", finalAmount=" + finalAmount + ", adminNote=" + adminNote + ", finishedAt="
-				+ finishedAt + ", recipientName=" + recipientName + ", items=" + items + "]\n";
-	}
+    public String toString() {
+        return "Order [id=" + id + ", userId=" + userId + ", vouchersId=" + vouchersId + ", orderCode=" + orderCode
+                + ", orderDate=" + orderDate + ", status=" + status + ", paymentStatus=" + paymentStatus
+                + ", totalProductsPrice=" + totalProductsPrice + ", shippingFee=" + shippingFee + ", discountAmount="
+                + discountAmount + ", finalAmount=" + finalAmount + ", adminNote=" + adminNote + ", finishedAt="
+                + finishedAt + ", recipientName=" + recipientName + ", items=" + items + "]\n";
+    }
 
-	public int getId() {
+    public int getId() {
         return id;
     }
 
@@ -111,6 +111,7 @@ public class Order {
         return userId;
     }
 
+    @ColumnName("users_id")
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -122,6 +123,7 @@ public class Order {
     public void setStatus(int value) {
         this.status = OrderStatus.fromValue(value);
     }
+
     public OrderStatus getEOrderStatus() {
         return status;
     }
@@ -148,12 +150,15 @@ public class Order {
                 return "secondary";
         }
     }
+
     public int getPaymentStatus() {
         return paymentStatus != null ? paymentStatus.getValue() : 0;
     }
+
     public PaymentStatus getEPaymentStatus() {
         return paymentStatus;
     }
+
     public void setPaymentStatus(int value) {
         this.paymentStatus = PaymentStatus.fromValue(value);
     }
@@ -213,32 +218,57 @@ public class Order {
 
     //Nhóm Admin
     @ColumnName("shipping_phone")
-    public String getShippingPhone() { return shippingPhone; }
-    public void setShippingPhone(String shippingPhone) { this.shippingPhone = shippingPhone; }
+    public String getShippingPhone() {
+        return shippingPhone;
+    }
+
+    public void setShippingPhone(String shippingPhone) {
+        this.shippingPhone = shippingPhone;
+    }
 
     @ColumnName("shipping_address")
-    public String getShippingAddress() { return shippingAddress; }
-    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
 
     @ColumnName("shipping_city")
-    public String getShippingCity() { return shippingCity; }
-    public void setShippingCity(String shippingCity) { this.shippingCity = shippingCity; }
+    public String getShippingCity() {
+        return shippingCity;
+    }
+
+    public void setShippingCity(String shippingCity) {
+        this.shippingCity = shippingCity;
+    }
 
     @ColumnName("customer_email")
-    public String getCustomerEmail() { return customerEmail; }
-    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
 
     @ColumnName("shipping_note")
-    public String getShippingNote() { return shippingNote; }
-    public void setShippingNote(String shippingNote) { this.shippingNote = shippingNote; }
+    public String getShippingNote() {
+        return shippingNote;
+    }
+
+    public void setShippingNote(String shippingNote) {
+        this.shippingNote = shippingNote;
+    }
 
     //Định dạng ngày/h vn cho chi tiết đơn ở trong qly đơn
     public String getFormattedOrderDate() {
         if (this.orderDate == null) return "";
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            return this.orderDate.format(formatter);
-        } catch (Exception e) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                return this.orderDate.format(formatter);
+            } catch (Exception e) {
             return this.orderDate.toString().replace("T", " ");
         }
     }

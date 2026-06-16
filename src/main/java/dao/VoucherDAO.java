@@ -54,13 +54,13 @@ public class VoucherDAO {
 
     public List<Voucher> getVouchersForUserWallet(int userId) {
         String sql = "SELECT v.* FROM vouchers v " +
+                "LEFT JOIN orders o ON v.id = o.vouchers_id " +
+                "  AND o.users_id = :userId " +
+                "  AND o.status != 3 " +
                 "WHERE (v.end_date IS NULL OR v.end_date >= NOW()) " +
-                "AND v.usage_limit > 0 " +
-                "AND v.id NOT IN (" +
-                "    SELECT vouchers_id FROM orders " +
-                "    WHERE users_id = :userId AND vouchers_id IS NOT NULL " +
-                "    AND status != 3" +
-                ") ORDER BY v.discount_amount DESC";
+                "  AND v.usage_limit > 0 " +
+                "  AND o.id IS NULL " +
+                "ORDER BY v.discount_amount DESC";
 
         return jdbi.withHandle(handle -> handle.createQuery(sql)
                 .bind("userId", userId)

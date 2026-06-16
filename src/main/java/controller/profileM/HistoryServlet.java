@@ -39,6 +39,7 @@ public class HistoryServlet extends HttpServlet {
             request.setAttribute("historyOrders", historyOrders);
 
             request.getRequestDispatcher("/WEB-INF/views/profileM/order-history.jsp").forward(request, response);
+
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -119,7 +119,7 @@
                                                 <c:otherwise><span class="status-active"><i class="bi bi-check-circle-fill me-1"></i>Hoạt động</span></c:otherwise>
                                             </c:choose>
                                         </td>
-                                        <td class="text-muted" style="font-size: .83rem;">${u.createdAt}</td>
+                                        <td class="text-muted" style="font-size: .83rem;">${u.formattedCreatedAt}</td>
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <a href="${AuraSound}/admin/user-detail?id=${u.id}" class="btn-tbl-action btn-tbl-view">

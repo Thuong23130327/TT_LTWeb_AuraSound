@@ -25,12 +25,39 @@ public class CheckoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
         HttpSession session = request.getSession(false);
         User auth = (session != null) ? (User) session.getAttribute("auth") : null;
 
         // Ktra đăng nhập
         if (auth == null) {
             response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String vnpayStatus = request.getParameter("vnpay");
+
+        if (vnpayStatus != null && !vnpayStatus.isEmpty()) {
+            List<UserAddress> addresses = new ArrayList<>();
+            try {
+                addresses = addressService.getUserAddresses(auth.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            request.setAttribute("addresses", addresses);
+            request.setAttribute("addressCount", addresses.size());
+
+            request.setAttribute("cartItems", new ArrayList<>());
+            request.setAttribute("totalPrice", 0.0);
+            request.setAttribute("shippingFee", 30000.0);
+            request.setAttribute("finalTotal", 30000.0);
+            request.setAttribute("walletVouchers", new ArrayList<>());
+
+            request.getRequestDispatcher("/WEB-INF/views/checkout.jsp")
+                    .forward(request, response);
             return;
         }
 
@@ -60,7 +87,7 @@ public class CheckoutServlet extends HttpServlet {
             request.getSession().setAttribute("checkoutSelectedIds", selectedIds);
         } else {
             Object sessionIds = request.getSession().getAttribute("checkoutSelectedIds");
-            if (sessionIds instanceof List) {
+            if (sessionIds != null) {
                 selectedIds = (List<Integer>) sessionIds;
             }
         }
@@ -68,7 +95,6 @@ public class CheckoutServlet extends HttpServlet {
         // Lấy ds sp
         List<CartItemDTO> allItems = CartService.getListItems(cartId);
 
-        String vnpayStatus = request.getParameter("vnpay");
 
         if (allItems == null || allItems.isEmpty()) {
             if (!"success".equals(vnpayStatus)) {
