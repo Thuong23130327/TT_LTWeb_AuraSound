@@ -173,7 +173,7 @@
     </div>
 </main>
 
-<!-- ===== MODAL XÁC NHẬN HỦY ĐƠN ===== -->
+<!--MODAL XÁC NHẬN HỦY ĐƠN-->
 <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -193,7 +193,7 @@
     </div>
 </div>
 
-<!-- ===== MODAL ĐÁNH GIÁ SẢN PHẨM ===== -->
+<!--MODAL ĐÁNH GIÁ SẢN PHẨM-->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
