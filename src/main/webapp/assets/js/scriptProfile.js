@@ -1,8 +1,6 @@
 // profile.js
 
-// =============================================
-// CHUYỂN ĐỔI TAB (PROFILE PAGE)
-// =============================================
+
 function showTab(tabId) {
     const contents = document.querySelectorAll('.tab-content');
     contents.forEach(content => content.classList.remove('active'));
@@ -17,9 +15,6 @@ function showTab(tabId) {
     if (clickedLink) clickedLink.classList.add('active');
 }
 
-// =============================================
-// MOBILE MENU TOGGLE
-// =============================================
 function toggleMobileMenu() {
     const sideMenu = document.getElementById('sideMenuContent');
     if (!sideMenu) return;
@@ -32,9 +27,6 @@ function toggleMobileMenu() {
     }
 }
 
-// =============================================
-// EDIT PROFILE MODAL
-// =============================================
 document.addEventListener("DOMContentLoaded", function () {
     const btnOpenEdit = document.getElementById('btnOpenEdit');
     const modal       = document.getElementById('modal-edit-profile');
@@ -82,9 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// =============================================
-// MOBILE NAV MENU + LOGOUT
-// =============================================
 document.addEventListener('DOMContentLoaded', () => {
     const hamburgerIcon = document.getElementById('hamburger-icon');
     const closeButton   = document.getElementById('mobile-menu-close');
@@ -131,15 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// =============================================
-// XỬ LÝ NÚT HỦY ĐƠN, MUA LẠI, ĐÁNH GIÁ
-// =============================================
+
 document.addEventListener('DOMContentLoaded', function () {
     const ctxPath = (typeof window.ctxPath !== 'undefined') ? window.ctxPath : '';
 
-    // --------------------------------------------------
-    // NÚT HỦY ĐƠN - chỉ áp dụng đơn chờ duyệt (status=0)
-    // --------------------------------------------------
     let pendingCancelOrderId = null;
 
     document.querySelectorAll('.btn-cancel-order').forEach(function (btn) {
@@ -193,9 +177,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --------------------------------------------------
-    // NÚT MUA LẠI
-    // --------------------------------------------------
     document.querySelectorAll('.btn-buy-again').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -230,9 +211,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --------------------------------------------------
-    // NÚT ĐÁNH GIÁ - mở Bootstrap modal giống productdetail
-    // --------------------------------------------------
     document.querySelectorAll('.btn-open-review').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -261,9 +239,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// =============================================
-// TOAST NOTIFICATION
-// =============================================
 function showToast(message, type) {
     let container = document.getElementById('profileToastContainer');
     if (!container) {
@@ -286,7 +261,6 @@ function showToast(message, type) {
     }, 2500);
 }
 
-// Inject CSS animations cho toast
 (function () {
     if (document.getElementById('profileToastCSS')) return;
     const style = document.createElement('style');
