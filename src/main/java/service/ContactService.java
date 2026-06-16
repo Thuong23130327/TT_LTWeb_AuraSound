@@ -14,6 +14,12 @@ public class ContactService {
     public boolean sendContactMail(String email, String name, String phone, String message, User user) {
         if (message == null || message.trim().isEmpty()) return false;
 
+        String phoneRegex = "^0[35789]\\d{8}$";
+        String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+        
+        if (email == null || !email.matches(emailRegex)) return false;
+        if (phone == null || !phone.matches(phoneRegex)) return false;
+
         Contact contact = new Contact();
         contact.setUsersID(user != null ? user.getId() : null);
         contact.setSenderMail(email);

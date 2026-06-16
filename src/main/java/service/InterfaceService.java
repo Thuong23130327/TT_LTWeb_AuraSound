@@ -78,4 +78,14 @@ public class InterfaceService {
     public boolean updateBanner(int id, String title, String description, String targetUrl, int sortOrder) {
         return bannerDAO.update(id, title, description, targetUrl, sortOrder);
     }
+
+    public boolean updateBrand(int id, String name, String logoUrl) {
+        return brandDAO.update(id, name, logoUrl);
+    }
+    public boolean updateCategory(int id, String name, Integer parentId) {
+        return categoryDAO.update(id, name, parentId);
+    }
+    public boolean updateFooter(int id, String title, String targetUrl, int sortOrder) {
+        return footerLinkDAO.update(id, title, targetUrl, sortOrder);
+    }
 }

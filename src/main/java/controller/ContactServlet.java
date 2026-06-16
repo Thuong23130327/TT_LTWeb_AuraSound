@@ -47,10 +47,19 @@ public class ContactServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String message = request.getParameter("message");
 
+        String phoneRegex = "^0[35789]\\d{8}$";
+        String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
         HttpSession session = request.getSession();
+
+        if (!phone.matches(phoneRegex) || !email.matches(emailRegex)) {
+            session.setAttribute("errorMessage", "Input không hợp lệ");
+            session.setAttribute("old_name", name);
+            session.setAttribute("old_email", email);
+            response.sendRedirect(request.getContextPath() + "/contact");
+            return;
+        }
         User user = (User) session.getAttribute("auth");
         boolean sendSuccess = contactService.sendContactMail(email, name, phone, message, user);
-
         if (sendSuccess) {
             session.setAttribute("successMessage", "AuraSound đã nhận được lời nhắn. Xin cảm ơn quý khách!");
             response.sendRedirect(request.getContextPath() + "/contact");

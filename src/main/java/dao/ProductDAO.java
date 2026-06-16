@@ -4,11 +4,6 @@ import dao.DB.DBConnect;
 import model.entity.Product;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.FieldMapper;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 public class ProductDAO {
@@ -134,22 +129,28 @@ public class ProductDAO {
 
     public List<Product> searchProductByText(String textSearch, int limit) {
         String searchTerm = "%" + textSearch + "%";
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT p.* FROM products p " +
-                                "JOIN brands b ON b.id = p.Brands_id " +
-                                "JOIN categories c ON c.id = p.Categories_id " +
-                                "WHERE p.name LIKE :search " +
-                                "OR p.sku LIKE :search " +
-                                "OR p.display_sell_price LIKE :search " +
-                                "OR p.display_market_price LIKE :search " +
-                                "OR b.name LIKE :search " +
-                                "OR c.name LIKE :search " +
-                                "LIMIT :limit")
-                        .bind("search", searchTerm)
-                        .bind("limit", limit)
-                        .mapToBean(Product.class)
-                        .list()
-        );
+        return jdbi.withHandle(handle -> {
+            handle.registerRowMapper(FieldMapper.factory(Product.class));
+
+            return handle.createQuery("SELECT p.* FROM products p " +
+                            "JOIN brands b ON b.id = p.Brands_id " +
+                            "JOIN categories c ON c.id = p.Categories_id " +
+                            "WHERE p.is_active = 1 " +
+                            "AND p.display_sell_price > 0 " +
+                            "AND p.display_image_url IS NOT NULL " +
+                            "AND p.display_image_url != '' " +
+                            "AND (p.name LIKE :search " +
+                            "OR p.sku LIKE :search " +
+                            "OR p.display_sell_price LIKE :search " +
+                            "OR p.display_market_price LIKE :search " +
+                            "OR b.name LIKE :search " +
+                            "OR c.name LIKE :search) " +
+                            "LIMIT :limit")
+                    .bind("search", searchTerm)
+                    .bind("limit", limit)
+                    .mapTo(Product.class)
+                    .list();
+        });
     }
 
     public Map<Integer, Integer> getTotalStock() {
