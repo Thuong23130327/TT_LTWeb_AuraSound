@@ -31,11 +31,8 @@
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-
-                <div
-                        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-1">
-                    <h2 class="h2 section-title text-primary">
-                        Admin Dashboard
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                    <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">Admin Dashboard
                     </h2>
                 </div>
             </div>

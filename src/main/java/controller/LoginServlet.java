@@ -24,6 +24,10 @@ public class LoginServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.contains("login") && !referer.contains("register")) {
+            request.getSession().setAttribute("redirectAfterLogin", referer);
+        }
         String code = request.getParameter("code");
 
         if (code != null && !code.isEmpty()) {
@@ -125,9 +129,15 @@ public class LoginServlet extends HttpServlet {
             if (user.isAdminOrStaff()) {
                 session.setAttribute("author", user);
                 response.sendRedirect("admin/dashboard");
-            } else
-                response.sendRedirect("home");
-
+            } else {
+                String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+                if (redirectUrl != null) {
+                    session.removeAttribute("redirectAfterLogin");
+                    response.sendRedirect(redirectUrl);
+                } else {
+                    response.sendRedirect("home");
+                }
+            }
         } else {
             //TH2 : login thất bại
             request.setAttribute("loginEmail", email);

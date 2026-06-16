@@ -282,12 +282,11 @@ td button:hover {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch; /* Tạo hiệu ứng trượt quán tính trên iOS */
     gap: 8px;
     padding-bottom: 8px;
 }
 .table-responsive::-webkit-scrollbar {
-    height: 6px; /* Độ dày thanh cuộn ngang */
+    height: 6px;
 }
 .table-responsive::-webkit-scrollbar-track {
     background: #f1f1f1;

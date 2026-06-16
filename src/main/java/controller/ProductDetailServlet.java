@@ -19,6 +19,11 @@ import java.util.List;
 @WebServlet(name = "ProductDetailServlet", value = "/detail")
 public class ProductDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String referer = request.getHeader("Referer");
+        HttpSession session = request.getSession(false);
+        if (referer != null && !referer.contains("detail")) {
+            session.setAttribute("previousPage", referer);
+        }
         String pid = request.getParameter("pid");
         if (pid == null) {
             response.sendRedirect("home"); // Hoặc trang lỗi
@@ -39,7 +44,6 @@ public class ProductDetailServlet extends HttpServlet {
         List<Image> imgs = productService.getImageByProductId(pid);
         ProductVariant curVariant = productService.getVariantByImg(variants, product.getImg());
         List<Category> categories = productService.getCategory(product.getCategoriesId());
-        HttpSession session = request.getSession(false);
         List<Integer> wishlistIds = new ArrayList<>();
         if (session != null) {
             User currentUser = (User) session.getAttribute("auth");

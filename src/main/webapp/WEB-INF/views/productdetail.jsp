@@ -31,9 +31,11 @@
     <section class="container sproduct my-5 pt-5">
         <div class="row mb-3">
             <div class="col-12">
-                <button type="button" class="btn-back-custom" onclick="history.back()">
-                    <i class="bi bi-arrow-left"></i> Quay lại
-                </button>
+                <a href="${not empty sessionScope.previousPage ? sessionScope.previousPage : 'product'}" style="text-decoration: none;">
+                    <button type="button" class="btn-back-custom">
+                        <i class="bi bi-arrow-left"></i> Quay lại
+                    </button>
+                </a>
             </div>
         </div>
 
