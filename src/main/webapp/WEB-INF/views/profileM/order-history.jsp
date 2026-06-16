@@ -149,7 +149,7 @@
                         Tổng tiền: <strong><%= amountStr %></strong>
                     </div>
                     <div class="modern-order-actions">
-                        <a href="${pageContext.request.contextPath}/order-detail?id=<%= order.getId() %>" class="btn-outline">Xem chi tiết</a>
+                        <a href="${pageContext.request.contextPath}/order-detail-success?id=<%= order.getOrderCode() %>" class="btn">Xem chi tiết</a>
                         <% if (statusValue == 0) { %>
                             <button class="btn-outline btn-danger btn-cancel-order" data-id="<%= order.getId() %>">Hủy đơn</button>
                         <% } %>

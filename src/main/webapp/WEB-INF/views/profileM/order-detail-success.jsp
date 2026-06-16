@@ -1,8 +1,10 @@
+<%@ page import="model.entity.Order" %>
+<%@ page import="model.entity.OrderItem" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
         <% request.setAttribute("pageTitle", "Chi tiết đơn hàng - AuraSound" );
             request.setAttribute("activePage", "order-history" ); %>
-
+        <% Order currentOrder = (Order) request.getAttribute("order"); %>
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,52 +75,72 @@
                             </div>
                         </div>
                         <section class="profile-content">
-                            <h3 class="title">Đơn hàng đang chờ duyệt</h3>
-                            <c:choose>
-                                <c:when test="${not empty succOrders}">
-                                    <%-- <c:if test="${not empty succOrders}">--%>
-                                        <%-- <p>Mã đơn: #${succOrders.orderCode}</p>--%>
-                                            <%-- <p>Tổng tiền:
-                                                <fmt:formatNumber value="${succOrders.finalAmount}" type="currency"
-                                                    currencySymbol="VNĐ" />
-                                                </p>--%>
-                                                <%-- <p>Ngày đặt:
-                                                    <c:out
-                                                        value="${fn:replace(succOrders.orderDate.toString(), 'T', ' ')}" />
-                                                    </p>--%>
-                                                    <%-- </c:if>--%>
-                                                        <c:forEach var="order" items="${pendingOrders}">
-                                                            <a class="a-nodecor"
-                                                                href="${pageContext.request.contextPath}/order-detail?id=${order.id}">
-                                                                <div class="list-item">
-                                                                    <div class="item-order history">
-                                                                        #${order.orderCode} - Người nhận: ${not empty
-                                                                        order.recipientName ? order.recipientName :
-                                                                        'Trống tên'}
-                                                                        | Tổng tiền:
-                                                                        <c:choose>
-                                                                            <c:when
-                                                                                test="${not empty order.finalAmount}">
-                                                                                <fmt:formatNumber
-                                                                                    value="${order.finalAmount}"
-                                                                                    type="currency" pattern="#,###" />đ
-                                                                            </c:when>
-                                                                            <c:otherwise>0 VNĐ</c:otherwise>
-                                                                        </c:choose>
-                                                                        <br>
-                                                                        <small>Ngày đặt:
-                                                                            <c:out
-                                                                                value="${fn:replace(order.orderDate, 'T', ' ')}" />
-                                                                        </small>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="alert alert-info">Bạn hiện không có đơn hàng đã hoàn thành nào.</div>
-                                </c:otherwise>
-                            </c:choose>
+                            <h3 class="title"><i class="fa-solid fa-file-invoice"></i> Chi tiết đơn hàng</h3>
+
+                            <% if (currentOrder != null) {
+                                String statusDesc = "Đang xử lý";
+                                int statusValue = currentOrder.getStatus();
+                                if(statusValue == 1) statusDesc = "Đang vận chuyển";
+                                else if(statusValue == 2) statusDesc = "Hoàn thành";
+                                else if(statusValue == 3) statusDesc = "Đã hủy";
+                            %>
+                            <div class="card mb-4 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                        <div>
+                                            <h5 class="fw-bold mb-1">Mã đơn hàng: <%= currentOrder.getOrderCode() %></h5>
+                                            <p class="text-muted small mb-0">Trạng thái: <span class="badge bg-primary"><%= statusDesc %></span></p>
+                                        </div>
+                                        <div class="text-md-end">
+                                            <p class="mb-0 text-muted small">Tổng thanh toán</p>
+                                            <h4 class="text-danger fw-bold mb-0">
+                                                <%= String.format("%,.0f", currentOrder.getFinalAmount()) %> đ
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold mb-3">Sản phẩm đã mua</h5>
+                            <div class="modern-order-card p-3 mb-4">
+                                <div class="modern-order-body">
+                                    <%
+                                        if(currentOrder.getItems() != null) {
+                                            for(OrderItem item : currentOrder.getItems()) {
+                                                String priceStr = item.getPrice_at_purchase() != null ? String.format("%,.0f", item.getPrice_at_purchase()) + " đ" : "0 đ";
+                                    %>
+                                    <div class="modern-order-item d-flex align-items-center gap-3 py-2 border-bottom">
+                                        <img src="<%= item.getProductVariant() != null ? item.getProductVariant().getMainImageUrl() : "../assets/img/default-product.png" %>"
+                                             alt="Product" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+                                        <div style="flex:1;">
+                                            <h6 class="fw-bold mb-1"><%= item.getProductName() %></h6>
+                                            <p class="text-muted small mb-0">
+                                                Phân loại: <%= item.getProductVariant() != null ? item.getProductVariant().getColorName() : "Mặc định" %>
+                                                | Số lượng: x<%= item.getQuantity() %>
+                                            </p>
+                                        </div>
+                                        <div class="fw-bold text-dark"><%= priceStr %></div>
+                                    </div>
+                                    <%
+                                            }
+                                        }
+                                    %>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-start">
+                                <a href="${pageContext.request.contextPath}/order-history" class="btn btn-outline-dark">
+                                    <i class="fa-solid fa-arrow-left"></i> Quay lại lịch sử mua hàng
+                                </a>
+                            </div>
+
+                            <% } else { %>
+                            <div class="alert alert-danger text-center my-4">
+                                <i class="fa-solid fa-triangle-exclamation mb-2 fs-3"></i>
+                                <p class="mb-0">Không tìm thấy thông tin chi tiết cho đơn hàng này hoặc mã đơn không hợp lệ.</p>
+                                <a href="${pageContext.request.contextPath}/order-history" class="btn btn-sm btn-secondary mt-3">Quay lại danh sách</a>
+                            </div>
+                            <% } %>
                         </section>
 
                     </div>
