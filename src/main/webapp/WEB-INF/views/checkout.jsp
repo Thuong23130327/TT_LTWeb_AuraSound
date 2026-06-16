@@ -206,6 +206,10 @@
                     <p>Phí vận chuyển:</p>
                     <p><fmt:formatNumber value="${shippingFee}" pattern="#,###"/>đ</p>
                 </div>
+                <div class="totals-item" id="expected-delivery-row">
+                    <p>Thời gian nhận hàng dự kiến:</p>
+                    <p id="expected-delivery-date">Đang cập nhật</p>
+                </div>
                 <div class="totals-item" id="discount-row">
                     <p>Giảm giá:</p>
                     <p id="discount-amount">-0đ</p>

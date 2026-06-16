@@ -87,10 +87,23 @@ public class OrderService {
                 finalAmount = 0;
             }
 
+            java.time.LocalDateTime expectedDeliveryDate = null;
+            try {
+                if (districtId > 0 && wardCode != null && !wardCode.trim().isEmpty()) {
+                    long leadtime = GHNService.getExpectedDeliveryDate(districtId, wardCode);
+                    if (leadtime > 0) {
+                        expectedDeliveryDate = java.time.LocalDateTime.ofEpochSecond(leadtime, 0, java.time.ZoneOffset.ofHours(7));
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "Lỗi khi lấy expected delivery date từ GHN: {0}", e.getMessage());
+            }
+
             int orderId = orderDAO.createOrder(
                     userId, vouchersId,
                     totalProductsPrice, shippingFee,
-                    discountAmount, finalAmount
+                    discountAmount, finalAmount,
+                    expectedDeliveryDate
             );
             if (orderId <= 0) {
                 return -1;

@@ -123,15 +123,20 @@
                         </div>
                     </div>
 
-                    <c:if test="${not empty shippingLogJson}">
-                        <input type="hidden" id="shippingLogData" value="${fn:escapeXml(shippingLogJson)}">
-                        <div class="ghn-route-title">
-                            <p><i class="fa-solid fa-route"></i> Hành trình vận chuyển (GHN)</p>
-                            <div id="ghn-timeline-container">
-                                <ul id="ghn-timeline-list"></ul>
-                            </div>
-                        </div>
-                    </c:if>
+                    <div class="ghn-route-title">
+                        <p><i class="fa-solid fa-calendar-alt"></i> Thời gian nhận hàng dự kiến: 
+                            <strong>
+                                <c:choose>
+                                    <c:when test="${not empty order.expectedDeliveryDate}">
+                                        ${fn:replace(order.expectedDeliveryDate, 'T', ' ')}
+                                    </c:when>
+                                    <c:otherwise>
+                                        Không xác định
+                                    </c:otherwise>
+                                </c:choose>
+                            </strong>
+                        </p>
+                    </div>
                 </div>
             </div>
 

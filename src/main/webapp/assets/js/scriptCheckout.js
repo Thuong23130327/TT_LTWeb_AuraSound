@@ -150,8 +150,34 @@ document.addEventListener("DOMContentLoaded", function () {
             wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
             wardSelect.disabled = true;
 
-            if (this.value) {
-                await fetchWards(this.value);
+    async function callShippingFeeApi(districtId, wardCode) {
+        if (!districtId || !wardCode) return;
+        const summaryContainer = document.querySelector('.order-summary');
+        if (summaryContainer) summaryContainer.classList.add('loading');
+        try {
+            const params = new URLSearchParams({ districtId, wardCode });
+            const res = await fetch('api/calculate-shipping', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                currentShippingFee = parseFloat(data.fee);
+                updateTotalDisplay(appliedDiscountAmount);
+                
+                const expectedDateEl = document.getElementById('expected-delivery-date');
+                if (expectedDateEl) {
+                    if (data.leadtime && data.leadtime > 0) {
+                        const date = new Date(data.leadtime * 1000);
+                        const day = ("0" + date.getDate()).slice(-2);
+                        const month = ("0" + (date.getMonth() + 1)).slice(-2);
+                        const year = date.getFullYear();
+                        expectedDateEl.innerText = `${day}/${month}/${year}`;
+                    } else {
+                        expectedDateEl.innerText = 'Không xác định';
+                    }
+                }
             }
         });
     }
