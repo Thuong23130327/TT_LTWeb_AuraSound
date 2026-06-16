@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -120,12 +119,7 @@
                                                 <c:otherwise><span class="status-active"><i class="bi bi-check-circle-fill me-1"></i>Hoạt động</span></c:otherwise>
                                             </c:choose>
                                         </td>
-                                        <td class="text-muted" style="font-size: .83rem; font-weight: 500;">
-                                            <c:if test="${not empty u.createdAt}">
-                                                <c:set var="dateStr" value="${u.createdAt.toString()}" />
-                                                ${fn:substring(dateStr, 8, 10)}/${fn:substring(dateStr, 5, 7)}/${fn:substring(dateStr, 0, 4)} ${fn:substring(dateStr, 11, 19)}
-                                            </c:if>
-                                        </td>
+                                        <td class="text-muted" style="font-size: .83rem;">${u.formattedCreatedAt}</td>
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <a href="${AuraSound}/admin/user-detail?id=${u.id}" class="btn-tbl-action btn-tbl-view">
