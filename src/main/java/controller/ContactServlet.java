@@ -10,6 +10,7 @@ import model.entity.Contact;
 import model.entity.User;
 import model.entity.User;
 import service.ContactService;
+import service.NotificationService;
 
 import java.io.IOException;
 
@@ -61,6 +62,7 @@ public class ContactServlet extends HttpServlet {
         User user = (User) session.getAttribute("auth");
         boolean sendSuccess = contactService.sendContactMail(email, name, phone, message, user);
         if (sendSuccess) {
+            NotificationService.addNotification("CONTACT", "Có một liên hệ mới cần phản hồi!");
             session.setAttribute("successMessage", "AuraSound đã nhận được lời nhắn. Xin cảm ơn quý khách!");
             response.sendRedirect(request.getContextPath() + "/contact");
         } else {

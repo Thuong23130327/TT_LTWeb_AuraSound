@@ -28,15 +28,24 @@ public class BrandDAO {
                         .bind("logoUrl", logoUrl)
                         .execute() > 0);
     }
-    public boolean insert(String imageUrl, String targetUrl) {
+    public boolean insert(String name, String logoUrl) {
         return jdbi.withHandle(handle ->
-                handle.createUpdate("INSERT INTO banners (image_url, target_url, is_active) VALUES (:img, :url, 1)")
-                        .bind("img", imageUrl).bind("url", targetUrl).execute() > 0);
+                handle.createUpdate("INSERT INTO brands (name, logo_url, is_active) VALUES (:name, :logo, 1)")
+                        .bind("name", name).bind("logo", logoUrl).execute() > 0);
     }
 
     public boolean delete(int id) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("DELETE FROM banners WHERE id = :id")
-                        .bind("id", id).execute() > 0);
+        return jdbi.withHandle(handle -> {
+            int productCount = handle.createQuery("SELECT COUNT(*) FROM products WHERE brands_id = :id")
+                    .bind("id", id)
+                    .mapTo(Integer.class).one();
+
+            if (productCount > 0) {
+                System.out.println("CẢNH BÁO: Không thể xóa Hãng này vì vẫn còn sản phẩm thuộc Hãng");
+                return false;
+            }
+            return handle.createUpdate("DELETE FROM brands WHERE id = :id")
+                    .bind("id", id).execute() > 0;
+        });
     }
 }

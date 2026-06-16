@@ -25,6 +25,11 @@ public class AMProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        model.entity.User currentUser = (model.entity.User) request.getSession().getAttribute("author");
+        if (currentUser == null || !currentUser.hasPermission("can_product_view")) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền xem sản phẩm.");
+            return;
+        }
         String categoryId = request.getParameter("categoryId");
 
         AdminProductService adminProductService = null;

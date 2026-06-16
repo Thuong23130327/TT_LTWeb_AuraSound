@@ -49,7 +49,7 @@ public class ProductServlet extends HttpServlet {
         List<Integer> wishlistIds = new ArrayList<>();
         HttpSession sessionG = request.getSession(false);
         if (sessionG != null) {
-            model.entity.User currentUser = (model.entity.User) sessionG.getAttribute("auth");
+         User currentUser = (User) sessionG.getAttribute("auth");
             if (currentUser != null) {
                 ProfileService profileService = new ProfileService();
                 wishlistIds = profileService.getWishlistProductIds(currentUser.getId());

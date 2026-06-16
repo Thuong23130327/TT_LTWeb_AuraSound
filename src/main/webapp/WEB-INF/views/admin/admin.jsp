@@ -32,14 +32,17 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                    <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">Admin Dashboard
+                    <h2 class="section-title text-primary"
+                        style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">Admin Dashboard
                     </h2>
                 </div>
             </div>
 
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="card stat-card">
+                    <div class="card stat-card"
+                         onclick="window.location.href='${pageContext.request.contextPath}/admin/product-manager'"
+                         style="cursor: pointer;" title="Đi đến Quản lý Sản phẩm">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
                                 <h5 class="card-title">Tổng sản phẩm</h5>
@@ -50,7 +53,9 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="card stat-card">
+                    <div class="card stat-card"
+                         onclick="window.location.href='${pageContext.request.contextPath}/admin/manage-order'"
+                         style="cursor: pointer;" title="Đi đến Quản lý Đơn hàng">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
                                 <h5 class="card-title">Tổng đơn hàng</h5>
@@ -61,7 +66,9 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="card stat-card">
+                    <div class="card stat-card"
+                         onclick="window.location.href='${pageContext.request.contextPath}/admin/manage-order'"
+                         style="cursor: pointer;" title="Xử lý đơn hàng">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
                                 <h5 class="card-title">Đơn chờ xử lý</h5>
@@ -72,7 +79,9 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="card stat-card">
+                    <div class="card stat-card"
+                         onclick="window.location.href='${pageContext.request.contextPath}/admin/user-manager'"
+                         style="cursor: pointer;" title="Đi đến Quản lý Khách hàng">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
                                 <h5 class="card-title">Khách hàng</h5>
@@ -86,7 +95,7 @@
 
             <div class="row">
                 <div class="col-lg-8 mb-4">
-                    <div class="card shadow-sm h-100">
+                    <div class="card shadow-sm mb-4">
                         <div class="card-header bg-white py-3">
                             <h5 class="mb-0 fw-bold text-dark">Thống kê doanh thu</h5>
                         </div>
@@ -146,14 +155,65 @@
                                 </div>
                             </div>
 
-                            <div class="chart-container">
-                                <div class="card-header bg-white py-3">
-                                    <h2 class="mb-0 fw-bold text-dark">Doanh thu 7 ngày gần đây</h2>
+                            <div class="chart-wrapper  mt-4">
+                                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                                    <h5 class="mb-0 fw-bold text-dark" id="chartTitle">Doanh thu 7 ngày gần đây</h5>
+                                    <select id="chartFilter" class="form-select w-auto fw-bold text-primary"
+                                            onchange="loadChartData()">
+                                        <option value="7days">7 ngày qua</option>
+                                        <option value="thisMonth">Tháng này</option>
+                                        <option value="thisYear">Năm nay</option>
+                                    </select>
                                 </div>
-                                <div class="bar-chart" style="height: 320px;">
+
+                                <div class="bar-chart">
                                     <canvas id="revenueBarChart"></canvas>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-bell text-warning"></i> Thông báo mới
+                            </h5>
+                        </div>
+                        <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
+                            <ul class="list-group list-group-flush">
+                                <c:forEach var="n" items="${recentNotis}">
+                                    <li class="list-group-item d-flex align-items-center p-3 border-bottom">
+
+                                        <c:choose>
+                                            <c:when test="${n.type == 'ORDER'}">
+                                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                                     style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                                                     style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-envelope"></i>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+
+                                        <div>
+                                            <h6 class="mb-1 text-dark" style="font-size: 14px;">${n.message}</h6>
+                                            <small class="text-muted"><i class="far fa-clock"></i> ${n.created_at}
+                                            </small>
+                                        </div>
+                                    </li>
+                                </c:forEach>
+
+                                <c:if test="${empty recentNotis}">
+                                    <li class="list-group-item text-center text-muted p-4">
+                                        <i class="fas fa-inbox fa-3x mb-3 text-light"></i><br>
+                                        Chưa có thông báo nào.
+                                    </li>
+                                </c:if>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -163,5 +223,59 @@
 </div>
 
 <%@ include file="/WEB-INF/tag/_footerAdmin.jsp" %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    let revenueChart = null;
+
+    function loadChartData() {
+        let filter = document.getElementById('chartFilter').value;
+        let titleEl = document.getElementById('chartTitle');
+
+        if (filter === '7days') titleEl.innerText = 'Doanh thu 7 ngày gần đây';
+        else if (filter === 'thisMonth') titleEl.innerText = 'Doanh thu Tháng này';
+        else if (filter === 'thisYear') titleEl.innerText = 'Doanh thu Năm nay';
+
+        fetch('${pageContext.request.contextPath}/admin/api/chart?filter=' + filter)
+            .then(response => response.json())
+            .then(data => {
+                renderChart(data.labels, data.data);
+            });
+    }
+
+    function renderChart(labels, data) {
+        const ctx = document.getElementById('revenueBarChart').getContext('2d');
+
+        if (revenueChart != null) {
+            revenueChart.destroy();
+        }
+
+        revenueChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: data,
+                    backgroundColor: 'rgba(13, 110, 253, 0.8)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {beginAtZero: true}
+                }
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        loadChartData();
+    });
+</script>
 </body>
 </html>

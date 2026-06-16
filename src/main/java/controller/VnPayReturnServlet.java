@@ -65,6 +65,8 @@ public class VnPayReturnServlet extends HttpServlet {
                 int currentQty = CartService.getListItems(cart.getId()).size();
                 request.getSession().setAttribute("cartQty", currentQty);
 
+                service.NotificationService.addNotification("ORDER", "Vừa có đơn đặt hàng mới chờ bạn xác nhận!");
+
                 response.sendRedirect(request.getContextPath() + "/checkout?vnpay=success&orderId=" + orderId);
             } else {
                 //hủy or ck thất bại
