@@ -111,6 +111,7 @@ public class Order {
         return userId;
     }
 
+    @ColumnName("users_id")
     public void setUserId(int userId) {
         this.userId = userId;
     }

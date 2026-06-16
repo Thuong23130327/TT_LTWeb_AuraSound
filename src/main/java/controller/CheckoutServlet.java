@@ -38,6 +38,29 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
+        String vnpayStatus = request.getParameter("vnpay");
+
+        if (vnpayStatus != null && !vnpayStatus.isEmpty()) {
+            List<UserAddress> addresses = new ArrayList<>();
+            try {
+                addresses = addressService.getUserAddresses(auth.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            request.setAttribute("addresses", addresses);
+            request.setAttribute("addressCount", addresses.size());
+
+            request.setAttribute("cartItems", new ArrayList<>());
+            request.setAttribute("totalPrice", 0.0);
+            request.setAttribute("shippingFee", 30000.0);
+            request.setAttribute("finalTotal", 30000.0);
+            request.setAttribute("walletVouchers", new ArrayList<>());
+
+            request.getRequestDispatcher("/WEB-INF/views/checkout.jsp")
+                    .forward(request, response);
+            return;
+        }
+
         List<UserAddress> addresses = new ArrayList<>();
         try {
             addresses = addressService.getUserAddresses(auth.getId());
@@ -72,7 +95,6 @@ public class CheckoutServlet extends HttpServlet {
         // Lấy ds sp
         List<CartItemDTO> allItems = CartService.getListItems(cartId);
 
-        String vnpayStatus = request.getParameter("vnpay");
 
         if (allItems == null || allItems.isEmpty()) {
             if (!"success".equals(vnpayStatus)) {
