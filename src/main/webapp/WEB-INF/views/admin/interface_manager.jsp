@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -199,15 +199,19 @@
                                         <td>${f.sortOrder}</td>
                                         <td>
 
-                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editFooterModal${f.id}">Sửa</button>
+                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                                    data-bs-target="#editFooterModal${f.id}">Sửa
+                                            </button>
 
                                             <div class="modal fade" id="editFooterModal${f.id}" tabindex="-1">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
-                                                        <form action="${pageContext.request.contextPath}/admin/upd-interface" method="post">
+                                                        <form action="${pageContext.request.contextPath}/admin/upd-interface"
+                                                              method="post">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title">Cập nhật Footer Link</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <input type="hidden" name="action" value="updateFooter">
@@ -215,19 +219,26 @@
 
                                                                 <div class="mb-3">
                                                                     <label>Tiêu đề hiển thị</label>
-                                                                    <input type="text" name="title" class="form-control" value="${f.title}" required>
+                                                                    <input type="text" name="title" class="form-control"
+                                                                           value="${f.title}" required>
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label>Đường dẫn đích (Target URL)</label>
-                                                                    <input type="text" name="targetUrl" class="form-control" value="${f.targetUrl}" required>
+                                                                    <input type="text" name="targetUrl"
+                                                                           class="form-control" value="${f.targetUrl}"
+                                                                           required>
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label>Thứ tự hiển thị (Sort Order)</label>
-                                                                    <input type="number" name="sortOrder" class="form-control" value="${f.sortOrder}" required>
+                                                                    <input type="number" name="sortOrder"
+                                                                           class="form-control" value="${f.sortOrder}"
+                                                                           required>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                                                <button type="submit" class="btn btn-primary">Lưu thay
+                                                                    đổi
+                                                                </button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -268,7 +279,11 @@
                                         </td>
                                         <td>
                                             <a href="${pageContext.request.contextPath}/admin/upd-interface?action=deleteBrand&id=${br.id}"
-                                               class="btn btn-danger btn-sm">Xóa</a></td>
+                                               class="btn btn-danger btn-sm">Xóa</a>
+                                            <button type="button" class="btn btn-warning btn-sm"
+                                                    onclick="openEditBrand('${br.id}', '${br.name}')">Sửa
+                                            </button>
+                                        </td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>
@@ -281,7 +296,7 @@
                                 <input type="text" name="name" class="form-control w-25" placeholder="Tên Danh mục"
                                        required>
                                 <select name="parentId" class="form-select w-25">
-                                    <option value="0">--- Trống (Là danh mục gốc) ---</option>
+                                    <option value="0">Là danh mục gốc</option>
                                     <c:forEach var="pc" items="${categories}">
                                         <option value="${pc.id}">${pc.name}</option>
                                     </c:forEach>
@@ -312,7 +327,13 @@
                                         </td>
                                         <td>
                                             <a href="${pageContext.request.contextPath}/admin/upd-interface?action=deleteCategory&id=${c.id}"
-                                               class="btn btn-danger btn-sm">Xóa</a></td>
+                                               class="btn btn-danger btn-sm">Xóa</a>
+
+                                            <button type="button" class="btn btn-warning btn-sm"
+                                                    onclick="openEditCategory('${c.id}', '${c.name}', '${c.parentId}')">
+                                                Sửa
+                                            </button>
+                                        </td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>
@@ -323,6 +344,62 @@
                 </div>
             </div>
         </main>
+    </div>
+</div>
+<div class="modal fade" id="editBrandModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="${pageContext.request.contextPath}/admin/upd-interface?action=updateBrand" method="post"
+              enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sửa Thương Hiệu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id" id="editBrandId">
+                <div class="mb-3">
+                    <label>Tên Hãng</label>
+                    <input type="text" name="name" id="editBrandName" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Logo mới (Bỏ trống nếu muốn giữ logo cũ)</label>
+                    <input type="file" name="imageFile" class="form-control" accept="image/*">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="${pageContext.request.contextPath}/admin/upd-interface?action=updateCategory" method="post"
+              class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sửa Danh Mục</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id" id="editCateId">
+                <div class="mb-3">
+                    <label>Tên Danh Mục</label>
+                    <input type="text" name="name" id="editCateName" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Danh mục cha (Để trống nếu là mục Gốc)</label>
+                    <select name="parentId" id="editCateParent" class="form-select">
+                        <option value="">--- Trống (Là danh mục gốc) ---</option>
+                        <c:forEach var="pc" items="${categories}">
+                            <option value="${pc.id}">${pc.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+            </div>
+        </form>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -358,6 +435,7 @@
                 }
             });
     }
+
     function updateBannerAjax(event, formElem) {
         event.preventDefault();
         let formData = new URLSearchParams(new FormData(formElem));
@@ -405,6 +483,38 @@
             }
         });
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let activeTab = localStorage.getItem('activeInterfaceTab');
+        if (activeTab) {
+            let triggerEl = document.querySelector('a[href="' + activeTab + '"]');
+            if (triggerEl) {
+                new bootstrap.Tab(triggerEl).show();
+            }
+        }
+
+        let tabLinks = document.querySelectorAll('a[data-bs-toggle="tab"]');
+        tabLinks.forEach(function (link) {
+            link.addEventListener('shown.bs.tab', function (e) {
+                localStorage.setItem('activeInterfaceTab', e.target.getAttribute('href'));
+            });
+        });
+    });
+
+    function openEditBrand(id, name) {
+        document.getElementById('editBrandId').value = id;
+        document.getElementById('editBrandName').value = name;
+        new bootstrap.Modal(document.getElementById('editBrandModal')).show();
+    }
+
+    function openEditCategory(id, name, parentId) {
+        document.getElementById('editCateId').value = id;
+        document.getElementById('editCateName').value = name;
+        document.getElementById('editCateParent').value = parentId || "";
+        new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+    }
+
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

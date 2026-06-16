@@ -31,13 +31,14 @@
                 </div>
             </c:if>
 
-            <div >
-                <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
-                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                        <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">Quản lý Voucher</h2>
+            <div class="mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;"> Quản lý Voucher</h2>
+                        <span class="text-muted" style="display: block; margin-bottom: 10px;">Quản lý mã giảm giá của hệ thống.</span>
                     </div>
-                    <button class="btn-add-voucher" data-bs-toggle="modal" data-bs-target="#addVoucherModal">
-                        <i class="bi bi-plus-circle me-1"></i> Tạo Voucher
+                    <button class="btn btn-warning fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#addVoucherModal">
+                        Tạo Voucher
                     </button>
                 </div>
             </div>
@@ -57,42 +58,9 @@
                 </c:choose>
             </c:forEach>
 
-            <div class="d-flex gap-3 mb-4 flex-wrap">
-                <div class="stat-pill">
-                    <div class="stat-icon icon-total"><i class="bi bi-ticket-perforated"></i></div>
-                    <div>
-                        <p class="stat-label">Tổng voucher</p>
-                        <p class="stat-value">${cntTotal}</p>
-                    </div>
-                </div>
-                <div class="stat-pill">
-                    <div class="stat-icon icon-active"><i class="bi bi-check-circle"></i></div>
-                    <div>
-                        <p class="stat-label">Đang hoạt động</p>
-                        <p class="stat-value">${cntActive}</p>
-                    </div>
-                </div>
-                <div class="stat-pill">
-                    <div class="stat-icon icon-expired"><i class="bi bi-x-circle"></i></div>
-                    <div>
-                        <p class="stat-label">Đã hết hạn</p>
-                        <p class="stat-value">${cntExpired}</p>
-                    </div>
-                </div>
-            </div>
-
-            <%-- Table --%>
-            <div class="voucher-table-wrap">
-                <div class="table-toolbar">
-                    <i class="bi bi-search text-muted"></i>
-                    <input type="text" id="searchInput" placeholder="Tìm theo mã voucher...">
-                    <span class="ms-auto text-muted" style="font-size:.82rem">
-                        Hiển thị <strong id="rowCount">${cntTotal}</strong> voucher
-                    </span>
-                </div>
-
+            <div class="mt-3">
                 <div class="table-responsive">
-                    <table class="table" id="voucherTable">
+                    <table class="table table-striped table-sm text-nowrap" id="voucherTable">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -125,8 +93,8 @@
                                     <tr>
                                         <td class="text-muted">${st.index + 1}</td>
                                         <td>
-                                            <span class="code-badge" onclick="copyCode('${v.code}', this)" title="Nhấn để sao chép">
-                                                <i class="bi bi-clipboard"></i>${v.code}
+                                            <span class="code-badge text-dark fw-bold" onclick="copyCode('${v.code}', this)" title="Nhấn để sao chép">
+                                                ${v.code}
                                             </span>
                                         </td>
                                         <td>
@@ -158,19 +126,19 @@
                                         <td>
                                             <c:choose>
                                                 <c:when test="${expired}">
-                                                    <span class="status-expired"><i class="bi bi-clock-history me-1"></i>Hết hạn</span>
+                                                    <span class="text-danger fw-bold">Hết hạn</span>
                                                 </c:when>
                                                 <c:when test="${usedUp}">
-                                                    <span class="status-used-up"><i class="bi bi-dash-circle me-1"></i>Hết lượt</span>
+                                                    <span class="text-secondary fw-bold">Hết lượt</span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="status-active"><i class="bi bi-lightning-charge me-1"></i>Hoạt động</span>
+                                                    <span class="text-success fw-bold">Hoạt động</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td>
-                                            <button class="btn-tbl-delete" onclick="confirmDelete(${v.id}, '${v.code}')">
-                                                <i class="bi bi-trash me-1"></i>Xóa
+                                            <button class="btn btn-sm btn-danger fw-bold" onclick="confirmDelete(${v.id}, '${v.code}')">
+                                                Xóa
                                             </button>
                                         </td>
                                     </tr>
@@ -186,7 +154,6 @@
     </div>
 </div>
 
-<%-- Modal thêm voucher --%>
 <div class="modal fade" id="addVoucherModal" tabindex="-1"
      data-bs-backdrop="static" data-bs-keyboard="false"
      data-should-open="${not empty showModal or not empty errorMsg}">
@@ -309,9 +276,38 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="${AuraSound}/assets/js/script.js"></script>
 <script src="${AuraSound}/assets/js/scriptAdmin.js"></script>
 <script src="${AuraSound}/assets/js/admin/scriptVoucher.js"></script>
+<script>
+    $(document).ready(function() {
+        var table = $('#voucherTable').DataTable({
+            "pageLength": 10,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json"
+            }
+        });
+
+        $('#voucherTable thead tr').clone(true).appendTo('#voucherTable thead');
+        $('#voucherTable thead tr:eq(1) th').each(function (i) {
+            var title = $(this).text();
+            if (title !== 'Thao tác' && title !== '#') {
+                $(this).html('<input type="text" class="form-control form-control-sm" placeholder="Lọc ' + title + '" />');
+
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table.column(i).search(this.value).draw();
+                    }
+                });
+            } else {
+                $(this).html('');
+            }
+        });
+    });
+</script>
 </body>
 </html>

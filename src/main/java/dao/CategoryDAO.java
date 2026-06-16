@@ -19,12 +19,25 @@ public class CategoryDAO {
                         .bind("name", name).bind("parentId", parentId).execute() > 0);
     }
     public boolean delete(int id) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("DELETE FROM categories WHERE id = :id").bind("id", id).execute() > 0);
+        return jdbi.withHandle(handle -> {
+            int productCount = handle.createQuery("SELECT COUNT(*) FROM products WHERE categories_id = :id")
+                    .bind("id", id)
+                    .mapTo(Integer.class).one();
+            int childCount = handle.createQuery("SELECT COUNT(*) FROM categories WHERE parents_id = :id")
+                    .bind("id", id)
+                    .mapTo(Integer.class).one();
+
+            if (productCount > 0 || childCount > 0) {
+                System.out.println("CẢNH BÁO: Không thể xóa Danh mục đang có sản phẩm hoặc có chứa thư mục con!");
+                return false;
+            }
+            return handle.createUpdate("DELETE FROM categories WHERE id = :id")
+                    .bind("id", id).execute() > 0;
+        });
     }
     public boolean update(int id, String name, Integer parentId) {
         return jdbi.withHandle(handle ->
-                handle.createUpdate("UPDATE categories SET name = :name, parent_id = :parentId WHERE id = :id")
+                handle.createUpdate("UPDATE categories SET name = :name, parents_id = :parentId WHERE id = :id")
                         .bind("id", id)
                         .bind("name", name)
                         .bind("parentId", parentId)
