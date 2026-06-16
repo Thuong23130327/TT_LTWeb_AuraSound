@@ -72,7 +72,7 @@ public class Banner {
 	public boolean isActive() {
 		return isActive;
 	}
-
+    @ColumnName("is_active")
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}

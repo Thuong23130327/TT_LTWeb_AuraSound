@@ -23,7 +23,6 @@
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-3">
 
-            <%-- Flash toast --%>
             <c:if test="${not empty flashMsg}">
                 <div class="flash-toast ${flashType}" id="flashToast">
                     <i class="bi ${flashType eq 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'}"></i>
@@ -32,12 +31,10 @@
                 </div>
             </c:if>
 
-            <%-- Header --%>
-            <div class="voucher-header-card">
+            <div >
                 <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
-                    <div>
-                        <h2><i class="bi bi-ticket-perforated me-2"></i>Quản lý Voucher</h2>
-                        <p>Tạo và quản lý mã giảm giá cho khách hàng AuraSound</p>
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                        <h2 class="section-title text-primary" style="margin-top: 0; margin-bottom: .5rem; font-weight: 500; line-height: 1.2;">Quản lý Voucher</h2>
                     </div>
                     <button class="btn-add-voucher" data-bs-toggle="modal" data-bs-target="#addVoucherModal">
                         <i class="bi bi-plus-circle me-1"></i> Tạo Voucher
@@ -60,7 +57,6 @@
                 </c:choose>
             </c:forEach>
 
-            <%-- Stats pills --%>
             <div class="d-flex gap-3 mb-4 flex-wrap">
                 <div class="stat-pill">
                     <div class="stat-icon icon-total"><i class="bi bi-ticket-perforated"></i></div>
