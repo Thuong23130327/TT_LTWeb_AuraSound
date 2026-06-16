@@ -6,8 +6,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+
 import java.io.IOException;
+
 import com.google.gson.Gson;
+
 @WebServlet(name = "AMUpdateInterfaceServlet", value = "/admin/upd-interface")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 2,
@@ -32,11 +35,11 @@ public class AMUpdateInterfaceServlet extends HttpServlet {
 
                 if (imageUrl != null) {
                     service.addBanner(
-                        imageUrl, 
-                        request.getParameter("targetUrl"),
-                        request.getParameter("title"),
-                        request.getParameter("description"),
-                        Integer.parseInt(request.getParameter("sortOrder"))
+                            imageUrl,
+                            request.getParameter("targetUrl"),
+                            request.getParameter("title"),
+                            request.getParameter("description"),
+                            Integer.parseInt(request.getParameter("sortOrder"))
                     );
                 }
             } else if ("deleteBanner".equals(action)) {
@@ -63,8 +66,7 @@ public class AMUpdateInterfaceServlet extends HttpServlet {
                 response.setContentType("application/json");
                 response.getWriter().write(new Gson().toJson(success));
                 return;
-            }
-            else if ("addBrand".equals(action)) {
+            } else if ("addBrand".equals(action)) {
                 Part filePart = request.getPart("imageFile");
                 String logoUrl = CloudinaryService.uploadFile(filePart);
 
@@ -73,29 +75,44 @@ public class AMUpdateInterfaceServlet extends HttpServlet {
                 }
             } else if ("deleteBrand".equals(action)) {
                 service.deleteBrand(Integer.parseInt(request.getParameter("id")));
-            }
-            else if ("addFooter".equals(action)) {
+            } else if ("addFooter".equals(action)) {
                 service.addFooter(request.getParameter("title"), request.getParameter("targetUrl"), Integer.parseInt(request.getParameter("sortOrder")));
                 request.getServletContext().setAttribute("footerLinks", service.getAllFooterLinks());
             } else if ("deleteFooter".equals(action)) {
                 service.deleteFooter(Integer.parseInt(request.getParameter("id")));
                 request.getServletContext().setAttribute("footerLinks", service.getAllFooterLinks());
-            }
-            else if ("addCategory".equals(action)) {
+            } else if ("addCategory".equals(action)) {
                 String parentIdStr = request.getParameter("parentId");
                 Integer parentId = (parentIdStr == null || parentIdStr.isEmpty()) ? null : Integer.parseInt(parentIdStr);
                 service.addCategory(request.getParameter("name"), parentId);
             } else if ("deleteCategory".equals(action)) {
                 service.deleteCategory(Integer.parseInt(request.getParameter("id")));
             } else if ("reorderBanners".equals(action)) {
-            String[] ids = request.getParameterValues("ids[]");
-            if (ids != null) {
-                service.reorderBanners(ids);
-                response.setContentType("application/json");
-                response.getWriter().write(new Gson().toJson(true));
-                return;
+                String[] ids = request.getParameterValues("ids[]");
+                if (ids != null) {
+                    service.reorderBanners(ids);
+                    response.setContentType("application/json");
+                    response.getWriter().write(new Gson().toJson(true));
+                    return;
+                }
+            } else if ("updateBrand".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                Part filePart = request.getPart("imageFile");
+                String logoUrl = null;
+                if (filePart != null && filePart.getSize() > 0) {
+                    logoUrl = CloudinaryService.uploadFile(filePart);
+                }
+                service.updateBrand(id, request.getParameter("name"), logoUrl);
+            } else if ("updateCategory".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                String parentIdStr = request.getParameter("parentId");
+                Integer parentId = (parentIdStr == null || parentIdStr.isEmpty()) ? null : Integer.parseInt(parentIdStr);
+                service.updateCategory(id, request.getParameter("name"), parentId);
+            } else if ("updateFooter".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                service.updateFooter(id, request.getParameter("title"), request.getParameter("targetUrl"), Integer.parseInt(request.getParameter("sortOrder")));
+                request.getServletContext().setAttribute("footerLinks", service.getAllFooterLinks());
             }
-        }
         } catch (Exception e) {
             e.printStackTrace();
         }

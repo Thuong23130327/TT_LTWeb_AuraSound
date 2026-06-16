@@ -190,12 +190,50 @@
                                 </thead>
                                 <tbody>
                                 <c:forEach var="f" items="${footers}">
+
+
                                     <tr>
                                         <td>${f.id}</td>
                                         <td>${f.title}</td>
                                         <td>${f.targetUrl}</td>
                                         <td>${f.sortOrder}</td>
                                         <td>
+
+                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editFooterModal${f.id}">Sửa</button>
+
+                                            <div class="modal fade" id="editFooterModal${f.id}" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="${pageContext.request.contextPath}/admin/upd-interface" method="post">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Cập nhật Footer Link</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="action" value="updateFooter">
+                                                                <input type="hidden" name="id" value="${f.id}">
+
+                                                                <div class="mb-3">
+                                                                    <label>Tiêu đề hiển thị</label>
+                                                                    <input type="text" name="title" class="form-control" value="${f.title}" required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label>Đường dẫn đích (Target URL)</label>
+                                                                    <input type="text" name="targetUrl" class="form-control" value="${f.targetUrl}" required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label>Thứ tự hiển thị (Sort Order)</label>
+                                                                    <input type="number" name="sortOrder" class="form-control" value="${f.sortOrder}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <a href="${pageContext.request.contextPath}/admin/upd-interface?action=deleteFooter&id=${f.id}"
                                                class="btn btn-danger btn-sm">Xóa</a></td>
                                     </tr>
