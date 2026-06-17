@@ -98,6 +98,15 @@ public class ProductVariant {
         this.isDefault = isDefault;
     }
 
+    public int getDiscountPercent() {
+        if (marketPrice == null || sellPrice == null || marketPrice.compareTo(java.math.BigDecimal.ZERO) <= 0) {
+            return 0;
+        }
+        java.math.BigDecimal diff = marketPrice.subtract(sellPrice);
+        java.math.BigDecimal percent = diff.divide(marketPrice, 2, java.math.RoundingMode.HALF_UP).multiply(new java.math.BigDecimal("100"));
+        return percent.intValue();
+    }
+
 
     @Override
     public String toString() {

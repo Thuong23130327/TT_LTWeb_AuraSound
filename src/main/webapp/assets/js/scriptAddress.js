@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const districtSelect = document.getElementById('district');
     const wardSelect = document.getElementById('ward');
 
-    const provinceIdInput = document.getElementById('provinceId');
-    const districtIdInput = document.getElementById('districtId');
-    const wardCodeInput = document.getElementById('wardCode');
-    const cityTextInput = document.getElementById('cityText');
+    const provinceIdInput = document.getElementById('provinceId') || document.getElementById('modalProvinceId');
+    const districtIdInput = document.getElementById('districtId') || document.getElementById('modalDistrictId');
+    const wardCodeInput = document.getElementById('wardCode') || document.getElementById('modalWardCode');
+    const cityTextInput = document.getElementById('cityText') || document.getElementById('modalCityText');
 
     // --- HÀM BỔ TRỢ GỌI API GHN (Hỗ trợ Async/Await) ---
 
@@ -153,7 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById('recipientName').value = recipientName;
         document.getElementById('phone').value = phone;
-        document.getElementById('address').value = addressValue;
+        const addressEl = document.getElementById('addressInput') || document.getElementById('address');
+        if (addressEl) addressEl.value = addressValue;
         document.getElementById('isDefault').checked = !!isDefaultBadge;
 
         action.value = 'edit';
@@ -235,7 +236,8 @@ document.addEventListener("DOMContentLoaded", function () {
         btnSaveAddress.addEventListener('click', function () {
             const recipientName = document.getElementById('recipientName').value.trim();
             const phone = document.getElementById('phone').value.trim();
-            const address = document.getElementById('address').value.trim();
+            const addressEl = document.getElementById('addressInput') || document.getElementById('address');
+            const address = addressEl ? addressEl.value.trim() : '';
 
             if (!recipientName) {
                 alert('Vui lòng nhập tên người nhận!');
