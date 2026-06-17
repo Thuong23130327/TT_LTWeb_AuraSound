@@ -59,6 +59,25 @@ $(document).ready(function() {
         $('#hidOrderId').val(orderId);
         $('#lblOrderCode').text(orderCode);
         $('#selOrderStatus').val(currentStatus);
+
+        // Logic chống nhảy cóc bước
+        let $select = $('#selOrderStatus');
+        let $helper = $('#statusHelper');
+        $select.find('option').prop('disabled', false); // Reset
+        $helper.hide();
+
+        currentStatus = parseInt(currentStatus);
+        if (currentStatus === 0) { // Pending
+            $select.find('option[value="2"]').prop('disabled', true); // Cannot go straight to Completed
+            $helper.text('* Đơn chờ xử lý không thể chuyển thẳng sang Hoàn thành.').show();
+        } else if (currentStatus === 1) { // Shipping
+            $select.find('option[value="0"]').prop('disabled', true); // Cannot go back to Pending
+            $helper.text('* Đơn đang giao không thể quay lại Chờ xử lý.').show();
+        } else if (currentStatus === 2 || currentStatus === 3) { // Completed or Cancelled
+            $select.find('option').prop('disabled', true);
+            $select.find(`option[value="${currentStatus}"]`).prop('disabled', false);
+            $helper.text('* Đơn hàng đã kết thúc, không thể thay đổi trạng thái.').show();
+        }
     });
 
     $('#btnSubmitStatus').click(function() {

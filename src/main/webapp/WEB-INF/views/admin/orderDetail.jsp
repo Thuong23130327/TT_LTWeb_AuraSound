@@ -37,10 +37,20 @@
                     </h2>
                     <small style="color: var(--gray-text);" class="ms-3">Ngày đặt: ${order.formattedOrderDate}</small>
                 </div>
-                <div>
+                <div class="d-flex align-items-center">
                     <span class="badge bg-${order.statusClass} fs-6 px-3 py-2 fw-medium">
                         ${order.EOrderStatus != null ? order.EOrderStatus.getDescription() : "Chờ duyệt"}
                     </span>
+                    <c:if test="${order.status != 2 && order.status != 3}">
+                        <button class="btn btn-sm btn-outline-primary ms-3 update-status-btn"
+                                data-id="${order.id}"
+                                data-code="${order.orderCode}"
+                                data-status="${order.status}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#statusModal">
+                            <i class="bi bi-pencil-square"></i> Chuyển trạng thái
+                        </button>
+                    </c:if>
                 </div>
             </div>
 
@@ -128,6 +138,23 @@
                             </p>
                         </div>
 
+                        <hr style="border-color: var(--profile-border-light); margin: 15px 0;">
+
+                        <div class="customer-info-section">
+                            <h6><i class="bi bi-credit-card-fill me-1" style="color: var(--theme-color-primary);"></i> Thông tin thanh toán</h6>
+                            <p class="mb-1">Phương thức: <strong>
+                                <c:choose>
+                                    <c:when test="${order.paymentStatus == 1}">Thanh toán Online (VNPay)</c:when>
+                                    <c:otherwise>Thanh toán khi nhận hàng (COD)</c:otherwise>
+                                </c:choose>
+                            </strong></p>
+                            <p class="mb-0">Trạng thái: 
+                                <span class="badge ${order.paymentStatus == 1 ? 'bg-success' : 'bg-secondary'} px-2 py-1 ms-1">
+                                    ${order.paymentStatus == 1 ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                </span>
+                            </p>
+                        </div>
+
                         <c:if test="${not empty order.adminNote}">
                             <hr style="border-color: var(--profile-border-light); margin: 15px 0;">
                             <div class="customer-info-section">
@@ -141,6 +168,32 @@
 
         </main>
     </div>
+</div>
+
+<div class="modal fade" id="statusModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header py-2 bg-light">
+        <h6 class="modal-title fw-bold text-primary">Cập nhật đơn <span id="lblOrderCode"></span></h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body py-3">
+        <input type="hidden" id="hidOrderId">
+        <label class="form-label fw-bold small mb-1">Chọn trạng thái mới</label>
+        <select id="selOrderStatus" class="form-select form-select-sm">
+          <option value="0">PENDING (Chờ xử lý)</option>
+          <option value="1">SHIPPING (Đang giao)</option>
+          <option value="2">COMPLETED (Hoàn thành)</option>
+          <option value="3">CANCELLED (Đã hủy đơn)</option>
+        </select>
+        <div id="statusHelper" class="form-text text-danger" style="font-size: 0.8rem; display: none;"></div>
+      </div>
+      <div class="modal-footer py-1 bg-light">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" id="btnSubmitStatus" class="btn btn-sm btn-primary px-3">Lưu dữ liệu</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>window.APP_CONTEXT = '${pageContext.request.contextPath}';</script>

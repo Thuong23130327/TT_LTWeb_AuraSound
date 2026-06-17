@@ -20,7 +20,7 @@ public class OrderShippingDAO {
                 "ua.ward_code AS ua_ward_code, " +
                 "ua.is_default AS ua_is_default " +
                 "FROM ordershippings os " +
-                "LEFT JOIN user_addresses ua ON os.useraddresses_id = ua.id " +
+                "LEFT JOIN useraddresses ua ON os.useraddresses_id = ua.id " +
                 "WHERE os.orders_id = :orderId";
 
         return jdbi.withHandle(handle -> handle.createQuery(sql)
@@ -63,7 +63,7 @@ public class OrderShippingDAO {
                                  String address, int provinceId, int districtId, String wardCode) {
         return jdbi.withHandle(handle -> {
             handle.createUpdate(
-                            "INSERT INTO user_addresses " +
+                            "INSERT INTO useraddresses " +
                                     "  (users_id, recipient_name, phone, city, address, province_id, district_id, ward_code, is_default) " +
                                     "VALUES " +
                                     "  (:userId, :recipientName, :phone, :city, :address, :provinceId, :districtId, :wardCode, 0)"

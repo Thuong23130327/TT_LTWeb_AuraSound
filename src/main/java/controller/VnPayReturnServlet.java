@@ -38,8 +38,7 @@ public class VnPayReturnServlet extends HttpServlet {
                 if (!first) hashData.append('&');
                 hashData.append(entry.getKey())
                         .append('=')
-                        .append(URLEncoder.encode(entry.getValue(),
-                                StandardCharsets.UTF_8.toString()));
+                        .append(URLEncoder.encode(entry.getValue(), StandardCharsets.US_ASCII.toString()));
                 first = false;
             }
         }

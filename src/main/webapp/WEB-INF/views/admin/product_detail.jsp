@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/tag/_taglibs.jsp" %>
 
 <%
@@ -104,7 +104,7 @@
                                                 id="isActiveToggle"
                                                 name="isActive"
                                                 value="true"
-                                        ${p.isActive ? 'checked' : ''}>
+                                        ${p.active ? 'checked' : ''}>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-gradient">
                                         Lưu Thay Đổi

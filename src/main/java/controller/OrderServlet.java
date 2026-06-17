@@ -147,7 +147,10 @@ public class OrderServlet extends HttpServlet {
                     vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang " + orderId);
                     vnp_Params.put("vnp_OrderType", "other");
                     vnp_Params.put("vnp_Locale", "vn");
-                    vnp_Params.put("vnp_ReturnUrl", VnPayConfig.vnp_ReturnUrl);
+                    
+                    String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+                    vnp_Params.put("vnp_ReturnUrl", baseUrl + "/vnpay_return");
+                    
                     vnp_Params.put("vnp_IpAddr", request.getRemoteAddr());
 
                     Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -174,10 +177,10 @@ public class OrderServlet extends HttpServlet {
                             }
                             hashData.append(fieldName)
                                     .append('=')
-                                    .append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
-                            query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()))
+                                    .append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                            query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()))
                                     .append('=')
-                                    .append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
+                                    .append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
 
                             firstEntry = false;
                         }
