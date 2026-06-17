@@ -129,13 +129,13 @@
                                         <input type="radio" name="selectedShippingAddress" value="${addr.id}" ${addr.isDefault ? 'checked' : ''} style="margin-top: 5px; cursor: pointer;">
                                         <div class="flex-grow-1 select-address-trigger">
                                             <div class="fw-bold fs-6">
-                                                ${addr.recipientName} | ${addr.phone}
+                                                    ${addr.recipientName} | ${addr.phone}
                                                 <c:if test="${addr.isDefault}">
                                                     <span class="badge bg-warning text-dark ms-2 fw-semibold">Mặc định</span>
                                                 </c:if>
                                             </div>
                                             <div class="text-muted small mt-1">
-                                                ${addr.address}, ${addr.city}
+                                                    ${addr.address}, ${addr.city}
                                             </div>
                                         </div>
                                     </div>
@@ -204,7 +204,7 @@
                 </div>
                 <div class="totals-item">
                     <p>Phí vận chuyển:</p>
-                    <p><fmt:formatNumber value="${shippingFee}" pattern="#,###"/>đ</p>
+                    <p id="shipping-fee-display"><fmt:formatNumber value="${shippingFee}" pattern="#,###"/>đ</p>
                 </div>
                 <div class="totals-item" id="expected-delivery-row">
                     <p>Thời gian nhận hàng dự kiến:</p>
@@ -216,7 +216,7 @@
                 </div>
                 <div class="totals-item total">
                     <p>Tổng cộng:</p>
-                    <p id="final-total" data-original="${finalTotal}">
+                    <p id="final-total" data-original="${finalTotal}" data-shipping="${shippingFee}">
                         <fmt:formatNumber value="${finalTotal}" pattern="#,###"/>đ
                     </p>
                 </div>
@@ -331,33 +331,33 @@
         <button id="btnSaveAddress" class="btn-primary">Lưu Địa Chỉ</button>
     </div>
 </div>
-    <div id="wallet-popup" class="popup-content-wrap" style="display: none;">
-        <div class="popup-content" style="max-width: 500px; text-align: left; padding: 20px;">
-            <button class="popup-close-btn" id="wallet-close"><i class="bi bi-x-lg"></i></button>
-            <h3 style="margin-bottom: 20px; font-size: 20px; color: #333;"><i class="bi bi-wallet2"></i> Kho Voucher Của Bạn</h3>
+<div id="wallet-popup" class="popup-content-wrap" style="display: none;">
+    <div class="popup-content" style="max-width: 500px; text-align: left; padding: 20px;">
+        <button class="popup-close-btn" id="wallet-close"><i class="bi bi-x-lg"></i></button>
+        <h3 style="margin-bottom: 20px; font-size: 20px; color: #333;"><i class="bi bi-wallet2"></i> Kho Voucher Của Bạn</h3>
 
-            <div class="voucher-list" style="max-height: 350px; overflow-y: auto;">
-                <c:choose>
-                    <c:when test="${not empty walletVouchers}">
-                        <c:forEach items="${walletVouchers}" var="v">
-                            <div class="voucher-card" style="border: 1px dashed #4a6bff; border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: #f8faff;">
-                                <div>
-                                    <strong style="color: #4a6bff; font-size: 18px;">${v.code}</strong>
-                                    <p style="margin: 5px 0 0; font-size: 14px;">Giảm: <fmt:formatNumber value="${v.discountAmount}" pattern="#,###"/>đ</p>
-                                    <p style="margin: 0; font-size: 12px; color: #666;">Đơn tối thiểu: <fmt:formatNumber value="${v.minimumOrderAmount}" pattern="#,###"/>đ</p>
-                                    <p style="margin: 0; font-size: 12px; color: #e74c3c;">HSD: ${v.endDateFormatted}</p>
-                                </div>
-                                <button type="button" class="btn-select-voucher" data-code="${v.code}" style="padding: 8px 15px; background: var(--theme-gradient-button); color: white; border: none; border-radius: 5px; cursor: pointer;">Dùng ngay</button>
+        <div class="voucher-list" style="max-height: 350px; overflow-y: auto;">
+            <c:choose>
+                <c:when test="${not empty walletVouchers}">
+                    <c:forEach items="${walletVouchers}" var="v">
+                        <div class="voucher-card" style="border: 1px dashed #4a6bff; border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: #f8faff;">
+                            <div>
+                                <strong style="color: #4a6bff; font-size: 18px;">${v.code}</strong>
+                                <p style="margin: 5px 0 0; font-size: 14px;">Giảm: <fmt:formatNumber value="${v.discountAmount}" pattern="#,###"/>đ</p>
+                                <p style="margin: 0; font-size: 12px; color: #666;">Đơn tối thiểu: <fmt:formatNumber value="${v.minimumOrderAmount}" pattern="#,###"/>đ</p>
+                                <p style="margin: 0; font-size: 12px; color: #e74c3c;">HSD: ${v.endDateFormatted}</p>
                             </div>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <p style="text-align: center; color: #888;">Hiện tại bạn chưa có voucher nào khả dụng.</p>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+                            <button type="button" class="btn-select-voucher" data-code="${v.code}" style="padding: 8px 15px; background: var(--theme-gradient-button); color: white; border: none; border-radius: 5px; cursor: pointer;">Dùng ngay</button>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <p style="text-align: center; color: #888;">Hiện tại bạn chưa có voucher nào khả dụng.</p>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
+</div>
 </div>
 
 
