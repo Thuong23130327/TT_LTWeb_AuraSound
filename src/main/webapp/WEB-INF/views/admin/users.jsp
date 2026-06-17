@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table align-middle" id="userManagementTable">
+                    <table class="table table-striped table-sm"id="userManagementTable">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -101,7 +101,7 @@
                                     <tr>
                                         <td class="text-muted">#${u.id}</td>
                                         <td><strong>${u.fullName}</strong></td>
-                                        <td><span class="code-badge" style="cursor:default; border:none; background:#f4f5f7;">${u.email}</span></td>
+                                        <td><span class="code-badge" style="cursor:default; border:none;">${u.email}</span></td>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 <c:choose>

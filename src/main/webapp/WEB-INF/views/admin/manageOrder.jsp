@@ -59,13 +59,14 @@
 
       <div class="user-table-wrap">
         <div class="table-responsive">
-          <table class="table table-hover align-middle" id="orderManagementTable">
+          <table class="table table-striped table-sm"id="orderManagementTable">
             <thead>
             <tr>
               <th>Mã Đơn</th>
               <th>Khách Hàng</th>
               <th>Ngày Đặt</th>
               <th>Tổng Tiền</th>
+              <th>Thanh Toán</th>
               <th>Trạng Thái Đơn</th>
               <th>Thao Tác</th>
             </tr>
@@ -78,6 +79,16 @@
                 <td class="text-muted" style="font-size: .85rem; font-weight: 500;">${o.formattedOrderDate}</td>
                 <td class="text-danger fw-bold">
                   <fmt:formatNumber value="${o.finalAmount}" pattern="#,###"/> đ
+                </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${o.paymentStatus == 1}">
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Đã thanh toán</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> Chưa thanh toán</span>
+                        </c:otherwise>
+                    </c:choose>
                 </td>
                 <td>
                     <span class="badge bg-${o.statusClass}">
@@ -125,6 +136,7 @@
           <option value="2">COMPLETED (Hoàn thành)</option>
           <option value="3">CANCELLED (Đã hủy đơn)</option>
         </select>
+        <div id="statusHelper" class="form-text text-danger" style="font-size: 0.8rem; display: none;"></div>
       </div>
       <div class="modal-footer py-1 bg-light">
         <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Đóng</button>

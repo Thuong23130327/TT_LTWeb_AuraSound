@@ -150,6 +150,12 @@ document.addEventListener("DOMContentLoaded", function () {
             wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
             wardSelect.disabled = true;
 
+            if (this.value) {
+                await fetchWards(this.value);
+            }
+        });
+    }
+
     async function callShippingFeeApi(districtId, wardCode) {
         if (!districtId || !wardCode) return;
         const summaryContainer = document.querySelector('.order-summary');
@@ -179,7 +185,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
             }
-        });
+        } catch (err) {
+            console.error("Lỗi khi gọi API tính phí:", err);
+            currentShippingFee = SHIPPING_FEE; 
+            updateTotalDisplay(appliedDiscountAmount);
+        } finally {
+            if (summaryContainer) summaryContainer.classList.remove('loading');
+        }
     }
 
     // Tải tỉnh thành ban đầu

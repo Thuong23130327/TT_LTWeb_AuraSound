@@ -265,9 +265,13 @@ public class Order {
 
     @ColumnName("expected_delivery_date")
     public java.time.LocalDateTime getExpectedDeliveryDate() {
+        if (expectedDeliveryDate == null && orderDate != null) {
+            return orderDate.plusDays(3);
+        }
         return expectedDeliveryDate;
     }
 
+    @ColumnName("expected_delivery_date")
     public void setExpectedDeliveryDate(java.time.LocalDateTime expectedDeliveryDate) {
         this.expectedDeliveryDate = expectedDeliveryDate;
     }
